@@ -13,11 +13,25 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    ball.cpp \
+    fieldstate.cpp \
+    robot.cpp \
+    structs.cpp \
+    unit.cpp \
+    vision.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    ball.h \
+    fieldstate.h \
+    robot.h \
+    unit.h \
+    encontraObjeto.hpp \
+    vision.h
 
 FORMS    += mainwindow.ui
+
+LIBS += `pkg-config opencv --libs`
 
 DISTFILES += \
     README.md
