@@ -1,12 +1,12 @@
-#ifndef VISAO_H
-#define VISAO_H
+#ifndef VISION_H
+#define VISION_H
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "fieldstate.h"
 using namespace cv;
 
-class Visao
+class Vision
 {
 private:
     Mat frameOriginal;
@@ -18,12 +18,12 @@ private:
     float aImg[8]; /* pontos para a retificaçao */
 
 public:
-    Visao();
+    Vision();
     void getData(Fieldstate *fs);
     void set_cameraid(int id);
 
 private:
-    void captureImage();
+    bool captureImage();
     void adjustImage();
     void rectifyImage(float aImg[8]);
     void convertImage();
@@ -33,4 +33,4 @@ private:
 
 };
 
-#endif // VISAO_H
+#endif // VISION_H

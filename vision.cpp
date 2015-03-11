@@ -1,12 +1,11 @@
-#include "visao.h"
+#include "vision.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "encontraObjeto.hpp"
 
-
 using namespace std;
 
-Visao::Visao()
+Vision::Vision()
 {
 
 }
@@ -17,13 +16,14 @@ Visao::Visao()
  * e atualiza a posicao de cada objeto no campo.
  */
 
-void Visao::getData(Fieldstate *fs){
-    captureImage();
-    //adjustImage();
-    convertImage();
-    renderImage(fs);
-    imshow("janela4", frameOriginal);
-    waitKey(0);
+void Vision::getData(Fieldstate *fs){
+    if(captureImage()){
+        //adjustImage();
+        convertImage();
+        renderImage(fs);
+        imshow("janela4", frameOriginal);
+        waitKey(0);
+    }
 }
 
 /* Adjust Image
@@ -31,22 +31,26 @@ void Visao::getData(Fieldstate *fs){
  * brilho, contraste, saturaçao e retificaçao.
  */
 
-void Visao::adjustImage(){
+void Vision::adjustImage(){
     float aImg[8] = {0.0, 0, frameOriginal.cols/2, 0, 0, frameOriginal.rows/2, frameOriginal.cols/2, frameOriginal.rows/2};
     rectifyImage(aImg);
 }
 
 
 /* faz a captura da imagem */
-void Visao::captureImage(){
+bool Vision::captureImage(){
     VideoCapture cap(id_camera);
 
     if (!cap.read(frameOriginal))
+    {
         cout << "check your device" << endl;
+        return false;
+    }
+    return true;
 }
 
 /* retifica a imagem, aWorld = limites da imagem, aWImg = limites da area a retificar */
-void Visao::rectifyImage(float aImg[8]){
+void Vision::rectifyImage(float aImg[8]){
     float aWorld[8] = {0, 0, frameOriginal.cols, 0, 0, frameOriginal.rows, frameOriginal.cols, frameOriginal.rows};
     CvMat mImg, mWorld;
     cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg,0);
@@ -63,12 +67,12 @@ void Visao::rectifyImage(float aImg[8]){
 
 
 /* converte a imagem capturada de BGR para HSV */
-void Visao::convertImage(){
+void Vision::convertImage(){
     cvtColor(frameOriginal, frameHSV, CV_BGR2HSV);
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
-void Visao::thresholdImage(CvScalar min, CvScalar max){
+void Vision::thresholdImage(CvScalar min, CvScalar max){
     inRange(frameHSV, (Scalar) min,(Scalar) max, frameBinary);
 }
 
@@ -83,7 +87,7 @@ void Visao::thresholdImage(CvScalar min, CvScalar max){
  * 8 - bola
  */
 
-void Visao::renderImage(Fieldstate *fs){
+void Vision::renderImage(Fieldstate *fs){
     for(int i = 0; i < 9; i++){
         thresholdImage(cvScalar(100,100,100), cvScalar(200, 200, 200));
         encontrados[i] = detectaCores(frameBinary.clone(), 80, 1, 40000); 
@@ -99,7 +103,7 @@ void Visao::renderImage(Fieldstate *fs){
  * e qual sua orientaçao.
  */
 
-void Visao::identifyRobot(Fieldstate *fs){
+void Vision::identifyRobot(Fieldstate *fs){
     double menor_distancia=0;
     int menorDistanciaId;
     for(int i=1; i<4; i++)
@@ -121,6 +125,6 @@ void Visao::identifyRobot(Fieldstate *fs){
     }
 }
 
-void Visao::set_cameraid(int id){
+void Vision::set_cameraid(int id){
     id_camera = id;
 }
