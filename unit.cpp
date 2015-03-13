@@ -4,15 +4,18 @@ Unit::Unit()
 {
 }
 
-posicao Unit::get_position(){
+/*
+ * GETTERS AND SETTERS
+ */
+Position Unit::get_position() const {
     return this->position;
 }
 
-void Unit::set_position(posicao position){
+void Unit::set_position(const Position &position){
     this->position = position;
 }
 
-void Unit::set_position(int x, int y){
+void Unit::set_position(const int &x, const int &y){
     this->position.x = x;
     this->position.y = y;
 }

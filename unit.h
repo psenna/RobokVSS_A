@@ -6,13 +6,13 @@
 class Unit
 {
 private:
-    posicao position;
+    Position position;
 
 public:
     Unit();
-    posicao get_position();
-    void set_position(posicao position);
-    void set_position(int x, int y);
+    Position get_position() const;
+    void set_position(const Position &position);
+    void set_position(const int &x, const int &y);
 };
 
 #endif // UNIT_H
