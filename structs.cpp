@@ -1,20 +1,31 @@
 #include "math.h"
 
-struct posicao//objeto encontrado em flood do frame binarizado
+struct Position
 {
-    float x, y, npix; // npix = quantidade de pixeis no objeto
-    bool operator<(const posicao& o) const //usado no std::sort(), ordem decrescente
+    float x, y, number_of_pixels;
+
+    /*
+     * Operator < Overloading
+     * This is used in std::sort() function, descending order.
+     * @param other the Position object to be compared with this.
+     */
+    bool operator<(const Position& other) const
     {
-        return npix > o.npix;
+        return number_of_pixels > other.number_of_pixels;
     }
 
-    float dist(posicao p){
-      return sqrt((x - p.x)*(x - p.x) + (y - p.y) * (y - p.y));
+    /*
+     * Calculates the distance between two Position objects.
+     * @param pos object which distance from this is desired.
+     */
+    float distance(Position pos){
+      return sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y));
     }
+
 };
 
 struct Goal
 {
-    posicao post_1;
-    posicao post_2;
+    Position post_1;
+    Position post_2;
 };
