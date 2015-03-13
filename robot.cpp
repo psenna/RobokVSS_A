@@ -4,11 +4,11 @@ Robot::Robot()
 {
 }
 
-posicao Robot::get_objective(){
+Position Robot::get_objective(){
     return this->objective;
 }
 
-void Robot::set_objective(posicao position){
+void Robot::set_objective(Position position){
     this->objective = position;
 }
 

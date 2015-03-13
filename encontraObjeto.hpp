@@ -10,7 +10,7 @@
 using namespace cv;
 using namespace std;
 
-void findObjFlood(Mat frameBin, int l, int c, vector<posicao> &objetos, int tamanhoMin, int tamanhoMax){//encontra um objeto por flood
+void findObjFlood(Mat frameBin, int l, int c, vector<Position> &objetos, int tamanhoMin, int tamanhoMax){//encontra um objeto por flood
     Point centObj;
     int npix=1;
     stack <int>pilhaL, pilhaC;
@@ -76,16 +76,16 @@ void findObjFlood(Mat frameBin, int l, int c, vector<posicao> &objetos, int tama
         }
     }
     if(npix>tamanhoMin && npix<tamanhoMax){
-    posicao obj;
-    obj.npix = npix;
+    Position obj;
+    obj.number_of_pixels = npix;
     obj.x = centObj.x/npix;
     obj.y = centObj.y/npix;
     objetos.push_back(obj);
     }
 }
 
-std::vector<posicao> detectaCores(Mat frameBin, int tamanhoMin, unsigned int numObjetos, int tamanhoMax){
-    std::vector<posicao> objetos;
+std::vector<Position> detectaCores(Mat frameBin, int tamanhoMin, unsigned int numObjetos, int tamanhoMax){
+    std::vector<Position> objetos;
 
     //double t, time;
     //t = (double)cvGetTickCount();

@@ -14,7 +14,7 @@ private:
     Mat frameBinary;
     CvCapture* capture;
     int id_camera;
-    Vector<posicao> encontrados[9];
+    Vector<Position> encontrados[9];
     float aImg[8]; /* pontos para a retificaçao */
 
 public:

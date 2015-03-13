@@ -110,9 +110,9 @@ void Vision::identifyRobot(Fieldstate *fs){
     {
         for(unsigned int j=0; j<encontrados[0].size(); j++)
         {
-            if(encontrados[i][0].dist(encontrados[0][j]) < menor_distancia || menor_distancia == 0)
+            if(encontrados[i][0].distance(encontrados[0][j]) < menor_distancia || menor_distancia == 0)
             {
-                menor_distancia = encontrados[i][0].dist(encontrados[0][j]);
+                menor_distancia = encontrados[i][0].distance(encontrados[0][j]);
                 menorDistanciaId = j;
             }
             if(menor_distancia != 0){

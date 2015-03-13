@@ -6,12 +6,12 @@
 class Robot : public Unit
 {
 private:
-    posicao objective;
+    Position objective;
 
 public:
     Robot();
-    posicao get_objective();
-    void set_objective(posicao position);
+    Position get_objective();
+    void set_objective(Position position);
     void set_objective(int x, int y);
 };
 

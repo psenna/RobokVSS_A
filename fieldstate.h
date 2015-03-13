@@ -14,7 +14,7 @@ private:
     Ball ball;
     std::vector<Robot> robots_team;
     std::vector<Robot> robots_enemy;
-    posicao field_centre;
+    Position field_centre;
 
 public:
     Fieldstate();
@@ -29,8 +29,8 @@ public:
     Robot get_robotTeamById(int id);
     std::vector<Robot> get_RobotsEnemy();
     void set_RobotsEnemy(std::vector<Robot> robots);
-    posicao get_fieldCentre();
-    void set_fieldCentre(posicao position);
+    Position get_fieldCentre();
+    void set_fieldCentre(Position position);
 
 };
 
