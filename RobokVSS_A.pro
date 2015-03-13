@@ -26,8 +26,8 @@ HEADERS  += mainwindow.h \
     fieldstate.h \
     robot.h \
     unit.h \
-    encontraObjeto.hpp \
-    vision.h
+    vision.h \
+    find_object.hpp
 
 FORMS    += mainwindow.ui
 

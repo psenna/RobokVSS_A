@@ -1,7 +1,7 @@
 #include "vision.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "encontraObjeto.hpp"
+#include "find_object.hpp"
 
 using namespace std;
 
@@ -15,14 +15,13 @@ Vision::Vision()
  * frames capturados, recebe como parametro o Fieldstate
  * e atualiza a posicao de cada objeto no campo.
  */
-
 void Vision::getData(Fieldstate *fs){
     if(captureImage()){
         //adjustImage();
         convertImage();
         renderImage(fs);
-        imshow("janela4", frameOriginal);
-        waitKey(0);
+        imshow("Janela 4", frame_original_);
+        cv::waitKey(0);
     }
 }
 
@@ -30,20 +29,19 @@ void Vision::getData(Fieldstate *fs){
  * Método responsável pelos ajustes na imagem.
  * brilho, contraste, saturaçao e retificaçao.
  */
-
 void Vision::adjustImage(){
-    float aImg[8] = {0.0, 0, frameOriginal.cols/2, 0, 0, frameOriginal.rows/2, frameOriginal.cols/2, frameOriginal.rows/2};
+    float aImg[8] = {0.0, 0, frame_original_.cols/2, 0, 0, frame_original_.rows/2, frame_original_.cols/2, frame_original_.rows/2};
     rectifyImage(aImg);
 }
 
 
 /* faz a captura da imagem */
 bool Vision::captureImage(){
-    VideoCapture cap(id_camera);
+    VideoCapture cap(id_camera_);
 
-    if (!cap.read(frameOriginal))
+    if (!cap.read(frame_original_))
     {
-        cout << "check your device" << endl;
+        cout << "Please check your device." << endl;
         return false;
     }
     return true;
@@ -51,29 +49,29 @@ bool Vision::captureImage(){
 
 /* retifica a imagem, aWorld = limites da imagem, aWImg = limites da area a retificar */
 void Vision::rectifyImage(float aImg[8]){
-    float aWorld[8] = {0, 0, frameOriginal.cols, 0, 0, frameOriginal.rows, frameOriginal.cols, frameOriginal.rows};
+    float aWorld[8] = {0, 0, frame_original_.cols, 0, 0, frame_original_.rows, frame_original_.cols, frame_original_.rows};
     CvMat mImg, mWorld;
     cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg,0);
     cvInitMatHeader(&mWorld, 4, 2, CV_32FC1, aWorld,0);
 
     CvMat* hist = cvCreateMat(3, 3, CV_32FC1);
     cvFindHomography(&mImg, &mWorld, hist, 0, 0.0, NULL);
-    IplImage temp = frameOriginal;
+    IplImage temp = frame_original_;
     cvWarpPerspective(&temp, &temp, hist);
     Mat frameAuxiliar(&temp);
-    frameOriginal = frameAuxiliar.clone();
+    frame_original_ = frameAuxiliar.clone();
     frameAuxiliar.release();
 }
 
 
 /* converte a imagem capturada de BGR para HSV */
 void Vision::convertImage(){
-    cvtColor(frameOriginal, frameHSV, CV_BGR2HSV);
+    cvtColor(frame_original_, frame_hsv_, CV_BGR2HSV);
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
 void Vision::thresholdImage(CvScalar min, CvScalar max){
-    inRange(frameHSV, (Scalar) min,(Scalar) max, frameBinary);
+    inRange(frame_hsv_, (Scalar) min, (Scalar) max, frame_binary_);
 }
 
 /*  Render Image
@@ -90,7 +88,7 @@ void Vision::thresholdImage(CvScalar min, CvScalar max){
 void Vision::renderImage(Fieldstate *fs){
     for(int i = 0; i < 9; i++){
         thresholdImage(cvScalar(100,100,100), cvScalar(200, 200, 200));
-        encontrados[i] = detectaCores(frameBinary.clone(), 80, 1, 40000); 
+        found_[i] = DetectColors(frame_binary_.clone(), 80, 1, 40000);
     }
     identifyRobot(fs);
 }
@@ -108,16 +106,16 @@ void Vision::identifyRobot(Fieldstate *fs){
     int menorDistanciaId;
     for(int i=1; i<4; i++)
     {
-        for(unsigned int j=0; j<encontrados[0].size(); j++)
+        for(unsigned int j=0; j<found_[0].size(); j++)
         {
-            if(encontrados[i][0].distance(encontrados[0][j]) < menor_distancia || menor_distancia == 0)
+            if(found_[i][0].distance(found_[0][j]) < menor_distancia || menor_distancia == 0)
             {
-                menor_distancia = encontrados[i][0].distance(encontrados[0][j]);
+                menor_distancia = found_[i][0].distance(found_[0][j]);
                 menorDistanciaId = j;
             }
             if(menor_distancia != 0){
-                double x = (encontrados[i][0].x + encontrados[0][menorDistanciaId].x) / 2;
-                double y = (encontrados[i][0].y + encontrados[0][menorDistanciaId].y) / 2;
+                double x = (found_[i][0].x + found_[0][menorDistanciaId].x) / 2;
+                double y = (found_[i][0].y + found_[0][menorDistanciaId].y) / 2;
                 fs->get_robotTeamById(j).set_position((int) x, (int) y);
             }
         }
@@ -125,6 +123,6 @@ void Vision::identifyRobot(Fieldstate *fs){
     }
 }
 
-void Vision::set_cameraid(int id){
-    id_camera = id;
+void Vision::set_camera_id(const int &id){
+    id_camera_ = id;
 }

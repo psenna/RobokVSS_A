@@ -3,15 +3,17 @@
 
 #include "unit.h"
 
+using namespace robok;
+
 class Ball : public Unit
 {
 private:
-    Position prediction;
+    Position prediction_;
 
 public:
     Ball();
     Position get_prediction() const;
-    void set_prediction(const Position &position);
+    void set_prediction(const Position &position_);
     void set_prediction(const int &x, const int &y);
 };
 

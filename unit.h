@@ -3,10 +3,12 @@
 
 #include "structs.cpp"
 
+namespace robok {
+
 class Unit
 {
 private:
-    Position position;
+    Position position_;
 
 public:
     Unit();
@@ -14,5 +16,7 @@ public:
     void set_position(const Position &position);
     void set_position(const int &x, const int &y);
 };
+
+} // end namespace robok
 
 #endif // UNIT_H
