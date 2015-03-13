@@ -6,13 +6,13 @@
 class Ball : public Unit
 {
 private:
-    posicao prediction;
+    Position prediction;
 
 public:
     Ball();
-    posicao get_prediction();
-    void set_prediction(posicao position);
-    void set_prediction(int x, int y);
+    Position get_prediction() const;
+    void set_prediction(const Position &position);
+    void set_prediction(const int &x, const int &y);
 };
 
 #endif // BALL_H
