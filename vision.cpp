@@ -7,7 +7,7 @@ using namespace std;
 
 Vision::Vision()
 {
-
+    cap.open(0);
 }
 
 /* get Data
@@ -19,9 +19,9 @@ void Vision::getData(Fieldstate *fs){
     if(captureImage()){
         //adjustImage();
         convertImage();
-        renderImage(fs);
+        //renderImage(fs);
         imshow("Janela 4", frame_original_);
-        cv::waitKey(0);
+        cv::waitKey(1);
     }
 }
 
@@ -37,7 +37,8 @@ void Vision::adjustImage(){
 
 /* faz a captura da imagem */
 bool Vision::captureImage(){
-    VideoCapture cap(id_camera_);
+    if(!cap.isOpened())
+        cap.open(id_camera_);
 
     if (!cap.read(frame_original_))
     {
@@ -88,9 +89,20 @@ void Vision::thresholdImage(CvScalar min, CvScalar max){
 void Vision::renderImage(Fieldstate *fs){
     for(int i = 0; i < 9; i++){
         thresholdImage(cvScalar(100,100,100), cvScalar(200, 200, 200));
+        dilateImage();
+        erodeImage();
         found_[i] = DetectColors(frame_binary_.clone(), 80, 1, 40000);
     }
     identifyRobot(fs);
+}
+
+
+void Vision::dilateImage(){
+
+}
+
+void Vision::erodeImage(){
+
 }
 
 

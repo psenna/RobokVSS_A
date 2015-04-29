@@ -9,6 +9,7 @@ class Robot : public Unit
 {
 private:
     Position objective_;
+    Comando comando;
 
 public:
     Robot();

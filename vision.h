@@ -20,6 +20,7 @@ private:
     int id_camera_;
     Vector<Position> found_[9];
     float aImg[8]; /* pontos para a retificaçao */
+    VideoCapture cap;
 
 public:
     Vision();
@@ -32,6 +33,8 @@ private:
     void rectifyImage(float aImg[8]);
     void convertImage();
     void thresholdImage(CvScalar min, CvScalar max);
+    void dilateImage();
+    void erodeImage();
     void renderImage(Fieldstate *fs);
     void identifyRobot(Fieldstate *fs);
 
