@@ -5,54 +5,54 @@ using namespace robok;
 /*
  * GETTERS AND SETTERS
  */
-void Fieldstate::set_goalLeft(const Goal &goal){
-    this->goal_left_ = goal;
+void Fieldstate::setGoalLeft(const Goal &goal){
+    this->m_GoalLeft = goal;
 }
 
-Goal Fieldstate::get_goalLeft() const{
-    return this->goal_left_;
+Goal Fieldstate::getGoalLeft() const{
+    return this->m_GoalLeft;
 }
 
-void Fieldstate::set_goalRight(const Goal &goal){
-    this->goal_right_ = goal;
+void Fieldstate::setGoalRight(const Goal &goal){
+    this->m_GoalRight = goal;
 }
 
-Goal Fieldstate::get_goalRight() const{
-    return this->goal_right_;
+Goal Fieldstate::getGoalRight() const{
+    return this->m_GoalRight;
 }
 
-void Fieldstate::set_ball(const Ball &ball){
-    this->ball_ = ball;
+void Fieldstate::setBall(const Ball &ball){
+    this->m_Ball = ball;
 }
 
-Ball Fieldstate::get_ball() const{
-    return this->ball_;
+Ball Fieldstate::getBall() const{
+    return this->m_Ball;
 }
 
-void Fieldstate::set_RobotsTeam(const std::vector<Robot> &robots){
-    this->robots_team_ = robots;
+void Fieldstate::setRobotsTeam(const std::vector<Robot> &robots){
+    this->m_RobotsTeam = robots;
 }
 
-std::vector<Robot> Fieldstate::get_robots_team() const {
-   return this->robots_team_;
+std::vector<Robot> Fieldstate::getRobotsTeam() const {
+   return this->m_RobotsTeam;
 }
 
-Robot Fieldstate::get_robotTeamById(int id){
-    return robots_team_.at(id);
+Robot Fieldstate::getRobotTeamById(const int &id){
+    return m_RobotsTeam.at(id);
 }
 
-void Fieldstate::set_RobotsEnemy(const std::vector<Robot> &robots){
-    this->robots_enemy_ = robots;
+void Fieldstate::setRobotsEnemy(const std::vector<Robot> &robots){
+    this->m_RobotsEnemy = robots;
 }
 
-std::vector<Robot> Fieldstate::get_robots_enemy() const {
-    return this->robots_enemy_;
+std::vector<Robot> Fieldstate::getRobotsEnemy() const {
+    return this->m_RobotsEnemy;
 }
 
-void Fieldstate::set_field_centre(const Position &position){
-    this->field_centre_ = position;
+void Fieldstate::setFieldCenter(const Position &position){
+    this->m_FieldCenter = position;
 }
 
-Position Fieldstate::get_field_centre() const {
-    return this->field_centre_;
+Position Fieldstate::getFieldCenter() const {
+    return this->m_FieldCenter;
 }

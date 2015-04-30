@@ -8,13 +8,13 @@ using namespace robok;
 class Ball : public Unit
 {
 private:
-    Position prediction_;
+    Position m_Prediction;
 
 public:
     Ball();
-    Position get_prediction() const;
-    void set_prediction(const Position &position_);
-    void set_prediction(const int &x, const int &y);
+    Position getPrediction() const;
+    void setPrediction(const Position& position);
+    void setPrediction(const int& x, const int& y);
 };
 
 #endif // BALL_H

@@ -7,15 +7,15 @@ Ball::Ball()
 /*
  * GETTERS AND SETTERS
  */
-Position Ball::get_prediction() const {
-    return this->prediction_;
+Position Ball::getPrediction() const {
+    return m_Prediction;
 }
 
-void Ball::set_prediction(const Position &position){
-    this->prediction_ = position;
+void Ball::setPrediction(const Position& position){
+    m_Prediction = position;
 }
 
-void Ball::set_prediction(const int &x, const int &y){
-    this->prediction_.x = x;
-    this->prediction_.y = y;
+void Ball::setPrediction(const int& x, const int& y){
+    m_Prediction.x = x;
+    m_Prediction.y = y;
 }

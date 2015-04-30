@@ -10,29 +10,36 @@ namespace robok {
 
 class Fieldstate
 {
-private:
-    Goal goal_left_;
-    Goal goal_right_;
-    Ball ball_;
-    std::vector<Robot> robots_team_;
-    std::vector<Robot> robots_enemy_;
-    Position field_centre_;
-
 public:
+
     Fieldstate();
-    Goal get_goalLeft() const;
-    void set_goalLeft(const Goal &goal);
-    Goal get_goalRight() const;
-    void set_goalRight(const Goal &goal);
-    Ball get_ball() const;
-    void set_ball(const Ball &ball);
-    std::vector<Robot> get_robots_team() const;
-    void set_RobotsTeam(const std::vector<Robot> &robots);
-    Robot get_robotTeamById(int id);
-    std::vector<Robot> get_robots_enemy() const;
-    void set_RobotsEnemy(const std::vector<Robot> &robots);
-    Position get_field_centre() const;
-    void set_field_centre(const Position &position);
+
+    Goal getGoalLeft() const;
+    void setGoalLeft(const Goal& goal);
+
+    Goal getGoalRight() const;
+    void setGoalRight(const Goal &goal);
+
+    Ball getBall() const;
+    void setBall(const Ball& ball);
+
+    std::vector<Robot> getRobotsTeam() const;
+    void setRobotsTeam(const std::vector<Robot> &robots);
+    Robot getRobotTeamById(const int& id);
+
+    std::vector<Robot> getRobotsEnemy() const;
+    void setRobotsEnemy(const std::vector<Robot>& robots);
+
+    Position getFieldCenter() const;
+    void setFieldCenter(const Position& position);
+
+private:
+    Goal m_GoalLeft;
+    Goal m_GoalRight;
+    Ball m_Ball;
+    std::vector<Robot> m_RobotsTeam;
+    std::vector<Robot> m_RobotsEnemy;
+    Position m_FieldCenter;
 
 };
 

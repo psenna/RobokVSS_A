@@ -27,5 +27,5 @@ struct Position
 struct Goal
 {
     Position post_1;
-    Position post_2;
+    Position post_2;        
 };

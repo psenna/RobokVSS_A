@@ -12,19 +12,10 @@ using cv::Scalar;
 
 class Vision
 {
-private:
-    Mat frame_original_;
-    Mat frame_hsv_;
-    Mat frame_binary_;
-    CvCapture* capture_;
-    int id_camera_;
-    Vector<Position> found_[9];
-    float aImg[8]; /* pontos para a retificaçao */
-
 public:
     Vision();
-    void getData(Fieldstate *fs);
-    void set_camera_id(const int &id);
+    void getData(Fieldstate* fs);
+    void setCameraId(const int& id);
 
 private:
     bool captureImage();
@@ -32,8 +23,16 @@ private:
     void rectifyImage(float aImg[8]);
     void convertImage();
     void thresholdImage(CvScalar min, CvScalar max);
-    void renderImage(Fieldstate *fs);
-    void identifyRobot(Fieldstate *fs);
+    void renderImage(Fieldstate* fs);
+    void identifyRobot(Fieldstate* fs);
+
+    Mat m_FrameOriginal;
+    Mat m_FrameHSV;
+    Mat m_FrameBinary;
+    CvCapture* m_Capture;
+    int m_IdCamera;
+    Vector<Position> m_Found[9];
+    float aImg[8]; /* pontos para a retificaçao */
 
 };
 

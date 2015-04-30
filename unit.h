@@ -7,14 +7,17 @@ namespace robok {
 
 class Unit
 {
-private:
-    Position position_;
-
 public:
+
     Unit();
-    Position get_position() const;
-    void set_position(const Position &position);
-    void set_position(const int &x, const int &y);
+
+    Position getPosition() const;
+    void setPosition(const Position& position);
+    void setPosition(const int& x, const int& y);
+
+private:
+    Position m_Position;
+
 };
 
 } // end namespace robok
