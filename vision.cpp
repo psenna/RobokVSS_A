@@ -3,6 +3,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "find_object.hpp"
 
+// Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
+#define SIZE 2
+
 using namespace std;
 
 Vision::Vision()
@@ -107,12 +110,26 @@ void Vision::renderImage(Fieldstate *fs)
 }
 
 
-void Vision::dilateImage(){
-
+void Vision::dilateImage()
+{
+    // Tipos podem ser:
+    // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
+    // Precisamos ver qual será melhor para o projeto
+    Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
+                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
+                                            cv::Point(SIZE, SIZE));
+    cv::dilate(m_FrameBinary, m_FrameBinary, element);
 }
 
-void Vision::erodeImage(){
-
+void Vision::erodeImage()
+{
+    // Tipos podem ser:
+    // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
+    // Precisamos ver qual será melhor para o projeto
+    Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
+                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
+                                            cv::Point(SIZE, SIZE));
+    cv::erode(m_FrameBinary, m_FrameBinary, element);
 }
 
 
@@ -145,6 +162,6 @@ void Vision::identifyRobot(Fieldstate *fs){
     }
 }
 
-void Vision::setCameraId(const int &id){
+void Vision::setCameraId(const int& id){
     m_IdCamera = id;
 }
