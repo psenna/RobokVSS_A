@@ -9,6 +9,9 @@ class Ball : public Unit
 {
 private:
     Position m_Prediction;
+    
+    // Só um teste.
+    int b;
 
 public:
     Ball();
