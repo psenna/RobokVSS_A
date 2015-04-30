@@ -15,7 +15,7 @@ private:
 
 public:
     Ball();
-    Position getPrediction() const;
+    Position getPredictionNow() const;
     void setPrediction(const Position& position);
     void setPrediction(const int& x, const int& y);
 };
