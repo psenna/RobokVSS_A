@@ -7,7 +7,7 @@ using namespace std;
 
 Vision::Vision()
 {
-
+    m_VideoCapture.open(0);
 }
 
 /* get Data
@@ -18,10 +18,10 @@ Vision::Vision()
 void Vision::getData(Fieldstate *fs){
     if(captureImage()){
         //adjustImage();
-        convertImage();
-        renderImage(fs);
+        convertImage();                
+        //renderImage(fs);
         imshow("Janela 4", m_FrameOriginal);
-        cv::waitKey(0);
+        cv::waitKey(1);
     }
 }
 
@@ -38,22 +38,25 @@ void Vision::adjustImage(){
 /* faz a captura da imagem */
 bool Vision::captureImage(){
 
-    VideoCapture cap(m_IdCamera);
+    if (!m_VideoCapture.isOpened())
+        m_VideoCapture.open(m_IdCamera);
 
-    if (!cap.read(m_FrameOriginal))
+    if (!m_VideoCapture.read(m_FrameOriginal))
     {
         cout << "Please check your device." << endl;
         return false;
     }
+
     return true;
+
 }
 
 /* retifica a imagem, aWorld = limites da imagem, aWImg = limites da area a retificar */
 void Vision::rectifyImage(float aImg[8]){
     float aWorld[8] = {0, 0, m_FrameOriginal.cols, 0, 0, m_FrameOriginal.rows, m_FrameOriginal.cols, m_FrameOriginal.rows};
     CvMat mImg, mWorld;
-    cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg,0);
-    cvInitMatHeader(&mWorld, 4, 2, CV_32FC1, aWorld,0);
+    cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg, 0);
+    cvInitMatHeader(&mWorld, 4, 2, CV_32FC1, aWorld, 0);
 
     CvMat* hist = cvCreateMat(3, 3, CV_32FC1);
     cvFindHomography(&mImg, &mWorld, hist, 0, 0.0, NULL);
@@ -88,15 +91,27 @@ void Vision::thresholdImage(CvScalar min, CvScalar max)
  * 8 - bola
  */
 
+
 void Vision::renderImage(Fieldstate *fs)
 {
     for (int i = 0; i < 9; i++)
     {
         thresholdImage(cvScalar(100, 100, 100), cvScalar(200, 200, 200));
+        dilateImage();
+        erodeImage();
         m_Found[i] = DetectColors(m_FrameBinary.clone(), 80, 1, 40000);
     }
 
     identifyRobot(fs);
+
+}
+
+
+void Vision::dilateImage(){
+
+}
+
+void Vision::erodeImage(){
 
 }
 
@@ -109,11 +124,11 @@ void Vision::renderImage(Fieldstate *fs)
  */
 
 void Vision::identifyRobot(Fieldstate *fs){
-    double menor_distancia=0;
+    double menor_distancia = 0;
     int menorDistanciaId;
-    for(int i=1; i<4; i++)
+    for(int i = 1; i < 4; i++)
     {
-        for(unsigned int j=0; j<m_Found[0].size(); j++)
+        for(unsigned int j = 0; j<m_Found[0].size(); j++)
         {
             if(m_Found[i][0].distance(m_Found[0][j]) < menor_distancia || menor_distancia == 0)
             {

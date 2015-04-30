@@ -9,10 +9,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     Vision vision;
     Fieldstate *fs = NULL;
-    vision.setCameraId(0);
-    vision.getData(fs);
+
+    while (true)
+    {
+        vision.setCameraId(0);
+        vision.getData(fs);
+    }
+
 }
 
 MainWindow::~MainWindow()

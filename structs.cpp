@@ -29,3 +29,12 @@ struct Goal
     Position post_1;
     Position post_2;        
 };
+
+struct Command
+{
+    int velocidadeEsq;
+    int velodicadeDir;
+    int sentidoEsq;
+    int sentidoDir;
+    int id;
+};

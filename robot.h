@@ -14,9 +14,12 @@ public:
     Position getObjective() const;
     void setObjective(const Position& position);
     void setObjective(const int& x, const int& y);
+    Command getCommand() const;
+    void setCommand(const Command& command);
 
 private:
     Position m_Objective;
+    Command m_Command;
 
 };
 

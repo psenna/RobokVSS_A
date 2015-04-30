@@ -24,7 +24,9 @@ private:
     void convertImage();
     void thresholdImage(CvScalar min, CvScalar max);
     void renderImage(Fieldstate* fs);
-    void identifyRobot(Fieldstate* fs);
+    void identifyRobot(Fieldstate* fs);    
+    void dilateImage();
+    void erodeImage();
 
     Mat m_FrameOriginal;
     Mat m_FrameHSV;
@@ -33,6 +35,7 @@ private:
     int m_IdCamera;
     Vector<Position> m_Found[9];
     float aImg[8]; /* pontos para a retificaçao */
+    VideoCapture m_VideoCapture;
 
 };
 
