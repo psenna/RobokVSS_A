@@ -145,14 +145,14 @@ void Vision::identifyRobot(Fieldstate *fs){
     int menorDistanciaId;
     for(int i = 1; i < 4; i++)
     {
-        for(unsigned int j = 0; j<m_Found[0].size(); j++)
+        for(unsigned int j = 0; j < m_Found[0].size(); j++)
         {
             if(m_Found[i][0].distance(m_Found[0][j]) < menor_distancia || menor_distancia == 0)
             {
                 menor_distancia = m_Found[i][0].distance(m_Found[0][j]);
                 menorDistanciaId = j;
             }
-            if(menor_distancia != 0){
+            if(menor_distancia != 0) {
                 double x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 double y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
                 fs->getRobotTeamById(j).setPosition((int) x, (int) y);
