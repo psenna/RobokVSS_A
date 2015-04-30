@@ -8,14 +8,11 @@ using namespace robok;
 class Ball : public Unit
 {
 private:
-    Position m_Prediction;
-    
-    // Só um teste.
-    int b;
+    Position m_Prediction;   
 
 public:
     Ball();
-    Position getPredictionNow() const;
+    Position getPrediction() const;
     void setPrediction(const Position& position);
     void setPrediction(const int& x, const int& y);
 };
