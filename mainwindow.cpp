@@ -10,13 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    Vision vision;
+    Vision *vision = Vision::getInstance();
     Fieldstate *fs = NULL;
 
     while (true)
     {
-        vision.setCameraId(0);
-        vision.getData(fs);
+        vision->setCameraId(0);
+        vision->getData(fs);
     }
 
 }

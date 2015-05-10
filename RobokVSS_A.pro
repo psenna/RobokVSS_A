@@ -17,9 +17,10 @@ SOURCES += main.cpp\
     ball.cpp \
     fieldstate.cpp \
     robot.cpp \
-    structs.cpp \
     unit.cpp \
-    vision.cpp
+    vision.cpp \
+    renderthread.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     ball.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     robot.h \
     unit.h \
     vision.h \
-    find_object.hpp
+    renderthread.h \
+    floodfill.hpp
 
 FORMS    += mainwindow.ui
 

@@ -1,16 +1,30 @@
 #include "vision.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "find_object.hpp"
 
 // Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
 #define SIZE 2
 
 using namespace std;
 
+Vision* Vision::m_Instance = 0;
+
 Vision::Vision()
 {
     m_VideoCapture.open(0);
+
+    for (int i = 0; i < 9; i++)
+    {
+        m_RenderThreads[i].setMinMax(cvScalar(0, 0, 0), cvScalar(100, 100, 100));
+        m_RenderThreads[i].setNumber(i);
+    }
+}
+
+Vision* Vision::getInstance()
+{
+    if (!m_Instance)
+        m_Instance = new Vision();
+    return m_Instance;
 }
 
 /* get Data
@@ -78,9 +92,11 @@ void Vision::convertImage()
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
-void Vision::thresholdImage(CvScalar min, CvScalar max)
+cv::Mat Vision::thresholdImage(CvScalar min, CvScalar max)
 {
-    inRange(m_FrameHSV, (Scalar) min, (Scalar) max, m_FrameBinary);
+    cv::Mat binaryFrame;
+    inRange(m_FrameHSV, (Scalar) min, (Scalar) max, binaryFrame);
+    return binaryFrame;
 }
 
 /*  Render Image
@@ -97,39 +113,38 @@ void Vision::thresholdImage(CvScalar min, CvScalar max)
 
 void Vision::renderImage(Fieldstate *fs)
 {
-    for (int i = 0; i < 9; i++)
-    {
-        thresholdImage(cvScalar(100, 100, 100), cvScalar(200, 200, 200));
-        dilateImage();
-        erodeImage();
-        m_Found[i] = DetectColors(m_FrameBinary.clone(), 80, 1, 40000);
-    }
+    for (int i = 0; i < 9; i++)    
+        m_RenderThreads[i].start();
 
     identifyRobot(fs);
 
 }
 
 
-void Vision::dilateImage()
+cv::Mat Vision::dilateImage(const cv::Mat &binaryFrame)
 {
+    Mat result;
+
     // Tipos podem ser:
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
                                             cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
-    cv::dilate(m_FrameBinary, m_FrameBinary, element);
+    cv::dilate(binaryFrame, result, element);
 }
 
-void Vision::erodeImage()
+cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
 {
+    Mat result;
+
     // Tipos podem ser:
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
                                             cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
-    cv::erode(m_FrameBinary, m_FrameBinary, element);
+    cv::erode(binaryFrame, result, element);
 }
 
 

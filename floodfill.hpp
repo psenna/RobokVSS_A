@@ -1,5 +1,5 @@
-#ifndef ENCONTRAOBJETO3_HPP
-#define ENCONTRAOBJETO3_HPP
+#ifndef FLOODFILL_HPP
+#define FLOODFILL_HPP
 
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
@@ -136,4 +136,4 @@ std::vector<Position> DetectColors(Mat frameBin, int min_size, unsigned int numb
     return objects;
 }
 
-#endif // ENCONTRAOBJETO3_HPP
+#endif // FLOODFILL_HPP
