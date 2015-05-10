@@ -98,6 +98,7 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         object.y = centObj.y/pixels_counter;
         objects.push_back(object);
     }
+
 }
 
 std::vector<Position> DetectColors(Mat frameBin, int min_size, unsigned int number_of_objects, int max_size)

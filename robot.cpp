@@ -10,11 +10,11 @@ Position Robot::getObjective() const{
     return m_Objective;
 }
 
-void Robot::setObjective(const Position& position){
+void Robot::setObjective(const Position &position){
     m_Objective = position;
 }
 
-void Robot::setObjective(const int& x, const int& y){
+void Robot::setObjective(const int &x, const int &y){
     m_Objective.x = x;
     m_Objective.y = y;
 }
@@ -24,7 +24,7 @@ Command Robot::getCommand() const
     return m_Command;
 }
 
-void Robot::setCommand(const Command& command)
+void Robot::setCommand(const Command &command)
 {
     m_Command = command;
 }

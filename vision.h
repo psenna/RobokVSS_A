@@ -16,7 +16,7 @@ class Vision
 public:
     static Vision* getInstance();
     void getData(Fieldstate *fs);
-    void setCameraId(const int& id);
+    void setCameraId(const int &id);
 
     friend class RenderThread;
 

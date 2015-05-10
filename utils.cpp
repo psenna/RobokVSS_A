@@ -26,15 +26,15 @@ struct Position
 
 struct Goal
 {
-    Position post_1;
-    Position post_2;        
+    Position GoalPost_1;
+    Position GoalPost_2;
 };
 
 struct Command
 {
-    int velocidadeEsq;
-    int velodicadeDir;
-    int sentidoEsq;
-    int sentidoDir;
-    int id;
+    int SpeedLeft;
+    int SpeedRight;
+    int OrientationLeft;
+    int OrientationRight;
+    int ID;
 };

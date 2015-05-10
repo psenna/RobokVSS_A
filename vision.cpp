@@ -177,6 +177,6 @@ void Vision::identifyRobot(Fieldstate *fs){
     }
 }
 
-void Vision::setCameraId(const int& id){
+void Vision::setCameraId(const int &id){
     m_IdCamera = id;
 }

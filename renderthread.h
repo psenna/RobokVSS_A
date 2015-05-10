@@ -9,9 +9,15 @@ class RenderThread : public QThread
 public:
     RenderThread();
 
+    void run();
+
     int getNumber() const;
     void setNumber(const int &number);
-    void run();
+
+    CvScalar getMax() const;
+    CvScalar getMin() const;
+    void setMax(const CvScalar &max);
+    void setMin(const CvScalar &min);
     void setMinMax(const CvScalar &min, const CvScalar &max);
 
 private:
