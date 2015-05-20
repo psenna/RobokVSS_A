@@ -1,4 +1,4 @@
-#ifndef FLOODFILL_HPP
+﻿#ifndef FLOODFILL_HPP
 #define FLOODFILL_HPP
 
 #include "opencv2/highgui/highgui.hpp"
@@ -17,28 +17,27 @@ std::vector<Position> DetectColors(Mat frameBin, int min_size, unsigned int numb
 
 
 
-void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects, int min_size, int max_size)
+void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects, int min_size, int max_size) //realiza o FloodFill em uma area fechada branca
 {
-    Point centObj;
-    int pixels_counter = 1;
-    std::stack<int> pilhaL, pilhaC;
-    pilhaL.push(l);
-    pilhaC.push(c);
+    Point centObj;  //centro da area branca
+    int pixels_counter = 1;	//contador para determinar a quantidade de pixels brancos dentro da area
+    std::stack<int> pilhaL, pilhaC;	//pilhas para controle de pontos ja processados. As duas pilhas representam as coordenadas x (coluna) e y (linha) de um ponto
+    pilhaL.push(l);	//adiciona o primeiro ponto a pilha (coordenada y)
+    pilhaC.push(c);	//adiciona o primeiro ponto a pilha (coordenada x)
     frameBin.at<char>(l, c) = 0;
 
-    while (pilhaC.size() > 0) {
-        l = pilhaL.top();
-        c = pilhaC.top();
-        centObj.x += c;
-        centObj.y += l;
-        pilhaL.pop();
-        pilhaC.pop();
+    while (pilhaC.size() > 0) {		//enquanto houver pontos na pilha
+        l = pilhaL.pop();		
+        c = pilhaC.pop();
+        centObj.x += c;			//soma as coordenadas x
+        centObj.y += l;			//e y para futuramente realizar uma media aritmetica
 
+					//Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
         if (frameBin.at<char>(l+1, c) != 0) {
-            pilhaL.push(l+1);
-            pilhaC.push(c);
-            frameBin.at<char>(l+1, c) = 0;
-            pixels_counter++;
+            pilhaL.push(l+1);			//se sim adiciona as coordenadas y
+            pilhaC.push(c);			//e x deste ponto as respectivas pilhas
+            frameBin.at<char>(l+1, c) = 0;	//pinta de preto cada ponto já processado
+            pixels_counter++;			//aumenta o contador de pixels brancos dentro desta area branca
         }
 
         if (frameBin.at<char>(l-1, c) != 0) {
@@ -91,12 +90,12 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         }
     } // end while
 
-    if (pixels_counter > min_size && pixels_counter < max_size) {
-        Position object;
-        object.number_of_pixels = pixels_counter;
-        object.x = centObj.x/pixels_counter;
-        object.y = centObj.y/pixels_counter;
-        objects.push_back(object);
+    if (pixels_counter > min_size && pixels_counter < max_size) { //Verifica se a quantidade de pixels dentro da area branca esta dentro de um intervalo predefinido
+        Position object;		//cria-se um novo objeto
+        object.number_of_pixels = pixels_counter;	//seta a quantidade de pixels
+        object.x = centObj.x/pixels_counter;		//seta suas coordenadas x
+        object.y = centObj.y/pixels_counter;		// e y usando a media aritmetica de todas as coordenadas somadas pela quantidade de pixels
+        objects.push_back(object);			//adiciona o objeto ao vetor de todas as areas brancas fechadas ja encontradas
     }
 
 }
