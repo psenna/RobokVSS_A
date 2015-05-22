@@ -27,10 +27,12 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
     frameBin.at<char>(l, c) = 0;
 
     while (pilhaC.size() > 0) {		//enquanto houver pontos na pilha
-        l = pilhaL.pop();		
-        c = pilhaC.pop();
+        l = pilhaL.top();
+        c = pilhaC.top();       //processar o proximo ponto no topo da pilha
         centObj.x += c;			//soma as coordenadas x
         centObj.y += l;			//e y para futuramente realizar uma media aritmetica
+        pilhaC.pop();
+        pilhaL.pop();           //remover o ponto a processar da pilha
 
 					//Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
         if (frameBin.at<char>(l+1, c) != 0) {
