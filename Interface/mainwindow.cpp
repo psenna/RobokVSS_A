@@ -4,14 +4,13 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <vector>
-#include <pthread.h>
-#include <stdio.h>
 
 using namespace cv;
 
 Vision *vision; //*****BUGOU NA HORA DE COLOCAR COMO ATRIBUTO DE MAINWINDOW.H*****
 
 QImage IplImage2QImage(const IplImage *iplImage);
+QImage Mat2QImage(Mat matImg);
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -20,24 +19,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->showMaximized();
 
     vision = Vision::getInstance();
+    Fieldstate *fs = NULL;
 
     display1 = &vision->m_FrameOriginal;
-    display2 = &matNula;
+    display2 = &vision->m_FrameBinary;
+    vision->setCameraId(0);
+
+    on_radioButton_clicked();
 }
 
-void *MainWindow::display(){
-    Vision::getInstance()->setCameraId(0);
-    while(Vision::getInstance()->captureImage()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*display1)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*display2)));
-    }
-}
-
-void *MainWindow::display_helper(void *param){ //http://stackoverflow.com/questions/1151582/pthread-function-from-a-class
-    return ((MainWindow *)param)->display();
-}
-
-QImage MainWindow::Mat2QImage(Mat matImg){  //simplesmente converte Mat->IplImage->QImage
+QImage Mat2QImage(Mat matImg){  //simplesmente converte Mat->IplImage->QImage
     IplImage img = (matImg);
     QImage qImg = IplImage2QImage(&img);
     return qImg;
@@ -107,38 +98,49 @@ QImage IplImage2QImage(const IplImage *iplImage)
 void MainWindow::on_radioButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
-
-    display1 = &vision->m_FrameOriginal;
-    display2 = &vision->m_FrameBinary;
+    ui->label_3->clear();
+    while(vision->captureImage() && ui->radioButton->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
 }
 
 void MainWindow::on_radioButton_2_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 
-    display1 = &vision->m_FrameOriginal;
-    display2 = &vision->m_FrameOriginal; //frameretificado
+    while(vision->captureImage() && ui->radioButton_2->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
 }
 
 void MainWindow::on_radioButton_3_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
 
-    display1 = &vision->m_FrameOriginal;
-    display2 = &vision->m_FrameBinary;
+    while(vision->captureImage() && ui->radioButton_3->isChecked()){
+        vision->calibrate(0);
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameBinary)));
+    }
 }
 
 void MainWindow::on_radioButton_4_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
 
-    display1 = &vision->m_FrameOriginal;
-    display2 = &vision->m_FrameOriginal;    //pintado nele os pontos de ajuste
+    while(vision->captureImage() && ui->radioButton_4->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
 }
 
 void MainWindow::on_radioButton_5_clicked()
 {
     ui->stackedWidget->setCurrentIndex(4);
-    display1 = &vision->m_FrameOriginal;
-    display2 = &matNula;
+
+    while(vision->captureImage() && ui->radioButton_5->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
 }

@@ -18,9 +18,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void capturar();
-    QImage Mat2QImage(Mat matImg);
-    void *display();
-    static void *display_helper(void *param);
 
 private slots:
     void on_radioButton_clicked();
@@ -37,7 +34,6 @@ private:
     Ui::MainWindow *ui;
     Mat *display1;
     Mat *display2;
-    Mat matNula;
 };
 
 #endif // MAINWINDOW_H

@@ -5,10 +5,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "fieldstate.h"
 #include "renderthread.h"
-#include "Interface/mainwindow.h"
+#include <vector>
 
 using cv::Mat;
-using cv::Vector;
 using cv::VideoCapture;
 using cv::Scalar;
 
@@ -17,20 +16,26 @@ class Vision
 public:
     static Vision* getInstance();
     void getData(Fieldstate *fs);
+    void calibrate(int id);
+    void retification();
     void setCameraId(const int &id);
+    void setMinMax(CvScalar min, CvScalar max, int id);
+    bool captureImage();
+    CvScalar getMin(int id);
+    CvScalar getMax(int id);
+    void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
 
     friend class RenderThread;
     friend class MainWindow;
 
 private:
     Vision();
-    bool captureImage();
     void adjustImage();
-    void rectifyImage(float aImg[8]);
-    void convertImage();
+    void rectifyImage();
+    void convertImage();    
     void renderImage(Fieldstate *fs);
     void identifyRobot(Fieldstate *fs);
-    Mat thresholdImage(CvScalar min, CvScalar max);
+    Mat thresholdImage(Scalar min, Scalar max);
     Mat dilateImage(const Mat &binaryFrame);
     Mat erodeImage(const Mat &binaryFrame);
 
@@ -40,9 +45,12 @@ private:
     Mat m_FrameBinary;
     CvCapture* m_Capture;
     int m_IdCamera;
-    Vector<Position> m_Found[9];
+
+    std::vector<Position> m_Found[9];
     float aImg[8]; /* pontos para a retificaçao */
     VideoCapture m_VideoCapture;
+    CvScalar m_Max[9];
+    CvScalar m_Min[9];
     RenderThread m_RenderThreads[9];
 
 };

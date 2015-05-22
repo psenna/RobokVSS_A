@@ -106,8 +106,14 @@ border-right: white</string>
       </item>
       <item>
        <widget class="QRadioButton" name="radioButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Settings</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
