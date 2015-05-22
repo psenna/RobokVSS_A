@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     ui = (new Ui::MainWindow);
     ui->setupUi(this);
+    this->setWindowTitle("Robok VSS System");
     this->showMaximized();
 
     vision = Vision::getInstance();
@@ -117,11 +118,32 @@ void MainWindow::on_radioButton_2_clicked()
 void MainWindow::on_radioButton_3_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+    int id = 0;
+    int h1, h2, s1, s2, v1, v2;
 
     while(vision->captureImage() && ui->radioButton_3->isChecked()){
-        vision->calibrate(0);
+        vision->calibrate(id);
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameBinary)));
+
+        if(ui->radioButton_6->isChecked()) id = 0;
+        if(ui->radioButton_7->isChecked()) id = 4;
+        if(ui->radioButton_8->isChecked()) id = 1;
+        if(ui->radioButton_9->isChecked()) id = 2;
+        if(ui->radioButton_10->isChecked()) id = 3;
+        if(ui->radioButton_11->isChecked()) id = 5;
+        if(ui->radioButton_12->isChecked()) id = 6;
+        if(ui->radioButton_13->isChecked()) id = 7;
+        if(ui->radioButtonBall->isChecked()) id = 8;
+
+        h1 = ui->horizontalSliderh1->value();
+        h2 = ui->horizontalSliderh2->value();
+        s1 = ui->horizontalSliders1->value();
+        s2 = ui->horizontalSliders2->value();
+        v1 = ui->horizontalSliderv1->value();
+        v2 = ui->horizontalSliderv2->value();
+
+        vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
     }
 }
 

@@ -43,8 +43,8 @@ border-right: 3px solid black;</string>
     <widget class="QWidget" name="verticalWidget" native="true">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>220</y>
+       <x>50</x>
+       <y>210</y>
        <width>160</width>
        <height>307</height>
       </rect>
@@ -57,14 +57,17 @@ border-right: white</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <spacer name="verticalSpacer">
+         <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -81,10 +84,13 @@ border-right: white</string>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -96,10 +102,13 @@ border-right: white</string>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>10</height>
          </size>
         </property>
        </spacer>
@@ -118,14 +127,17 @@ border-right: white</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer name="horizontalSpacer_7">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>10</height>
          </size>
         </property>
        </spacer>
@@ -138,14 +150,17 @@ border-right: white</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_2">
+       <spacer name="horizontalSpacer_21">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>10</height>
          </size>
         </property>
        </spacer>
@@ -158,14 +173,17 @@ border-right: white</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_3">
+       <spacer name="horizontalSpacer_22">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>10</height>
          </size>
         </property>
        </spacer>
@@ -178,14 +196,17 @@ border-right: white</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_4">
+       <spacer name="horizontalSpacer_23">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>10</height>
          </size>
         </property>
        </spacer>
@@ -205,7 +226,7 @@ border-right: white</string>
        <x>10</x>
        <y>10</y>
        <width>221</width>
-       <height>211</height>
+       <height>201</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -218,15 +239,14 @@ border-right: white</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>550</y>
+      <y>520</y>
       <width>1361</width>
-      <height>221</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(255, 255, 255);
-border-top: 3px solid black;
-border-left: 2px solid black</string>
+border-top: 3px solid black;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -240,7 +260,7 @@ border-left: 2px solid black</string>
        <x>-1</x>
        <y>-1</y>
        <width>991</width>
-       <height>221</height>
+       <height>241</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -250,7 +270,7 @@ border-left: 2px solid black</string>
          <string notr="true">border-left: 2px rgb(0, 0, 0);</string>
         </property>
         <property name="currentIndex">
-         <number>4</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="Settings">
          <property name="styleSheet">
@@ -259,8 +279,8 @@ border-left: 2px solid black</string>
          <widget class="QWidget" name="horizontalLayoutWidget">
           <property name="geometry">
            <rect>
-            <x>240</x>
-            <y>10</y>
+            <x>250</x>
+            <y>30</y>
             <width>581</width>
             <height>181</height>
            </rect>
@@ -742,8 +762,8 @@ border-color: white;</string>
          <widget class="QPushButton" name="pushButton_5">
           <property name="geometry">
            <rect>
-            <x>670</x>
-            <y>90</y>
+            <x>470</x>
+            <y>160</y>
             <width>111</width>
             <height>27</height>
            </rect>
@@ -758,8 +778,8 @@ border-color: white;</string>
          <widget class="QPushButton" name="pushButton_6">
           <property name="geometry">
            <rect>
-            <x>670</x>
-            <y>50</y>
+            <x>310</x>
+            <y>160</y>
             <width>111</width>
             <height>27</height>
            </rect>
@@ -796,6 +816,9 @@ border-color: white;</string>
                <property name="text">
                 <string>Blue</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -806,20 +829,11 @@ border-color: white;</string>
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_8">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+              <widget class="QRadioButton" name="radioButtonBall">
+               <property name="text">
+                <string>Ball</string>
                </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>107</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
+              </widget>
              </item>
             </layout>
            </item>
@@ -889,6 +903,120 @@ border-color: white;</string>
               </widget>
              </item>
             </layout>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="formLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>670</x>
+            <y>10</y>
+            <width>311</width>
+            <height>188</height>
+           </rect>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_27">
+             <property name="text">
+              <string>H1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSlider" name="horizontalSliderh1">
+             <property name="maximum">
+              <number>180</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_28">
+             <property name="text">
+              <string>H2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSlider" name="horizontalSliderh2">
+             <property name="maximum">
+              <number>180</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_29">
+             <property name="text">
+              <string>S1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_30">
+             <property name="text">
+              <string>S2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_31">
+             <property name="text">
+              <string>V1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_32">
+             <property name="text">
+              <string>V2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSlider" name="horizontalSliders1">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSlider" name="horizontalSliders2">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QSlider" name="horizontalSliderv1">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSlider" name="horizontalSliderv2">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1337,7 +1465,7 @@ border-color: white;</string>
       <x>239</x>
       <y>0</y>
       <width>1121</width>
-      <height>551</height>
+      <height>521</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -1355,10 +1483,10 @@ border-color: white;</string>
        <widget class="QLabel" name="label_2">
         <property name="geometry">
          <rect>
-          <x>6</x>
-          <y>6</y>
+          <x>10</x>
+          <y>20</y>
           <width>541</width>
-          <height>531</height>
+          <height>481</height>
          </rect>
         </property>
         <property name="text">
@@ -1382,9 +1510,9 @@ border-color: white;</string>
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>10</y>
+          <y>20</y>
           <width>541</width>
-          <height>531</height>
+          <height>491</height>
          </rect>
         </property>
         <property name="text">

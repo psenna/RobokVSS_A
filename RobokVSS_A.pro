@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     vision.cpp \
     renderthread.cpp \
     utils.cpp \
-    Interface/mainwindow.cpp
+    Interface/mainwindow.cpp \
+    mouse.cpp
 
 HEADERS  += \
     ball.h \
@@ -30,7 +31,8 @@ HEADERS  += \
     vision.h \
     renderthread.h \
     floodfill.hpp \
-    Interface/mainwindow.h
+    Interface/mainwindow.h \
+    mouse.h
 
 FORMS    += \
     Interface/mainwindow.ui
