@@ -13,27 +13,32 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     ball.cpp \
     fieldstate.cpp \
     robot.cpp \
     unit.cpp \
     vision.cpp \
     renderthread.cpp \
-    utils.cpp
+    utils.cpp \
+    Interface/mainwindow.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     ball.h \
     fieldstate.h \
     robot.h \
     unit.h \
     vision.h \
     renderthread.h \
-    floodfill.hpp
+    floodfill.hpp \
+    Interface/mainwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += \
+    Interface/mainwindow.ui
 
 LIBS += `pkg-config opencv --libs`
 
 DISTFILES += \
     README.md
+
+RESOURCES += \
+    Interface/robok.qrc

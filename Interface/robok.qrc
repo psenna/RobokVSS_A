@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/fieldAdjust.png</file>
+        <file>resources/rectifyImage.jpg</file>
+        <file>resources/robokLogo.png</file>
+    </qresource>
+</RCC>

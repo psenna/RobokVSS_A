@@ -63,7 +63,6 @@ bool Vision::captureImage(){
         cout << "Please check your device." << endl;
         return false;
     }
-
     return true;
 
 }

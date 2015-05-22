@@ -5,6 +5,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "fieldstate.h"
 #include "renderthread.h"
+#include "Interface/mainwindow.h"
 
 using cv::Mat;
 using cv::Vector;
@@ -19,13 +20,14 @@ public:
     void setCameraId(const int &id);
 
     friend class RenderThread;
+    friend class MainWindow;
 
 private:
     Vision();
     bool captureImage();
     void adjustImage();
     void rectifyImage(float aImg[8]);
-    void convertImage();    
+    void convertImage();
     void renderImage(Fieldstate *fs);
     void identifyRobot(Fieldstate *fs);
     Mat thresholdImage(CvScalar min, CvScalar max);
