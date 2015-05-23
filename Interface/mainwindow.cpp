@@ -153,20 +153,82 @@ void MainWindow::on_buttonLoadCalib_clicked()
 void MainWindow::mousePressEvent( QMouseEvent* ev )
 {
     if(ui->radioButton_3->isChecked()){
-        if(ev->button() & Qt::RightButton){
+
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
 
-        if(vec[0]-15 < 0) vec[0] = 15; if(vec[0]+15 > 180) vec[0] = 165;
-        if(vec[1]-15 < 0) vec[1] = 15; if(vec[1]+15 > 255) vec[1] = 240;
-        if(vec[2]-15 < 0) vec[2] = 15; if(vec[2]+15 > 255) vec[2] = 240;
+        if(ev->button() & Qt::LeftButton){ //setHsvInterval
+            if(vec[0]-15 < 0) vec[0] = 15; if(vec[0]+15 > 180) vec[0] = 165;
+            if(vec[1]-15 < 0) vec[1] = 15; if(vec[1]+15 > 255) vec[1] = 240;
+            if(vec[2]-15 < 0) vec[2] = 15; if(vec[2]+15 > 255) vec[2] = 240;
 
-        ui->horizontalSliderh1->setValue(vec[0]-15); ui->horizontalSliderh2->setValue(vec[0]+15);
-        ui->horizontalSliders1->setValue(vec[1]-15); ui->horizontalSliders2->setValue(vec[1]+15);
-        ui->horizontalSliderv1->setValue(vec[2]-15); ui->horizontalSliderv2->setValue(vec[2]+15);
+            ui->horizontalSliderh1->setValue(vec[0]-15); ui->horizontalSliderh2->setValue(vec[0]+15);
+            ui->horizontalSliders1->setValue(vec[1]-15); ui->horizontalSliders2->setValue(vec[1]+15);
+            ui->horizontalSliderv1->setValue(vec[2]-15); ui->horizontalSliderv2->setValue(vec[2]+15);
+
+            Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), 1);
         }
-        else if(ev->button() & Qt::LeftButton){
-            //implementar add intervalo HSV
+        else if(ev->button() & Qt::RightButton){ //addHSVInterval
+            int h1 = vision->getMin(1).val[0];
+            int h2 = vision->getMax(1).val[0];
+            int s1 = vision->getMin(1).val[1];
+            int s2 = vision->getMax(1).val[1];
+            int v1 = vision->getMin(1).val[2];
+            int v2 = vision->getMax(1).val[2];
+
+            if(vec[0]-15 > 0 && vec[0]-15 < h1){
+                h1 = vec[0] - 15;
+            }else{
+                if(vec[0]-15 < 0){
+                    h1 = 0;
+                }
+            }
+
+            if(vec[0]+15 < 180 && vec[0]+15 > h2){
+                h2 = vec[0] + 15;
+            }else{
+                if(vec[0]+15 > 180){
+                    h2 = 180;
+                }
+            }
+
+            if(vec[1]-15 > 0 && vec[1]-15 < s1){
+                s1 = vec[1] - 15;
+            }else{
+                if(vec[1]-15 < 0){
+                    s1 = 0;
+                }
+            }
+
+            if(vec[1]+15 < 255 && vec[1]+15 > s2){
+                s2 = vec[1] + 15;
+            }else{
+                if(vec[1]+15 > 255){
+                    s2 = 255;
+                }
+            }
+
+            if(vec[2]-15 > 0 && vec[2]-15 < v1){
+                v1 = vec[2] - 15;
+            }else{
+                if(vec[2]-15 < 0){
+                    v1 = 0;
+                }
+            }
+
+            if(vec[2]+15 < 255 && vec[2]+15 > v2){
+                v2 = vec[2] + 15;
+            }else{
+                if(vec[2]+15 > 255){
+                    v2 = 255;
+                }
+            }
+
+            ui->horizontalSliderh1->setValue(h1); ui->horizontalSliderh2->setValue(h2);
+            ui->horizontalSliders1->setValue(s1); ui->horizontalSliders2->setValue(s2);
+            ui->horizontalSliderv1->setValue(v1); ui->horizontalSliderv2->setValue(v2);
+
+            Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), 1);
         }
     }
 }
