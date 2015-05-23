@@ -48,7 +48,7 @@ void RenderThread::run()
     Vision *vision = Vision::getInstance();
 
     // Obter frame binarizado com os intervalos min e max
-    binaryFrame = vision->thresholdImage(m_Min, m_Max);
+    binaryFrame = vision->thresholdImage((Scalar) vision->getMin(m_Number), (Scalar) vision->getMax(m_Number));
 
     // Aplicar dilatação no frame binarizado
     binaryFrame = vision->dilateImage(binaryFrame);

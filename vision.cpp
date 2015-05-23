@@ -1,6 +1,8 @@
 #include "vision.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <sys/time.h>
+#include <mouse.h>
 
 // Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
 #define SIZE 2
@@ -9,13 +11,20 @@ using namespace std;
 
 Vision* Vision::m_Instance = 0;
 
+double tempo()
+{
+    struct timeval tv;
+    gettimeofday(&tv,0);
+    return tv.tv_sec + tv.tv_usec/1e6;
+}
+
 Vision::Vision()
 {
-    m_VideoCapture.open(0);
+    m_VideoCapture.open(1);
 
     for (int i = 0; i < 9; i++)
     {
-        m_RenderThreads[i].setMinMax(cvScalar(0, 0, 0), cvScalar(100, 100, 100));
+        this->setMinMax(cvScalar(0, 0, 0), cvScalar(0, 0, 0), i);
         m_RenderThreads[i].setNumber(i);
     }
 }
@@ -34,11 +43,50 @@ Vision* Vision::getInstance()
  */
 void Vision::getData(Fieldstate *fs){
     if(captureImage()){
+
+        double ti,tf; // ti = tempo inicial // tf = tempo final
+        ti = tempo();
+
         //adjustImage();
-        convertImage();                
-        //renderImage(fs);
-        imshow("Janela 4", m_FrameOriginal);
+        convertImage();
+        renderImage(fs);
+
+
+        tf = tempo();
+        cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
+
+        cv::setMouseCallback("Resultado", mouseEvent, &m_FrameHSV);
+
+        std::cout << "size: " << this->m_Found[1].size() << std::endl;
+        if(m_Found[1].size() > 0){
+            std::cout << "tam: " << this->m_Found[1].at(0).number_of_pixels << std::endl;
+            cv::circle(m_FrameOriginal, cvPoint(m_Found[1].at(0).x, m_Found[1].at(0).y), 10, cvScalar(255,0,0));
+        }
+
+        imshow("Resultado", m_FrameOriginal);
+
         cv::waitKey(1);
+    }
+}
+
+void Vision::calibrate(int id){
+    if(captureImage()){
+        //adjustImage();
+        convertImage();
+
+        //cv::setMouseCallback("Original Frame", mouseEvent, &m_FrameHSV);
+
+        m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
+        m_FrameBinary = erodeImage(m_FrameBinary);
+        m_FrameBinary = dilateImage(m_FrameBinary);
+    }
+}
+
+void Vision::retification(){
+    if(captureImage()){
+        convertImage();
+        setRetificationsParam(0,0,m_FrameOriginal.cols,0,0, m_FrameOriginal.rows,m_FrameOriginal.cols,m_FrameOriginal.rows);
+        rectifyImage();
     }
 }
 
@@ -47,8 +95,7 @@ void Vision::getData(Fieldstate *fs){
  * brilho, contraste, saturaçao e retificaçao.
  */
 void Vision::adjustImage(){
-    float aImg[8] = {0.0, 0, m_FrameOriginal.cols/2, 0, 0, m_FrameOriginal.rows/2, m_FrameOriginal.cols/2, m_FrameOriginal.rows/2};
-    rectifyImage(aImg);
+    rectifyImage();
 }
 
 
@@ -63,12 +110,13 @@ bool Vision::captureImage(){
         cout << "Please check your device." << endl;
         return false;
     }
+    cvWaitKey(1);
     return true;
 
 }
 
 /* retifica a imagem, aWorld = limites da imagem, aWImg = limites da area a retificar */
-void Vision::rectifyImage(float aImg[8]){
+void Vision::rectifyImage(){
     float aWorld[8] = {0, 0, m_FrameOriginal.cols, 0, 0, m_FrameOriginal.rows, m_FrameOriginal.cols, m_FrameOriginal.rows};
     CvMat mImg, mWorld;
     cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg, 0);
@@ -91,16 +139,18 @@ void Vision::convertImage()
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
-cv::Mat Vision::thresholdImage(CvScalar min, CvScalar max)
+cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
 {
     cv::Mat binaryFrame;
-    inRange(m_FrameHSV, (Scalar) min, (Scalar) max, binaryFrame);
+    inRange(m_FrameHSV, min, max, binaryFrame);
+
     return binaryFrame;
 }
 
 /*  Render Image
  * método que chama a binarizaçao de todas as imagens
  * e guarda a posicao das cores encontradas no vetor 'encontrados'.
+ *  H: 0 - 180  S: 0 - 255  V: 0 - 255
  *
  * índices de encontrados:
  * 0 e 4 - cor time nosso e adversário respectivamente
@@ -109,13 +159,13 @@ cv::Mat Vision::thresholdImage(CvScalar min, CvScalar max)
  * 8 - bola
  */
 
-
 void Vision::renderImage(Fieldstate *fs)
 {
     for (int i = 0; i < 9; i++)    
         m_RenderThreads[i].start();
 
-    identifyRobot(fs);
+
+    //identifyRobot(fs);
 
 }
 
@@ -131,6 +181,7 @@ cv::Mat Vision::dilateImage(const cv::Mat &binaryFrame)
                                             cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::dilate(binaryFrame, result, element);
+    return result;
 }
 
 cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
@@ -144,6 +195,7 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
                                             cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::erode(binaryFrame, result, element);
+    return result;
 }
 
 
@@ -178,4 +230,36 @@ void Vision::identifyRobot(Fieldstate *fs){
 
 void Vision::setCameraId(const int &id){
     m_IdCamera = id;
+}
+
+void Vision::setMinMax(CvScalar min, CvScalar max, int id){
+    m_Min[id] = min;
+    m_Max[id] = max;
+}
+
+CvScalar Vision::getMin(int id){
+    return this->m_Min[id];
+}
+
+CvScalar Vision::getMax(int id){
+    return this->m_Max[id];
+}
+
+void Vision::setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h){
+    aImg[0] = a;
+    aImg[1] = b;
+    aImg[2] = c;
+    aImg[3] = d;
+    aImg[4] = e;
+    aImg[5] = f;
+    aImg[6] = g;
+    aImg[7] = h;
+}
+
+CvScalar* Vision::getAllMin(){
+    return m_Min;
+}
+
+CvScalar* Vision::getAllMax(){
+    return m_Max;
 }
