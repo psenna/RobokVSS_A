@@ -5,6 +5,10 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "read_write.h"
 #include <vector>
+#include <QMouseEvent>
+#include <QtWidgets/QMessageBox>
+
+#include <stdio.h>
 
 using namespace cv;
 
@@ -26,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     display1 = &vision->m_FrameOriginal;
     display2 = &vision->m_FrameBinary;
     vision->setCameraId(0);
-
     on_radioButton_clicked();
 }
 
@@ -35,37 +38,6 @@ QImage Mat2QImage(Mat matImg){  //simplesmente converte Mat->IplImage->QImage
     QImage qImg = IplImage2QImage(&img);
     return qImg;
 }
-
-void MainWindow::capturar(){
-    CvCapture *cap;     //cria um objeto do tipo CvCapture para captar as imagens a cam
-    cap = cvCaptureFromCAM(0);   //seta que a captura ocorrera no dispositivo video0(por default é a webcam do note)
-    IplImage *frame, *hsv, *img, *bin;   //cria um objeto de imagem, para guardar a imagem capturada;
-    frame = cvQueryFrame(cap);  //faz a requisição de um frame e o guarda no objeto préviamente instanciado
-
-    while(frame){    //enquanto frame nao for null, ou seja, houver alguma imagem
-        cvWaitKey(10);   //aguarda 10 microseg.
-        img = cvCloneImage(frame);  //clona a imagem capturada (sem isso não funciona)
-        hsv = cvCloneImage(frame);  //clona
-
-        cvCvtColor(img, hsv, CV_BGR2HSV);  //converte a img original em hsv e guarda em imagem.hsv
-
-        // isso nao é importante agora, somente um método pra colocar imagem em uma label, já que o opencv nao dispoe de outro recurso pra colocar video na UI
-        QImage qimg;
-        qimg = IplImage2QImage(img);
-        ui->label_2->setPixmap(QPixmap::fromImage(qimg));
-        qimg = IplImage2QImage(hsv);
-        ui->label_3->setPixmap(QPixmap::fromImage(qimg));
-
-
-        cvReleaseImage(&hsv);
-        cvReleaseImage(&img); //desaloca a memória
-        frame = cvQueryFrame(cap);  // frame recebe uma nova imagem da captura.
-    }
-
-    cvReleaseCapture(&cap); //desaloca o espaço alocado pra captura.
-}
-
-
 
 MainWindow::~MainWindow()
 {
@@ -177,6 +149,28 @@ void MainWindow::on_buttonLoadCalib_clicked()
     }
     atualizaSliders(-1);
 }
+
+void MainWindow::mousePressEvent( QMouseEvent* ev )
+{
+    if(ui->radioButton_3->isChecked()){
+        if(ev->button() & Qt::RightButton){
+        QPoint P = ui->label_2->mapFrom(this, ev->pos());
+        cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
+
+        if(vec[0]-15 < 0) vec[0] = 15; if(vec[0]+15 > 180) vec[0] = 165;
+        if(vec[1]-15 < 0) vec[1] = 15; if(vec[1]+15 > 255) vec[1] = 240;
+        if(vec[2]-15 < 0) vec[2] = 15; if(vec[2]+15 > 255) vec[2] = 240;
+
+        ui->horizontalSliderh1->setValue(vec[0]-15); ui->horizontalSliderh2->setValue(vec[0]+15);
+        ui->horizontalSliders1->setValue(vec[1]-15); ui->horizontalSliders2->setValue(vec[1]+15);
+        ui->horizontalSliderv1->setValue(vec[2]-15); ui->horizontalSliderv2->setValue(vec[2]+15);
+        }
+        else if(ev->button() & Qt::LeftButton){
+            //implementar add intervalo HSV
+        }
+    }
+}
+
 
 int MainWindow::atualizaSliders(int id){
     int novo;

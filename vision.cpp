@@ -2,7 +2,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <sys/time.h>
-#include <mouse.h>
 
 // Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
 #define SIZE 2
@@ -20,7 +19,7 @@ double tempo()
 
 Vision::Vision()
 {
-    m_VideoCapture.open(1);
+    m_VideoCapture.open(0);
 
     for (int i = 0; i < 9; i++)
     {
@@ -54,8 +53,6 @@ void Vision::getData(Fieldstate *fs){
 
         tf = tempo();
         cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
-
-        cv::setMouseCallback("Resultado", mouseEvent, &m_FrameHSV);
 
         std::cout << "size: " << this->m_Found[1].size() << std::endl;
         if(m_Found[1].size() > 0){

@@ -21,7 +21,6 @@ SOURCES += main.cpp\
     renderthread.cpp \
     utils.cpp \
     Interface/mainwindow.cpp \
-    mouse.cpp \
     read_write.cpp
 
 HEADERS  += \
@@ -33,7 +32,6 @@ HEADERS  += \
     renderthread.h \
     floodfill.hpp \
     Interface/mainwindow.h \
-    mouse.h \
     read_write.h
 
 FORMS    += \

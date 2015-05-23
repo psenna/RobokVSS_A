@@ -17,7 +17,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void capturar();
+
+    void mousePressEvent( QMouseEvent* ev);
 
 private slots:
     void on_radioButton_clicked();
