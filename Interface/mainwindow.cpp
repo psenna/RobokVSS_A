@@ -18,6 +18,7 @@ Vision *vision; //*****BUGOU NA HORA DE COLOCAR COMO ATRIBUTO DE MAINWINDOW.H***
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
+    ///teste
     ui = (new Ui::MainWindow);
     ui->setupUi(this);
     this->setWindowTitle("Robok VSS System");
