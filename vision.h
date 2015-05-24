@@ -26,6 +26,7 @@ public:
     CvScalar* getAllMin();
     CvScalar* getAllMax();
     void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
+    void closeCapture();
 
     friend class RenderThread;
     friend class MainWindow;

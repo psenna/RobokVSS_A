@@ -23,9 +23,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     ui->setupUi(this);
     this->setWindowTitle("Robok VSS System");
     this->showMaximized();
+    //connect( ui->myQuitButton, SIGNAL( clicked() ), qApp, SLOT( quit() ) );
+
+    QApplication::quit();
 
     vision = Vision::getInstance();
-    Fieldstate *fs = NULL;
 
     m_Display1 = &vision->m_FrameOriginal;
     m_Display2 = &vision->m_FrameBinary;
@@ -35,7 +37,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
+
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    delete ui;
+    vision->closeCapture();
+    exit(0);
 }
 
 void MainWindow::on_buttonSaveCalib_clicked()
@@ -234,4 +244,9 @@ void MainWindow::on_buttonScanDevices_clicked()
     QStringList stringList = serial->scan();
     ui->comboBoxdevicesgame->clear();
     ui->comboBoxdevicesgame->addItems(stringList);
+}
+
+void MainWindow::on_buttonGo_clicked()
+{
+    vision->getData(fs);
 }

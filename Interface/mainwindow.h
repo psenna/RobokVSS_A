@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
 #include "serial.h"
+#include "fieldstate.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +19,7 @@ public:
     ~MainWindow();
 
     void mousePressEvent( QMouseEvent* ev);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
 
@@ -39,11 +41,14 @@ private slots:
 
     void on_buttonScanDevices_clicked();
 
+    void on_buttonGo_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;
     cv::Mat *m_Display2;
     Serial *serial;
+    Fieldstate *fs;
 };
 
 #endif // MAINWINDOW_H
