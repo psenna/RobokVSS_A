@@ -43,6 +43,14 @@ private slots:
 
     void on_buttonGo_clicked();
 
+    void on_horizontalSliderBrightness_valueChanged(int value);
+
+    void on_horizontalSliderSaturation_valueChanged(int value);
+
+    void on_horizontalSliderContrast_valueChanged(int value);
+
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;

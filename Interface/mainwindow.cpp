@@ -250,3 +250,32 @@ void MainWindow::on_buttonGo_clicked()
 {
     vision->getData(fs);
 }
+
+void MainWindow::on_horizontalSliderBrightness_valueChanged(int value)
+{
+    char Brightness[70];
+    int valor = ui->horizontalSliderBrightness->value();
+    sprintf(Brightness, "uvcdynctrl --device=/dev/video%d --set='Brightness' %d", vision->m_IdCamera, value);
+    system(Brightness);
+}
+
+void MainWindow::on_horizontalSliderSaturation_valueChanged(int value)
+{
+    char Saturation[70];
+    sprintf(Saturation, "uvcdynctrl --device=/dev/video%d --set='Saturation' %d", vision->m_IdCamera, value);
+    system(Saturation);
+}
+
+void MainWindow::on_horizontalSliderContrast_valueChanged(int value)
+{
+    char Contrast[70];
+    sprintf(Contrast, "uvcdynctrl --device=/dev/video%d --set='Contrast' %d", vision->m_IdCamera, value);
+    std::cout << Contrast << std::endl;
+    system(Contrast);
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+    vision->m_IdCamera = index;
+    vision->closeCapture();
+}

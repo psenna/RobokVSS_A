@@ -14,7 +14,7 @@ double time();
 
 Vision::Vision()
 {
-    m_VideoCapture.open(0);
+    m_VideoCapture.open(1);
 
     for (int i = 0; i < 9; i++)
     {
