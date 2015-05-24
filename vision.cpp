@@ -10,12 +10,7 @@ using namespace std;
 
 Vision* Vision::m_Instance = 0;
 
-double tempo()
-{
-    struct timeval tv;
-    gettimeofday(&tv,0);
-    return tv.tv_sec + tv.tv_usec/1e6;
-}
+double time();
 
 Vision::Vision()
 {
@@ -44,14 +39,14 @@ void Vision::getData(Fieldstate *fs){
     if(captureImage()){
 
         double ti,tf; // ti = tempo inicial // tf = tempo final
-        ti = tempo();
+        ti = time();
 
         //adjustImage();
         convertImage();
         renderImage(fs);
 
 
-        tf = tempo();
+        tf = time();
         cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
         std::cout << "size: " << this->m_Found[1].size() << std::endl;
@@ -259,4 +254,11 @@ CvScalar* Vision::getAllMin(){
 
 CvScalar* Vision::getAllMax(){
     return m_Max;
+}
+
+double time()
+{
+    struct timeval tv;
+    gettimeofday(&tv, 0);
+    return tv.tv_sec + tv.tv_usec/1e6;
 }

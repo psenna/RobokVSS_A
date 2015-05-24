@@ -32,7 +32,8 @@ HEADERS  += \
     renderthread.h \
     floodfill.hpp \
     Interface/mainwindow.h \
-    read_write.h
+    read_write.h \
+    utils.h
 
 FORMS    += \
     Interface/mainwindow.ui

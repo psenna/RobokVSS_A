@@ -1,40 +1,34 @@
-#include "math.h"
+#include "utils.h"
 
-struct Position
+using namespace cv;
+
+QImage IplImage2QImage(const IplImage *iplImage)
 {
-    float x, y, number_of_pixels;
+    int height = iplImage->height;
+    int width = iplImage->width;
 
-    /*
-     * Operator < Overloading
-     * This is used in std::sort() function, descending order.
-     * @param other the Position object to be compared with this.
-     */
-    bool operator<(const Position& other) const
+    if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 3)
     {
-        return number_of_pixels > other.number_of_pixels;
+        const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
+        QImage img(qImageBuffer, width, height, QImage::Format_RGB888);
+        return img.rgbSwapped();
+    } else if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 1){
+        const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
+        QImage img(qImageBuffer, width, height, QImage::Format_Indexed8);
+
+        QVector<QRgb> colorTable;
+        for (int i = 0; i < 256; i++){
+            colorTable.push_back(qRgb(i, i, i));
+        }
+        img.setColorTable(colorTable);
+        return img;
+    }else{
+        return QImage();
     }
+}
 
-    /*
-     * Calculates the distance between two Position objects.
-     * @param pos object which distance from this is desired.
-     */
-    float distance(Position pos){
-      return sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y));
-    }
-
-};
-
-struct Goal
-{
-    Position GoalPost_1;
-    Position GoalPost_2;
-};
-
-struct Command
-{
-    int SpeedLeft;
-    int SpeedRight;
-    int OrientationLeft;
-    int OrientationRight;
-    int ID;
-};
+QImage Mat2QImage(Mat matImg) {  //simplesmente converte Mat->IplImage->QImage
+    IplImage img = (matImg);
+    QImage qImg = IplImage2QImage(&img);
+    return qImg;
+}

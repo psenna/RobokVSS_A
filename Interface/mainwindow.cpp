@@ -14,8 +14,6 @@ using namespace cv;
 
 Vision *vision; //*****BUGOU NA HORA DE COLOCAR COMO ATRIBUTO DE MAINWINDOW.H*****
 
-QImage IplImage2QImage(const IplImage *iplImage);
-QImage Mat2QImage(Mat matImg);
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -27,112 +25,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     vision = Vision::getInstance();
     Fieldstate *fs = NULL;
 
-    display1 = &vision->m_FrameOriginal;
-    display2 = &vision->m_FrameBinary;
+    m_Display1 = &vision->m_FrameOriginal;
+    m_Display2 = &vision->m_FrameBinary;
     vision->setCameraId(0);
-    on_radioButton_clicked();
-}
-
-QImage Mat2QImage(Mat matImg){  //simplesmente converte Mat->IplImage->QImage
-    IplImage img = (matImg);
-    QImage qImg = IplImage2QImage(&img);
-    return qImg;
+    on_rBtnSettings_clicked();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-QImage IplImage2QImage(const IplImage *iplImage)
-{
-    int height = iplImage->height;
-    int width = iplImage->width;
-
-    if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 3)
-    {
-        const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
-        QImage img(qImageBuffer, width, height, QImage::Format_RGB888);
-        return img.rgbSwapped();
-    } else if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 1){
-        const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
-        QImage img(qImageBuffer, width, height, QImage::Format_Indexed8);
-
-        QVector<QRgb> colorTable;
-        for (int i = 0; i < 256; i++){
-            colorTable.push_back(qRgb(i, i, i));
-        }
-        img.setColorTable(colorTable);
-        return img;
-    }else{
-        return QImage();
-    }
-}
-
-void MainWindow::on_radioButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(0);
-    ui->label_3->clear();
-    while(vision->captureImage() && ui->radioButton->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-    }
-}
-
-void MainWindow::on_radioButton_2_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(1);
-
-    while(vision->captureImage() && ui->radioButton_2->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-    }
-}
-
-void MainWindow::on_radioButton_3_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(2);
-    ui->radioButton_6->setChecked(true);
-    int id = 0, novo;
-    int h1, h2, s1, s2, v1, v2;
-
-    atualizaSliders(-1);
-
-    while(ui->radioButton_3->isChecked()){
-        vision->calibrate(id);
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameBinary)));
-
-        id = atualizaSliders(id);
-
-        h1 = ui->horizontalSliderh1->value();
-        h2 = ui->horizontalSliderh2->value();
-        s1 = ui->horizontalSliders1->value();
-        s2 = ui->horizontalSliders2->value();
-        v1 = ui->horizontalSliderv1->value();
-        v2 = ui->horizontalSliderv2->value();
-
-        vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
-    }
-}
-
-void MainWindow::on_radioButton_4_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(3);
-
-    while(vision->captureImage() && ui->radioButton_4->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-    }
-}
-
-void MainWindow::on_radioButton_5_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(4);
-
-    while(vision->captureImage() && ui->radioButton_5->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-    }
 }
 
 void MainWindow::on_buttonSaveCalib_clicked()
@@ -147,12 +48,12 @@ void MainWindow::on_buttonLoadCalib_clicked()
     for(int i=0; i<9; i++){
         vision->setMinMax(a[i], b[i], i);
     }
-    atualizaSliders(-1);
+    updateSliders(-1);
 }
 
 void MainWindow::mousePressEvent( QMouseEvent* ev )
 {
-    if(ui->radioButton_3->isChecked()){
+    if(ui->rBtnCalibrate->isChecked()){
 
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
@@ -234,7 +135,7 @@ void MainWindow::mousePressEvent( QMouseEvent* ev )
 }
 
 
-int MainWindow::atualizaSliders(int id){
+int MainWindow::updateSliders(int id){
     int novo;
 
     if(ui->radioButton_6->isChecked()) novo = 0;
@@ -257,4 +158,71 @@ int MainWindow::atualizaSliders(int id){
         return novo;
     }
     return id;
+}
+
+void MainWindow::on_rBtnSettings_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+    ui->label_3->clear();
+    while (vision->captureImage() && ui->rBtnSettings->isChecked())
+    {
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
+}
+
+void MainWindow::on_rBtnRectifyImage_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+
+    while(vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
+}
+
+void MainWindow::on_rBtnCalibrate_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->radioButton_6->setChecked(true);
+    int id = 0, novo;
+    int h1, h2, s1, s2, v1, v2;
+
+    updateSliders(-1);
+
+    while(ui->rBtnCalibrate->isChecked()){
+        vision->calibrate(id);
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameBinary)));
+
+        id = updateSliders(id);
+
+        h1 = ui->horizontalSliderh1->value();
+        h2 = ui->horizontalSliderh2->value();
+        s1 = ui->horizontalSliders1->value();
+        s2 = ui->horizontalSliders2->value();
+        v1 = ui->horizontalSliderv1->value();
+        v2 = ui->horizontalSliderv2->value();
+
+        vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
+    }
+}
+
+void MainWindow::on_rBtnFieldAdjust_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+
+    while(vision->captureImage() && ui->rBtnFieldAdjust->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
+}
+
+void MainWindow::on_rBtnGame_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(4);
+
+    while(vision->captureImage() && ui->rBtnGame->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    }
 }

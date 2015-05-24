@@ -74,6 +74,13 @@ border-right: white</string>
         </item>
         <item>
          <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Options</string>
           </property>
@@ -114,7 +121,7 @@ border-right: white</string>
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton">
+       <widget class="QRadioButton" name="rBtnSettings">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -143,7 +150,7 @@ border-right: white</string>
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_2">
+       <widget class="QRadioButton" name="rBtnRectifyImage">
         <property name="text">
          <string>Rectify Image</string>
         </property>
@@ -166,7 +173,7 @@ border-right: white</string>
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="rBtnCalibrate">
         <property name="text">
          <string>Calibrate</string>
         </property>
@@ -189,7 +196,7 @@ border-right: white</string>
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_4">
+       <widget class="QRadioButton" name="rBtnFieldAdjust">
         <property name="text">
          <string>Field Adjust</string>
         </property>
@@ -212,7 +219,7 @@ border-right: white</string>
        </spacer>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_5">
+       <widget class="QRadioButton" name="rBtnGame">
         <property name="text">
          <string>Game</string>
         </property>
@@ -270,7 +277,7 @@ border-top: 3px solid black;</string>
          <string notr="true">border-left: 2px rgb(0, 0, 0);</string>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="Settings">
          <property name="styleSheet">
@@ -327,7 +334,7 @@ border-top: 3px solid black;</string>
                   <string notr="true">background-color: rgb(215, 211, 208);</string>
                  </property>
                  <property name="text">
-                  <string>cancel</string>
+                  <string>Cancel</string>
                  </property>
                 </widget>
                </item>
@@ -337,7 +344,7 @@ border-top: 3px solid black;</string>
                   <string notr="true">background-color: rgb(215, 211, 208);</string>
                  </property>
                  <property name="text">
-                  <string>save</string>
+                  <string>Save</string>
                  </property>
                 </widget>
                </item>
@@ -717,7 +724,7 @@ border-color: white;</string>
            <string notr="true">background-color: rgb(206, 203, 200);</string>
           </property>
           <property name="text">
-           <string>cancel</string>
+           <string>Cancel</string>
           </property>
          </widget>
          <widget class="QPushButton" name="pushButton_10">
@@ -733,7 +740,7 @@ border-color: white;</string>
            <string notr="true">background-color: rgb(206, 203, 200);</string>
           </property>
           <property name="text">
-           <string>save</string>
+           <string>Save</string>
           </property>
          </widget>
         </widget>
@@ -1121,7 +1128,7 @@ border-color: white;</string>
            <string notr="true">background-color: rgb(221, 218, 217);</string>
           </property>
           <property name="text">
-           <string>save</string>
+           <string>Save</string>
           </property>
          </widget>
          <widget class="QPushButton" name="pushButton_8">
@@ -1137,7 +1144,7 @@ border-color: white;</string>
            <string notr="true">background-color: rgb(221, 218, 217);</string>
           </property>
           <property name="text">
-           <string>cancel</string>
+           <string>Cancel</string>
           </property>
          </widget>
         </widget>
@@ -1413,11 +1420,20 @@ border-color: white;</string>
            </item>
            <item row="1" column="0">
             <widget class="QPushButton" name="pushButton_11">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="styleSheet">
               <string notr="true">background-color: rgb(212, 209, 205);</string>
              </property>
              <property name="text">
               <string>Back</string>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -1427,7 +1443,7 @@ border-color: white;</string>
               <string notr="true">background-color: rgb(212, 209, 205);</string>
              </property>
              <property name="text">
-              <string>set pos</string>
+              <string>Set Position</string>
              </property>
             </widget>
            </item>
@@ -1437,7 +1453,7 @@ border-color: white;</string>
               <string notr="true">background-color: rgb(212, 209, 205);</string>
              </property>
              <property name="text">
-              <string>GO!!</string>
+              <string>GO!</string>
              </property>
             </widget>
            </item>
@@ -1528,4 +1544,7 @@ border-color: white;</string>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
+ <slots>
+  <slot>on_Settings_clicked()</slot>
+ </slots>
 </ui>

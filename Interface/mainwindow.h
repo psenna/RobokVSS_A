@@ -4,8 +4,6 @@
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
 
-using cv::Mat;
-
 namespace Ui {
 class MainWindow;
 }
@@ -21,26 +19,27 @@ public:
     void mousePressEvent( QMouseEvent* ev);
 
 private slots:
-    void on_radioButton_clicked();
-
-    void on_radioButton_2_clicked();
-
-    void on_radioButton_3_clicked();
-
-    void on_radioButton_4_clicked();
-
-    void on_radioButton_5_clicked();
 
     void on_buttonSaveCalib_clicked();
 
     void on_buttonLoadCalib_clicked();
 
-    int atualizaSliders(int id);
+    int updateSliders(int id);
+
+    void on_rBtnSettings_clicked();
+
+    void on_rBtnRectifyImage_clicked();
+
+    void on_rBtnCalibrate_clicked();
+
+    void on_rBtnFieldAdjust_clicked();
+
+    void on_rBtnGame_clicked();
 
 private:
     Ui::MainWindow *ui;
-    Mat *display1;
-    Mat *display2;
+    cv::Mat *m_Display1;
+    cv::Mat *m_Display2;
 };
 
 #endif // MAINWINDOW_H
