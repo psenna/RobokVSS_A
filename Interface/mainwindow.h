@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
+#include "serial.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,10 +37,13 @@ private slots:
 
     void on_rBtnGame_clicked();
 
+    void on_buttonScanDevices_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;
     cv::Mat *m_Display2;
+    Serial *serial;
 };
 
 #endif // MAINWINDOW_H

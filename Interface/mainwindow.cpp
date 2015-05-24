@@ -4,9 +4,10 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "read_write.h"
+#include "serial.h"
 #include <vector>
 #include <QMouseEvent>
-#include <QtWidgets/QMessageBox>
+#include <QMessageBox>
 
 #include <stdio.h>
 
@@ -225,4 +226,11 @@ void MainWindow::on_rBtnGame_clicked()
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
     }
+}
+
+void MainWindow::on_buttonScanDevices_clicked()
+{
+    QStringList stringList = serial->scan();
+    ui->comboBoxdevicesgame->clear();
+    ui->comboBoxdevicesgame->addItems(stringList);
 }

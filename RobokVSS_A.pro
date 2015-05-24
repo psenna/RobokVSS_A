@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
+CONFIG += serialport
 QT       += core gui
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,7 +23,8 @@ SOURCES += main.cpp\
     renderthread.cpp \
     utils.cpp \
     Interface/mainwindow.cpp \
-    read_write.cpp
+    read_write.cpp \
+    serial.cpp
 
 HEADERS  += \
     ball.h \
@@ -33,7 +36,8 @@ HEADERS  += \
     floodfill.hpp \
     Interface/mainwindow.h \
     read_write.h \
-    utils.h
+    utils.h \
+    serial.h
 
 FORMS    += \
     Interface/mainwindow.ui
