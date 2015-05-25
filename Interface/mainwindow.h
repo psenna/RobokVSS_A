@@ -52,6 +52,14 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
+    void on_pushButton_10_clicked();
+
+    void on_pushButton_9_clicked();
+
+    void on_pushButtonSaveField_clicked();
+
+    void on_pushButtonLoadField_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;

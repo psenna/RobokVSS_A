@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 void saveSettings(int brightness, int saturation, int contrast) {
 
     FILE *file;
@@ -18,22 +19,22 @@ void saveSettings(int brightness, int saturation, int contrast) {
     fclose(file);
 }
 
-void saveRectfication(CvPoint a, CvPoint b, CvPoint c, CvPoint d) {
+void saveRectification(float a[8]) {
 
     FILE *file;
     file = fopen("retificacao", "wb");
 
     if (file) {
         int writing[8];
-        writing[0] = a.x;
-        writing[1] = a.y;
-        writing[2] = b.x;
-        writing[3] = b.y;
-        writing[4] = c.x;
-        writing[5] = c.y;
-        writing[6] = d.x;
-        writing[7] = d.y;
-        fwrite(writing, 1, sizeof(int) * 8, file);
+        writing[0] = a[0];
+        writing[1] = a[1];
+        writing[2] = a[2];
+        writing[3] = a[3];
+        writing[4] = a[4];
+        writing[5] = a[5];
+        writing[6] = a[6];
+        writing[7] = a[7];
+        fwrite(writing, 1, sizeof(float) * 8, file);
     }
 
     fclose(file);
@@ -104,4 +105,55 @@ void loadCalibration(CvScalar MIN[9], CvScalar MAX[9]) {
         }
         fclose(file);
     }
+}
+
+void loadRectification(float aImg[8]){
+    FILE *arq = fopen("retificacao","rb");
+
+    if (arq != NULL)
+    {
+        int leitura[8];
+        fread(leitura, 1, sizeof(float) * 8, arq);
+        for(int i = 0; i < 8; i++){
+            aImg[i] = leitura[i];
+        }
+        fclose(arq);
+    }
+}
+
+void loadFieldstate(Fieldstate *fs){
+    FILE *arq = fopen("field","rb");
+    int a[10];
+    if (arq != NULL)
+    {
+        int leitura[10];
+        fread(leitura, 1, sizeof(int) * 10, arq);
+
+        for(int i=0; i<10; i++)
+        a[i] = leitura[i];
+
+        fclose(arq);
+    }
+
+    Goal goal, goal2;
+    goal.GoalPost_1.x = a[0];
+    goal.GoalPost_1.y = a[1];
+
+    goal.GoalPost_2.x = a[2];
+    goal.GoalPost_2.y = a[3];
+
+    fs->setGoalLeft(goal);
+
+    goal2.GoalPost_1.x = a[4];
+    goal2.GoalPost_1.y = a[5];
+
+    goal2.GoalPost_2.x = a[6];
+    goal2.GoalPost_2.y = a[7];
+
+    fs->setGoalRight(goal2);
+
+    Position fieldCenter;
+    fieldCenter.x = a[8];
+    fieldCenter.y = a[9];
+    fs->setFieldCenter(fieldCenter);
 }

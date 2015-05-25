@@ -196,7 +196,7 @@ void MainWindow::on_rBtnCalibrate_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
     ui->radioButton_6->setChecked(true);
-    int id = 0, novo;
+    int id = 0;
     int h1, h2, s1, s2, v1, v2;
 
     updateSliders(-1);
@@ -254,7 +254,6 @@ void MainWindow::on_buttonGo_clicked()
 void MainWindow::on_horizontalSliderBrightness_valueChanged(int value)
 {
     char Brightness[70];
-    int valor = ui->horizontalSliderBrightness->value();
     sprintf(Brightness, "uvcdynctrl --device=/dev/video%d --set='Brightness' %d", m_Vision->m_IdCamera, value);
     system(Brightness);
 }
@@ -270,7 +269,6 @@ void MainWindow::on_horizontalSliderContrast_valueChanged(int value)
 {
     char Contrast[70];
     sprintf(Contrast, "uvcdynctrl --device=/dev/video%d --set='Contrast' %d", m_Vision->m_IdCamera, value);
-    std::cout << Contrast << std::endl;
     system(Contrast);
 }
 
@@ -278,4 +276,24 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
     m_Vision->m_IdCamera = index;
     m_Vision->closeCapture();
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+    saveRectification(m_Vision->aImg);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    loadRectification(m_Vision->aImg);
+}
+
+void MainWindow::on_pushButtonSaveField_clicked()
+{
+    saveFieldState(cvPoint(0,0), cvPoint(0,0), cvPoint(0,0), cvPoint(0,0), cvPoint(0,0));
+}
+
+void MainWindow::on_pushButtonLoadField_clicked()
+{
+    loadFieldstate(fs);
 }
