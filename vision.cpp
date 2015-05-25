@@ -16,7 +16,7 @@ Vision::Vision()
 {
     m_VideoCapture.open(1);
 
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 10; i++)
     {
         this->setMinMax(cvScalar(0, 0, 0), cvScalar(0, 0, 0), i);
         m_RenderThreads[i].setNumber(i);
@@ -79,6 +79,30 @@ void Vision::retification(){
     }
 }
 
+void Vision::autoRetification(){
+    if(captureImage()){
+        convertImage();
+
+        cv::Mat binaryFrame = thresholdImage(m_Min[9], m_Max[9]);
+
+        m_RenderThreads[9].start();
+        m_RenderThreads[9].wait();
+
+        float minx = 8888, miny = 8888, maxx = 0, maxy=0; //botar taam max
+
+        for(int i=0; i<4; i++){
+            minx = min(m_Found[9][i].x, minx);
+            miny = min(m_Found[9][i].y, miny);
+            maxx = max(m_Found[9][i].x, maxx);
+            maxy = max(m_Found[9][i].y, maxy);
+        }
+
+        setRetificationsParam(minx, miny,maxx , miny, minx, maxy, maxx, maxy);
+
+        rectifyImage();
+    }
+}
+
 /* Adjust Image
  * Método responsável pelos ajustes na imagem.
  * brilho, contraste, saturaçao e retificaçao.
@@ -104,8 +128,9 @@ bool Vision::captureImage(){
 
 }
 
-/* retifica a imagem, aWorld = limites da imagem, aWImg = limites da area a retificar */
+/* retifica a imagem, aWorld = limites da imagem, aImg = limites da area a retificar */
 void Vision::rectifyImage(){
+    //float aWorld[8] = {0, 0, 540, 0, 0, 405, 540, 405};
     float aWorld[8] = {0, 0, m_FrameOriginal.cols, 0, 0, m_FrameOriginal.rows, m_FrameOriginal.cols, m_FrameOriginal.rows};
     CvMat mImg, mWorld;
     cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg, 0);

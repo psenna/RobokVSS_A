@@ -60,6 +60,8 @@ private slots:
 
     void on_pushButtonLoadField_clicked();
 
+    void on_pushButtonAutoRect_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;

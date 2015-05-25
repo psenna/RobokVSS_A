@@ -27,6 +27,8 @@ public:
     CvScalar* getAllMax();
     void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
     void closeCapture();
+    void autoRetification();
+
 
     friend class RenderThread;
     friend class MainWindow;
@@ -44,17 +46,18 @@ private:
 
     static Vision *m_Instance;
     Mat m_FrameOriginal;
+    Mat m_FrameRect;
     Mat m_FrameHSV;
     Mat m_FrameBinary;
     CvCapture* m_Capture;
     int m_IdCamera;
 
-    std::vector<Position> m_Found[9];
+    std::vector<Position> m_Found[10];
     float aImg[8]; /* pontos para a retificaçao */
     VideoCapture m_VideoCapture;
-    CvScalar m_Max[9];
-    CvScalar m_Min[9];
-    RenderThread m_RenderThreads[9];
+    CvScalar m_Max[10];
+    CvScalar m_Min[10];
+    RenderThread m_RenderThreads[10];
 
 };
 

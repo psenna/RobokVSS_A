@@ -40,13 +40,13 @@ void saveRectification(float a[8]) {
     fclose(file);
 }
 
-void saveCalibration(CvScalar MIN[9], CvScalar MAX[9]){
+void saveCalibration(CvScalar MIN[10], CvScalar MAX[10]){
     FILE *arq;
     arq = fopen("calib", "wb");
 
     if(arq) {
-        int escrita[54];
-        for(int i = 0; i < 9; i++){
+        int escrita[60];
+        for(int i = 0; i < 10; i++){
             escrita[6*i+0] = MIN[i].val[0];
             escrita[6*i+1] = MAX[i].val[0];
             escrita[6*i+2] = MIN[i].val[1];
@@ -55,7 +55,7 @@ void saveCalibration(CvScalar MIN[9], CvScalar MAX[9]){
             escrita[6*i+5] = MAX[i].val[2];
         }
 
-        fwrite(escrita, 1, sizeof(int) * 6 * 9, arq);
+        fwrite(escrita, 1, sizeof(int) * 6 * 10, arq);
     }
 
     fclose(arq);
@@ -86,16 +86,16 @@ void saveFieldState(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e){
     fclose(file);
 }
 
-void loadCalibration(CvScalar MIN[9], CvScalar MAX[9]) {
+void loadCalibration(CvScalar MIN[10], CvScalar MAX[10]) {
 
     FILE* file = fopen("calib", "rb");
 
     if (file != NULL)
     {
-        int reading[54];
-        fread(reading, 1, sizeof(int) * 6 * 9, file);
+        int reading[60];
+        fread(reading, 1, sizeof(int) * 6 * 10, file);
 
-        for (int i = 0; i < 9; i++ ) {
+        for (int i = 0; i < 10; i++ ) {
             MIN[i].val[0] = reading[(6*i)+0];
             MAX[i].val[0] = reading[(6*i)+1];
             MIN[i].val[1] = reading[(6*i)+2];

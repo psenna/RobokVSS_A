@@ -55,9 +55,9 @@ void MainWindow::on_buttonSaveCalib_clicked()
 
 void MainWindow::on_buttonLoadCalib_clicked()
 {
-    CvScalar a[9], b[9];
+    CvScalar a[10], b[10];
     loadCalibration(a, b);
-    for(int i=0; i<9; i++){
+    for(int i=0; i<10; i++){
         m_Vision->setMinMax(a[i], b[i], i);
     }
     updateSliders(-1);
@@ -159,6 +159,7 @@ int MainWindow::updateSliders(int id){
     if(ui->radioButton_12->isChecked()) novo = 6;
     if(ui->radioButton_13->isChecked()) novo = 7;
     if(ui->radioButtonBall->isChecked()) novo = 8;
+    if(ui->radioButtonBorda->isChecked()) novo = 9;
 
     if(novo!=id){
         ui->horizontalSliderh1->setValue(m_Vision->getAllMin()[novo].val[0]);
@@ -187,7 +188,9 @@ void MainWindow::on_rBtnRectifyImage_clicked()
     ui->stackedWidget->setCurrentIndex(1);
 
     while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        m_Vision->m_FrameRect = m_Vision->m_FrameOriginal.clone();
+        m_Vision->adjustImage();
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameRect)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
@@ -296,4 +299,9 @@ void MainWindow::on_pushButtonSaveField_clicked()
 void MainWindow::on_pushButtonLoadField_clicked()
 {
     loadFieldstate(fs);
+}
+
+void MainWindow::on_pushButtonAutoRect_clicked()
+{
+    m_Vision->autoRetification();
 }
