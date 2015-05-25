@@ -19,7 +19,7 @@ public:
     void calibrate(int id);
     void retification();
     void setCameraId(const int &id);
-    void setMinMax(CvScalar min, CvScalar max, int id);
+    void setMinMax(const CvScalar &min, const CvScalar &max, const int &id);
     bool captureImage();
     CvScalar getMin(int id);
     CvScalar getMax(int id);

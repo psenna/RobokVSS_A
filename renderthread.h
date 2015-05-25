@@ -7,6 +7,7 @@
 class RenderThread : public QThread
 {
 public:
+
     RenderThread();
 
     void run();

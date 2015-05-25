@@ -2,101 +2,106 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void salvaConfiguracao(int brilho, int saturacao, int contraste){
+void saveSettings(int brightness, int saturation, int contrast) {
+
+    FILE *file;
+    file = fopen("calib", "wb");
+
+    if (file) {
+        int writing[3];
+        writing[0] = brightness;
+        writing[1] = saturation;
+        writing[2] = contrast;
+        fwrite(writing, 1, sizeof(int) * 3, file);
+    }
+
+    fclose(file);
+}
+
+void saveRectfication(CvPoint a, CvPoint b, CvPoint c, CvPoint d) {
+
+    FILE *file;
+    file = fopen("retificacao", "wb");
+
+    if (file) {
+        int writing[8];
+        writing[0] = a.x;
+        writing[1] = a.y;
+        writing[2] = b.x;
+        writing[3] = b.y;
+        writing[4] = c.x;
+        writing[5] = c.y;
+        writing[6] = d.x;
+        writing[7] = d.y;
+        fwrite(writing, 1, sizeof(int) * 8, file);
+    }
+
+    fclose(file);
+}
+
+void saveCalibration(CvScalar MIN[9], CvScalar MAX[9]){
     FILE *arq;
     arq = fopen("calib", "wb");
 
-      if(arq) {
-        int escrita[3];
-        escrita[0] = brilho;
-        escrita[1] = saturacao;
-        escrita[2] = contraste;
-        fwrite(escrita, 1, sizeof(int) * 3, arq);
-      }
-
-      fclose(arq);
-}
-
-void salvaRetifica(CvPoint a, CvPoint b, CvPoint c, CvPoint d){
-    FILE *arq;
-    arq = fopen("retificacao", "wb");
-      if(arq) {
-        int escrita[8];
-        escrita[0] = a.x;
-        escrita[1] = a.y;
-        escrita[2] = b.x;
-        escrita[3] = b.y;
-        escrita[4] = c.x;
-        escrita[5] = c.y;
-        escrita[6] = d.x;
-        escrita[7] = d.y;
-        fwrite(escrita, 1, sizeof(int) * 8, arq);
-      }
-
-      fclose(arq);
-}
-
-void salvaCalibracao(CvScalar MIN[9], CvScalar MAX[9]){
-    FILE *arq;
-    arq = fopen("calib", "wb");
-
-      if(arq) {
+    if(arq) {
         int escrita[54];
         for(int i = 0; i < 9; i++){
-         escrita[6*i+0] = MIN[i].val[0];
-         escrita[6*i+1] = MAX[i].val[0];
-         escrita[6*i+2] = MIN[i].val[1];
-         escrita[6*i+3] = MAX[i].val[1];
-         escrita[6*i+4] = MIN[i].val[2];
-         escrita[6*i+5] = MAX[i].val[2];
+            escrita[6*i+0] = MIN[i].val[0];
+            escrita[6*i+1] = MAX[i].val[0];
+            escrita[6*i+2] = MIN[i].val[1];
+            escrita[6*i+3] = MAX[i].val[1];
+            escrita[6*i+4] = MIN[i].val[2];
+            escrita[6*i+5] = MAX[i].val[2];
         }
 
         fwrite(escrita, 1, sizeof(int) * 6 * 9, arq);
-      }
+    }
 
-      fclose(arq);
+    fclose(arq);
 }
 
-void salvaEstadoCampo(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e){
-    FILE* arq;
-    arq = fopen("field", "wb");
+void saveFieldState(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e){
 
-      if(arq) {
-        int escrita[10];
+    FILE* file;
+    file = fopen("field", "wb");
 
-         escrita[0] = a.x;
-         escrita[1] = a.y;
-         escrita[2] = b.x;
-         escrita[3] = b.y;
-         escrita[4] = c.x;
-         escrita[5] = c.y;
-         escrita[6] = d.x;
-         escrita[7] = d.y;
-         escrita[8] = e.x;
-         escrita[9] = e.y;
+    if(file) {
+        int writing[10];
 
-        fwrite(escrita, 1, sizeof(int) * 10, arq);
-      }
+        writing[0] = a.x;
+        writing[1] = a.y;
+        writing[2] = b.x;
+        writing[3] = b.y;
+        writing[4] = c.x;
+        writing[5] = c.y;
+        writing[6] = d.x;
+        writing[7] = d.y;
+        writing[8] = e.x;
+        writing[9] = e.y;
 
-      fclose(arq);
+        fwrite(writing, 1, sizeof(int) * 10, file);
+    }
+
+    fclose(file);
 }
 
-void loadCalibragem(CvScalar MIN[9], CvScalar MAX[9]){
-    FILE* arq = fopen("calib","rb");
+void loadCalibration(CvScalar MIN[9], CvScalar MAX[9]) {
 
-    if (arq != NULL)
+    FILE* file = fopen("calib", "rb");
+
+    if (file != NULL)
     {
-        int leitura[54];
-        fread(leitura, 1, sizeof(int) * 6 * 9, arq);
+        int reading[54];
+        fread(reading, 1, sizeof(int) * 6 * 9, file);
 
-        for(int i = 0; i < 9; i++ ){
-            MIN[i].val[0] = leitura[(6*i)+0];
-            MAX[i].val[0] = leitura[(6*i)+1];
-            MIN[i].val[1] = leitura[(6*i)+2];
-            MAX[i].val[1] = leitura[(6*i)+3];
-            MIN[i].val[2] = leitura[(6*i)+4];
-            MAX[i].val[2] = leitura[(6*i)+5];
+        for (int i = 0; i < 9; i++ ) {
+            MIN[i].val[0] = reading[(6*i)+0];
+            MAX[i].val[0] = reading[(6*i)+1];
+            MIN[i].val[1] = reading[(6*i)+2];
+            MAX[i].val[1] = reading[(6*i)+3];
+            MIN[i].val[2] = reading[(6*i)+4];
+            MAX[i].val[2] = reading[(6*i)+5];
         }
-        fclose(arq);
+        fclose(file);
     }
 }

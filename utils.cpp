@@ -12,17 +12,17 @@ QImage IplImage2QImage(const IplImage *iplImage)
         const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
         QImage img(qImageBuffer, width, height, QImage::Format_RGB888);
         return img.rgbSwapped();
-    } else if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 1){
+    } else if  (iplImage->depth == IPL_DEPTH_8U && iplImage->nChannels == 1) {
         const uchar *qImageBuffer = (const uchar*)iplImage->imageData;
         QImage img(qImageBuffer, width, height, QImage::Format_Indexed8);
 
         QVector<QRgb> colorTable;
-        for (int i = 0; i < 256; i++){
+        for (int i = 0; i < 256; i++) {
             colorTable.push_back(qRgb(i, i, i));
         }
         img.setColorTable(colorTable);
         return img;
-    }else{
+    } else {
         return QImage();
     }
 }

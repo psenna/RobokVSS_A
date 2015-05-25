@@ -3,10 +3,10 @@
 
 #include "opencv2/opencv.hpp"
 
-void salvaConfiguracao(int brilho, int saturacao, int contraste);
-void salvaRetifica(CvPoint a, CvPoint b, CvPoint c, CvPoint d);
-void salvaCalibracao(CvScalar MIN[9], CvScalar MAX[9]);
-void salvaEstadoCampo(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e);
-void loadCalibragem(CvScalar MIN[9], CvScalar MAX[9]);
+void saveSettings(int brightness, int saturation, int contrast);
+void saveRectfication(CvPoint a, CvPoint b, CvPoint c, CvPoint d);
+void saveCalibration(CvScalar MIN[9], CvScalar MAX[9]);
+void saveFieldState(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e);
+void loadCalibration(CvScalar MIN[9], CvScalar MAX[9]);
 
 #endif // READ_WRITE_H

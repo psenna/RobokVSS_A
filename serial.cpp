@@ -14,9 +14,9 @@ Serial::~Serial()
 
 QString Serial::createCommand(int id, int senEsq, int velEsq, int senDir, int velDir)
 {
-    char comando[15];
-    sprintf(comando, "<%d%d%03d%d%03d>", id, senEsq, velEsq, senDir, velDir);
-    return QString::fromUtf8(comando);
+    char command[15];
+    sprintf(command, "<%d%d%03d%d%03d>", id, senEsq, velEsq, senDir, velDir);
+    return QString::fromUtf8(command);
 
 }
 
@@ -24,10 +24,10 @@ bool Serial::connect(QString name)
 {
     serialPort.setPortName(name);
     serialPort.setBaudRate(9600);
-    if(serialPort.open(QIODevice::WriteOnly)){
+    if (serialPort.open(QIODevice::WriteOnly)) {
         return true;
     }
-    else{
+    else {
         return false;
     }
 }
@@ -37,7 +37,8 @@ bool Serial::send(QString command)
     serialPort.write(command.toUtf8().data(), command.length());
 }
 
-QStringList Serial::scan(){
+QStringList Serial::scan()
+{
     QList<QSerialPortInfo> list;
     list = QSerialPortInfo::availablePorts();
     QStringList stringList;

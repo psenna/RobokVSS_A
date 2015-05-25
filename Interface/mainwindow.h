@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 #include "serial.h"
 #include "fieldstate.h"
+#include "vision.h"
 
 namespace Ui {
 class MainWindow;
@@ -55,6 +56,7 @@ private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;
     cv::Mat *m_Display2;
+    Vision *m_Vision;
     Serial *serial;
     Fieldstate *fs;
 };

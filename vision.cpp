@@ -4,7 +4,7 @@
 #include <sys/time.h>
 
 // Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
-#define SIZE 2
+#define SIZE .5
 
 using namespace std;
 
@@ -59,13 +59,12 @@ void Vision::getData(Fieldstate *fs){
     }
 }
 
-void Vision::calibrate(int id){
-    if(captureImage()){
+void Vision::calibrate(int id) {
+
+    if (captureImage()) {
         //adjustImage();
         convertImage();
-
         //cv::setMouseCallback("Original Frame", mouseEvent, &m_FrameHSV);
-
         m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
         m_FrameBinary = erodeImage(m_FrameBinary);
         m_FrameBinary = dilateImage(m_FrameBinary);
@@ -154,9 +153,7 @@ void Vision::renderImage(Fieldstate *fs)
     for (int i = 0; i < 9; i++)    
         m_RenderThreads[i].start();
 
-
     //identifyRobot(fs);
-
 }
 
 
@@ -168,7 +165,7 @@ cv::Mat Vision::dilateImage(const cv::Mat &binaryFrame)
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
-                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
+                                            cv::Size(1 * SIZE + 1, 1 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::dilate(binaryFrame, result, element);
     return result;
@@ -182,7 +179,7 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
-                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
+                                            cv::Size(1 * SIZE + 1, 1 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::erode(binaryFrame, result, element);
     return result;
@@ -225,7 +222,7 @@ void Vision::setCameraId(const int &id){
     m_IdCamera = id;
 }
 
-void Vision::setMinMax(CvScalar min, CvScalar max, int id){
+void Vision::setMinMax(const CvScalar &min, const CvScalar &max, const int &id){
     m_Min[id] = min;
     m_Max[id] = max;
 }

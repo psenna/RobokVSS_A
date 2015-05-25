@@ -50,11 +50,12 @@ void RenderThread::run()
     // Obter frame binarizado com os intervalos min e max
     binaryFrame = vision->thresholdImage((Scalar) vision->getMin(m_Number), (Scalar) vision->getMax(m_Number));
 
-    // Aplicar dilatação no frame binarizado
+    // Aplicar erosão no frame binarizado
+    binaryFrame = vision->erodeImage(binaryFrame);
+
+    // Aplicar dilatação na imagem no frame resultante da erosão
     binaryFrame = vision->dilateImage(binaryFrame);
 
-    // Aplicar erosão na imagem no frame resultante da dilatação
-    binaryFrame = vision->erodeImage(binaryFrame);
 
     // Detectar cores a partir do frame binarizado resultante
     vision->m_Found[m_Number] = DetectColors(binaryFrame.clone(), 80, 1, 1500);

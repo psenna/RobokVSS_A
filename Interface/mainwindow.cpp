@@ -1,6 +1,5 @@
 #include "Interface/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "vision.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "read_write.h"
@@ -13,12 +12,8 @@
 
 using namespace cv;
 
-Vision *vision; //*****BUGOU NA HORA DE COLOCAR COMO ATRIBUTO DE MAINWINDOW.H*****
-
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
-{
-    ///teste
+{    
     ui = (new Ui::MainWindow);
     ui->setupUi(this);
     this->setWindowTitle("Robok VSS System");
@@ -27,50 +22,55 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QApplication::quit();
 
-    vision = Vision::getInstance();
+    // Instanciar Vision
+    m_Vision = Vision::getInstance();
 
-    m_Display1 = &vision->m_FrameOriginal;
-    m_Display2 = &vision->m_FrameBinary;
-    vision->setCameraId(0);
+    m_Display1 = &m_Vision->m_FrameOriginal;
+    m_Display2 = &m_Vision->m_FrameBinary;
+    m_Vision->setCameraId(0);
     on_rBtnSettings_clicked();
 }
 
 MainWindow::~MainWindow()
 {
-
+    delete m_Display1;
+    delete m_Display2;
+    delete m_Vision;
+    delete serial;
+    delete fs;
     delete ui;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     delete ui;
-    vision->closeCapture();
+    m_Vision->closeCapture();
     exit(0);
 }
 
 void MainWindow::on_buttonSaveCalib_clicked()
 {
-    salvaCalibracao(vision->getAllMin(), vision->getAllMax());
+    saveCalibration(m_Vision->getAllMin(), m_Vision->getAllMax());
 }
 
 void MainWindow::on_buttonLoadCalib_clicked()
 {
     CvScalar a[9], b[9];
-    loadCalibragem(a, b);
+    loadCalibration(a, b);
     for(int i=0; i<9; i++){
-        vision->setMinMax(a[i], b[i], i);
+        m_Vision->setMinMax(a[i], b[i], i);
     }
     updateSliders(-1);
 }
 
-void MainWindow::mousePressEvent( QMouseEvent* ev )
+void MainWindow::mousePressEvent(QMouseEvent* ev)
 {
-    if(ui->rBtnCalibrate->isChecked()){
+    if (ui->rBtnCalibrate->isChecked()) {
 
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
 
-        if(ev->button() & Qt::LeftButton){ //setHsvInterval
+        if (ev->button() & Qt::LeftButton) { //setHsvInterval
             if(vec[0]-15 < 0) vec[0] = 15; if(vec[0]+15 > 180) vec[0] = 165;
             if(vec[1]-15 < 0) vec[1] = 15; if(vec[1]+15 > 255) vec[1] = 240;
             if(vec[2]-15 < 0) vec[2] = 15; if(vec[2]+15 > 255) vec[2] = 240;
@@ -81,25 +81,25 @@ void MainWindow::mousePressEvent( QMouseEvent* ev )
 
             Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), 1);
         }
-        else if(ev->button() & Qt::RightButton){ //addHSVInterval
-            int h1 = vision->getMin(1).val[0];
-            int h2 = vision->getMax(1).val[0];
-            int s1 = vision->getMin(1).val[1];
-            int s2 = vision->getMax(1).val[1];
-            int v1 = vision->getMin(1).val[2];
-            int v2 = vision->getMax(1).val[2];
+        else if (ev->button() & Qt::RightButton) { //addHSVInterval
+            int h1 = m_Vision->getMin(1).val[0];
+            int h2 = m_Vision->getMax(1).val[0];
+            int s1 = m_Vision->getMin(1).val[1];
+            int s2 = m_Vision->getMax(1).val[1];
+            int v1 = m_Vision->getMin(1).val[2];
+            int v2 = m_Vision->getMax(1).val[2];
 
-            if(vec[0]-15 > 0 && vec[0]-15 < h1){
+            if (vec[0]-15 > 0 && vec[0]-15 < h1) {
                 h1 = vec[0] - 15;
-            }else{
-                if(vec[0]-15 < 0){
+            } else {
+                if (vec[0]-15 < 0) {
                     h1 = 0;
                 }
             }
 
-            if(vec[0]+15 < 180 && vec[0]+15 > h2){
+            if (vec[0]+15 < 180 && vec[0]+15 > h2) {
                 h2 = vec[0] + 15;
-            }else{
+            } else {
                 if(vec[0]+15 > 180){
                     h2 = 180;
                 }
@@ -161,12 +161,12 @@ int MainWindow::updateSliders(int id){
     if(ui->radioButtonBall->isChecked()) novo = 8;
 
     if(novo!=id){
-        ui->horizontalSliderh1->setValue(vision->getAllMin()[novo].val[0]);
-        ui->horizontalSliderh2->setValue(vision->getAllMax()[novo].val[0]);
-        ui->horizontalSliders1->setValue(vision->getAllMin()[novo].val[1]);
-        ui->horizontalSliders2->setValue(vision->getAllMax()[novo].val[1]);
-        ui->horizontalSliderv1->setValue(vision->getAllMin()[novo].val[2]);
-        ui->horizontalSliderv2->setValue(vision->getAllMax()[novo].val[2]);
+        ui->horizontalSliderh1->setValue(m_Vision->getAllMin()[novo].val[0]);
+        ui->horizontalSliderh2->setValue(m_Vision->getAllMax()[novo].val[0]);
+        ui->horizontalSliders1->setValue(m_Vision->getAllMin()[novo].val[1]);
+        ui->horizontalSliders2->setValue(m_Vision->getAllMax()[novo].val[1]);
+        ui->horizontalSliderv1->setValue(m_Vision->getAllMin()[novo].val[2]);
+        ui->horizontalSliderv2->setValue(m_Vision->getAllMax()[novo].val[2]);
         return novo;
     }
     return id;
@@ -176,9 +176,9 @@ void MainWindow::on_rBtnSettings_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
     ui->label_3->clear();
-    while (vision->captureImage() && ui->rBtnSettings->isChecked())
+    while (m_Vision->captureImage() && ui->rBtnSettings->isChecked())
     {
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
 
@@ -186,9 +186,9 @@ void MainWindow::on_rBtnRectifyImage_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 
-    while(vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
 
@@ -202,9 +202,9 @@ void MainWindow::on_rBtnCalibrate_clicked()
     updateSliders(-1);
 
     while(ui->rBtnCalibrate->isChecked()){
-        vision->calibrate(id);
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameBinary)));
+        m_Vision->calibrate(id);
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameBinary)));
 
         id = updateSliders(id);
 
@@ -215,7 +215,7 @@ void MainWindow::on_rBtnCalibrate_clicked()
         v1 = ui->horizontalSliderv1->value();
         v2 = ui->horizontalSliderv2->value();
 
-        vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
+        m_Vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
     }
 }
 
@@ -223,9 +223,9 @@ void MainWindow::on_rBtnFieldAdjust_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
 
-    while(vision->captureImage() && ui->rBtnFieldAdjust->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    while (m_Vision->captureImage() && ui->rBtnFieldAdjust->isChecked()) {
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
 
@@ -233,9 +233,9 @@ void MainWindow::on_rBtnGame_clicked()
 {
     ui->stackedWidget->setCurrentIndex(4);
 
-    while(vision->captureImage() && ui->rBtnGame->isChecked()){
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(vision->m_FrameOriginal)));
+    while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
 
@@ -248,34 +248,34 @@ void MainWindow::on_buttonScanDevices_clicked()
 
 void MainWindow::on_buttonGo_clicked()
 {
-    vision->getData(fs);
+    m_Vision->getData(fs);
 }
 
 void MainWindow::on_horizontalSliderBrightness_valueChanged(int value)
 {
     char Brightness[70];
     int valor = ui->horizontalSliderBrightness->value();
-    sprintf(Brightness, "uvcdynctrl --device=/dev/video%d --set='Brightness' %d", vision->m_IdCamera, value);
+    sprintf(Brightness, "uvcdynctrl --device=/dev/video%d --set='Brightness' %d", m_Vision->m_IdCamera, value);
     system(Brightness);
 }
 
 void MainWindow::on_horizontalSliderSaturation_valueChanged(int value)
 {
     char Saturation[70];
-    sprintf(Saturation, "uvcdynctrl --device=/dev/video%d --set='Saturation' %d", vision->m_IdCamera, value);
+    sprintf(Saturation, "uvcdynctrl --device=/dev/video%d --set='Saturation' %d", m_Vision->m_IdCamera, value);
     system(Saturation);
 }
 
 void MainWindow::on_horizontalSliderContrast_valueChanged(int value)
 {
     char Contrast[70];
-    sprintf(Contrast, "uvcdynctrl --device=/dev/video%d --set='Contrast' %d", vision->m_IdCamera, value);
+    sprintf(Contrast, "uvcdynctrl --device=/dev/video%d --set='Contrast' %d", m_Vision->m_IdCamera, value);
     std::cout << Contrast << std::endl;
     system(Contrast);
 }
 
 void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
-    vision->m_IdCamera = index;
-    vision->closeCapture();
+    m_Vision->m_IdCamera = index;
+    m_Vision->closeCapture();
 }
