@@ -1,6 +1,7 @@
 *.o
 *.exe
 *.pro.user
+*.pro.user.*
 
 #################
 ## Eclipse
