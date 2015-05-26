@@ -48,7 +48,7 @@ void RenderThread::run()
     Vision *vision = Vision::getInstance();
 
     // Obter frame binarizado com os intervalos min e max
-    binaryFrame = vision->thresholdImage((Scalar) vision->getMin(m_Number), (Scalar) vision->getMax(m_Number));
+    binaryFrame = vision->thresholdImage((Scalar) vision->getMin()[m_Number], (Scalar) vision->getMax()[m_Number]);
 
     // Aplicar erosão no frame binarizado
     binaryFrame = vision->erodeImage(binaryFrame);

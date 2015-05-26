@@ -277,7 +277,7 @@ border-top: 3px solid black;</string>
          <string notr="true">border-left: 2px rgb(0, 0, 0);</string>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="Settings">
          <property name="styleSheet">

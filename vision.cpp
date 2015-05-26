@@ -49,11 +49,11 @@ void Vision::getData(Fieldstate *fs){
         tf = time();
         cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
-        std::cout << "size: " << this->m_Found[1].size() << std::endl;
-        if(m_Found[1].size() > 0){
-            std::cout << "tam: " << this->m_Found[1].at(0).number_of_pixels << std::endl;
-            cv::circle(m_FrameOriginal, cvPoint(m_Found[1].at(0).x, m_Found[1].at(0).y), 10, cvScalar(255,0,0));
-        }
+//        std::cout << "size: " << this->m_Found[1].size() << std::endl;
+//        if(m_Found[1].size() > 0){
+//            std::cout << "tam: " << this->m_Found[1].at(0).number_of_pixels << std::endl;
+//            cv::circle(m_FrameOriginal, cvPoint(m_Found[1].at(0).x, m_Found[1].at(0).y), 10, cvScalar(255,0,0));
+//        }
 
         cv::waitKey(1);
     }
@@ -171,6 +171,7 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
  * 1,2 e 3 - robos nossos
  * 5,6 e 7 - robos adversarios
  * 8 - bola
+ * 9 - bordas do campo
  */
 
 void Vision::renderImage(Fieldstate *fs)
@@ -252,14 +253,6 @@ void Vision::setMinMax(const CvScalar &min, const CvScalar &max, const int &id){
     m_Max[id] = max;
 }
 
-CvScalar Vision::getMin(int id){
-    return this->m_Min[id];
-}
-
-CvScalar Vision::getMax(int id){
-    return this->m_Max[id];
-}
-
 void Vision::setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h){
     aImg[0] = a;
     aImg[1] = b;
@@ -271,11 +264,11 @@ void Vision::setRetificationsParam(float a, float b, float c, float d, float e, 
     aImg[7] = h;
 }
 
-CvScalar* Vision::getAllMin(){
+CvScalar* Vision::getMin(){
     return m_Min;
 }
 
-CvScalar* Vision::getAllMax(){
+CvScalar* Vision::getMax(){
     return m_Max;
 }
 

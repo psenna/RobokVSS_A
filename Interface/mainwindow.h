@@ -21,6 +21,7 @@ public:
 
     void mousePressEvent( QMouseEvent* ev);
     void closeEvent(QCloseEvent *event);
+    void callLoadCalibration();
 
 private slots:
 

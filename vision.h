@@ -21,10 +21,8 @@ public:
     void setCameraId(const int &id);
     void setMinMax(const CvScalar &min, const CvScalar &max, const int &id);
     bool captureImage();
-    CvScalar getMin(int id);
-    CvScalar getMax(int id);
-    CvScalar* getAllMin();
-    CvScalar* getAllMax();
+    CvScalar* getMin();
+    CvScalar* getMax();
     void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
     void closeCapture();
     void autoRetification();

@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Display1 = &m_Vision->m_FrameOriginal;
     m_Display2 = &m_Vision->m_FrameBinary;
     m_Vision->setCameraId(0);
+    callLoadCalibration();//carrega calibragem
     on_rBtnSettings_clicked();
 }
 
@@ -41,29 +42,50 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent *event)//Evento de fechar a ui
 {
     delete ui;
     m_Vision->closeCapture();
     exit(0);
 }
 
-void MainWindow::on_buttonSaveCalib_clicked()
-{
-    saveCalibration(m_Vision->getAllMin(), m_Vision->getAllMax());
-}
+void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_write.h
 
-void MainWindow::on_buttonLoadCalib_clicked()
-{
-    CvScalar a[10], b[10];
+    CvScalar a[10], b[10];//tornar o tamanho deste vetor algo mais dinamico
     loadCalibration(a, b);
-    for(int i=0; i<10; i++){
+    for(int i=0; i<10; i++){//para nao ter que ficar mudando toda hora aqui
         m_Vision->setMinMax(a[i], b[i], i);
     }
     updateSliders(-1);
 }
 
-void MainWindow::mousePressEvent(QMouseEvent* ev)
+int MainWindow::updateSliders(int id){ //Atualiza as Sliders da calibragem dependendo do objeto selecionado
+    int novo;
+
+    if(ui->radioButton_6->isChecked()) novo = 0; //cor do time nosso
+    if(ui->radioButton_7->isChecked()) novo = 4; //cor do time adversario
+    if(ui->radioButton_8->isChecked()) novo = 1; // V
+    if(ui->radioButton_9->isChecked()) novo = 2; // V
+    if(ui->radioButton_10->isChecked()) novo = 3; //robos nossos
+    if(ui->radioButton_11->isChecked()) novo = 5; // V
+    if(ui->radioButton_12->isChecked()) novo = 6; // V
+    if(ui->radioButton_13->isChecked()) novo = 7; //robos adversarios
+    if(ui->radioButtonBall->isChecked()) novo = 8; //bola
+    if(ui->radioButtonBorda->isChecked()) novo = 9; //bordas do campo
+
+    if(novo!=id){ // atualiza somente se mudar a opcao de objeto
+        ui->horizontalSliderh1->setValue(m_Vision->getMin()[novo].val[0]);
+        ui->horizontalSliderh2->setValue(m_Vision->getMax()[novo].val[0]);
+        ui->horizontalSliders1->setValue(m_Vision->getMin()[novo].val[1]);
+        ui->horizontalSliders2->setValue(m_Vision->getMax()[novo].val[1]);
+        ui->horizontalSliderv1->setValue(m_Vision->getMin()[novo].val[2]);
+        ui->horizontalSliderv2->setValue(m_Vision->getMax()[novo].val[2]);
+        return novo;
+    }
+    return id;
+}
+
+void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (criar uma nova classe de mouse e passar isso pra ela)
 {
     if (ui->rBtnCalibrate->isChecked()) {
 
@@ -82,12 +104,12 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
             Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), 1);
         }
         else if (ev->button() & Qt::RightButton) { //addHSVInterval
-            int h1 = m_Vision->getMin(1).val[0];
-            int h2 = m_Vision->getMax(1).val[0];
-            int s1 = m_Vision->getMin(1).val[1];
-            int s2 = m_Vision->getMax(1).val[1];
-            int v1 = m_Vision->getMin(1).val[2];
-            int v2 = m_Vision->getMax(1).val[2];
+            int h1 = m_Vision->getMin()[1].val[0];
+            int h2 = m_Vision->getMax()[1].val[0];
+            int s1 = m_Vision->getMin()[1].val[1];
+            int s2 = m_Vision->getMax()[1].val[1];
+            int v1 = m_Vision->getMin()[1].val[2];
+            int v2 = m_Vision->getMax()[1].val[2];
 
             if (vec[0]-15 > 0 && vec[0]-15 < h1) {
                 h1 = vec[0] - 15;
@@ -146,34 +168,23 @@ void MainWindow::mousePressEvent(QMouseEvent* ev)
     }
 }
 
+//********************************************************************************************
+//********************************************************************************************
+//*********** ACESSE AS FUNCOES ABAIXO PELA .ui , SAO TODAS FUNCOES DE EVENTO DA UI***********
+//********************************************************************************************
+//********************************************************************************************
 
-int MainWindow::updateSliders(int id){
-    int novo;
-
-    if(ui->radioButton_6->isChecked()) novo = 0;
-    if(ui->radioButton_7->isChecked()) novo = 4;
-    if(ui->radioButton_8->isChecked()) novo = 1;
-    if(ui->radioButton_9->isChecked()) novo = 2;
-    if(ui->radioButton_10->isChecked()) novo = 3;
-    if(ui->radioButton_11->isChecked()) novo = 5;
-    if(ui->radioButton_12->isChecked()) novo = 6;
-    if(ui->radioButton_13->isChecked()) novo = 7;
-    if(ui->radioButtonBall->isChecked()) novo = 8;
-    if(ui->radioButtonBorda->isChecked()) novo = 9;
-
-    if(novo!=id){
-        ui->horizontalSliderh1->setValue(m_Vision->getAllMin()[novo].val[0]);
-        ui->horizontalSliderh2->setValue(m_Vision->getAllMax()[novo].val[0]);
-        ui->horizontalSliders1->setValue(m_Vision->getAllMin()[novo].val[1]);
-        ui->horizontalSliders2->setValue(m_Vision->getAllMax()[novo].val[1]);
-        ui->horizontalSliderv1->setValue(m_Vision->getAllMin()[novo].val[2]);
-        ui->horizontalSliderv2->setValue(m_Vision->getAllMax()[novo].val[2]);
-        return novo;
-    }
-    return id;
+void MainWindow::on_buttonSaveCalib_clicked() //Save da Calibragem
+{
+    saveCalibration(m_Vision->getMin(), m_Vision->getMax());
 }
 
-void MainWindow::on_rBtnSettings_clicked()
+void MainWindow::on_buttonLoadCalib_clicked() //Load da Calibragem
+{
+    callLoadCalibration();
+}
+
+void MainWindow::on_rBtnSettings_clicked() //Settings
 {
     ui->stackedWidget->setCurrentIndex(0);
     ui->label_3->clear();
@@ -183,9 +194,10 @@ void MainWindow::on_rBtnSettings_clicked()
     }
 }
 
-void MainWindow::on_rBtnRectifyImage_clicked()
+void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
 {
     ui->stackedWidget->setCurrentIndex(1);
+    m_Vision->autoRetification();
 
     while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
         m_Vision->m_FrameRect = m_Vision->m_FrameOriginal.clone();
@@ -195,7 +207,7 @@ void MainWindow::on_rBtnRectifyImage_clicked()
     }
 }
 
-void MainWindow::on_rBtnCalibrate_clicked()
+void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
 {
     ui->stackedWidget->setCurrentIndex(2);
     ui->radioButton_6->setChecked(true);
@@ -222,7 +234,7 @@ void MainWindow::on_rBtnCalibrate_clicked()
     }
 }
 
-void MainWindow::on_rBtnFieldAdjust_clicked()
+void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
 {
     ui->stackedWidget->setCurrentIndex(3);
 
@@ -232,7 +244,7 @@ void MainWindow::on_rBtnFieldAdjust_clicked()
     }
 }
 
-void MainWindow::on_rBtnGame_clicked()
+void MainWindow::on_rBtnGame_clicked() //Game
 {
     ui->stackedWidget->setCurrentIndex(4);
 
