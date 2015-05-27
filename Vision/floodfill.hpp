@@ -8,6 +8,9 @@
 #include <stack>
 #include <vector>
 
+#define WHITE_PIXEL 1
+#define BLACK_PIXEL 0
+
 using cv::Mat;
 using cv::Point;
 using std::stack;
@@ -15,6 +18,17 @@ using std::stack;
 void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects, int min_size, int max_size);
 std::vector<Position> DetectColors(Mat frameBin, int min_size, unsigned int number_of_objects, int max_size);
 
+void FloodNeighbour(Mat &frame, int row, int column, std::stack<int> &row_stack, std::stack<int> &col_stack, int &counter)
+{
+    // Verifica se vizinho contém ponto branco
+    if (frame.at<char>(row, column) != BLACK_PIXEL)
+    {
+        col_stack.push(column);                             // se sim, adicione a coordenada y na pilha
+        row_stack.push(row);                                // E a coordenada x
+        frame.at<char>(row, column) = BLACK_PIXEL;          // Pinta o ponto processado de preto
+        counter++;                                          // Incrementa o contador
+    }
+}
 
 
 void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects, int min_size, int max_size) //realiza o FloodFill em uma area fechada branca
@@ -34,62 +48,32 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         pilhaC.pop();
         pilhaL.pop();           //remover o ponto a processar da pilha
 
-					//Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
+
+        // Vizinho de cima
+        FloodNeighbour(frameBin, l+1, c, pilhaL, pilhaC, pixels_counter);
+
+        // Vizinho de baixo
+        FloodNeighbour(frameBin, l-1, c, pilhaL, pilhaC, pixels_counter);
+
+        // Vizinho da direita
+        FloodNeighbour(frameBin, l, c+1, pilhaL, pilhaC, pixels_counter);
+
+        // Vizinho da esquerda
+        FloodNeighbour(frameBin, l, c-1, pilhaL, pilhaC, pixels_counter);
+
+        // Vizinhos Diagonais
+        FloodNeighbour(frameBin, l-1, c-1, pilhaL, pilhaC, pixels_counter);
+        FloodNeighbour(frameBin, l+1, c+1, pilhaL, pilhaC, pixels_counter);
+        FloodNeighbour(frameBin, l+1, c-1, pilhaL, pilhaC, pixels_counter);
+        FloodNeighbour(frameBin, l-1, c+1, pilhaL, pilhaC, pixels_counter);
+
+        //Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
         if (frameBin.at<char>(l+1, c) != 0) {
             pilhaL.push(l+1);			//se sim adiciona as coordenadas y
             pilhaC.push(c);			//e x deste ponto as respectivas pilhas
             frameBin.at<char>(l+1, c) = 0;	//pinta de preto cada ponto já processado
             pixels_counter++;			//aumenta o contador de pixels brancos dentro desta area branca
-        }
-
-        if (frameBin.at<char>(l-1, c) != 0) {
-            pilhaL.push(l-1);
-            pilhaC.push(c);
-            frameBin.at<char>(l-1, c) = 0;
-            pixels_counter++;
-        }
-
-        if (frameBin.at<char>(l,c+1) != 0) {
-            pilhaL.push(l);
-            pilhaC.push(c+1);
-            frameBin.at<char>(l, c+1) = 0;
-            pixels_counter++;
-        }
-
-        if (frameBin.at<char>(l, c-1) != 0) {
-            pilhaL.push(l);
-            pilhaC.push(c-1);
-            frameBin.at<char>(l,c-1) = 0;
-            pixels_counter++;
-        }
-
-        //diagonais:
-        if (frameBin.at<char>(l-1,c-1) != 0) {
-            pilhaL.push(l-1);
-            pilhaC.push(c-1);
-            frameBin.at<char>(l-1, c-1) = 0;
-            pixels_counter++;
-        }
-        if (frameBin.at<char>(l+1,c+1) != 0) {
-            pilhaL.push(l+1);
-            pilhaC.push(c+1);
-            frameBin.at<char>(l+1,c+1) = 0;
-            pixels_counter++;
-        }
-
-        if (frameBin.at<char>(l+1,c-1) != 0) {
-            pilhaL.push(l+1);
-            pilhaC.push(c-1);
-            frameBin.at<char>(l+1,c-1) = 0;
-            pixels_counter++;
-        }
-
-        if (frameBin.at<char>(l-1,c+1) != 0) {
-            pilhaL.push(l-1);
-            pilhaC.push(c+1);
-            frameBin.at<char>(l-1, c+1) = 0;
-            pixels_counter++;
-        }
+        }        
     } // end while
 
     if (pixels_counter > min_size && pixels_counter < max_size) { //Verifica se a quantidade de pixels dentro da area branca esta dentro de um intervalo predefinido
