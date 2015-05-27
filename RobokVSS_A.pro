@@ -20,25 +20,25 @@ SOURCES += main.cpp\
     fieldstate.cpp \
     robot.cpp \
     unit.cpp \
-    vision.cpp \
-    renderthread.cpp \
-    utils.cpp \
-    Interface/mainwindow.cpp \
+    utils.cpp \    
     read_write.cpp \
-    serial.cpp
+    Interface/mainwindow.cpp \
+    Vision/renderthread.cpp \
+    Vision/vision.cpp \
+    Communitacion/serial.cpp
 
 HEADERS  += \
     ball.h \
     fieldstate.h \
     robot.h \
-    unit.h \
-    vision.h \
-    renderthread.h \
-    floodfill.hpp \
-    Interface/mainwindow.h \
+    unit.h \    
     read_write.h \
     utils.h \
-    serial.h
+    Interface/mainwindow.h \
+    Vision/floodfill.hpp \
+    Vision/renderthread.h \
+    Vision/vision.h \
+    Communitacion/serial.h
 
 FORMS    += \
     Interface/mainwindow.ui

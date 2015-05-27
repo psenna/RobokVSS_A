@@ -3,7 +3,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "read_write.h"
-#include "serial.h"
+#include "Communitacion/serial.h"
 #include <vector>
 #include <QMouseEvent>
 #include <QKeyEvent>

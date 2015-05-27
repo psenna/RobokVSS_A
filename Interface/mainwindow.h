@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
-#include "serial.h"
+#include "Communitacion/serial.h"
 #include "fieldstate.h"
-#include "vision.h"
+#include "Vision/vision.h"
 
 namespace Ui {
 class MainWindow;
