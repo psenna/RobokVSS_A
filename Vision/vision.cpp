@@ -46,7 +46,7 @@ void Vision::getData(Fieldstate *fs){
 
         //adjustImage();
         convertImage(&m_FrameOriginal);
-        renderImage(fs);
+        renderImage();
 
 
         tf = time();
@@ -56,11 +56,11 @@ void Vision::getData(Fieldstate *fs){
     }
 }
 
-void Vision::calibrate(int id, Mat* FrameAlvo) {
+void Vision::calibrate(int id, Mat* frameAlvo) {
 
     if (captureImage()) {
         //adjustImage();
-        convertImage(FrameAlvo);
+        convertImage(frameAlvo);
         //cv::setMouseCallback("Original Frame", mouseEvent, &m_FrameHSV);
         m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
         m_FrameBinary = erodeImage(m_FrameBinary);
@@ -162,9 +162,9 @@ void Vision::rectifyImage(){
 
 
 /* converte a imagem capturada de BGR para HSV */
-void Vision::convertImage(Mat* FrameAlvo)
+void Vision::convertImage(Mat* frameAlvo)
 {
-    cvtColor(*FrameAlvo, m_FrameHSV, CV_BGR2HSV);
+    cvtColor(*frameAlvo, m_FrameHSV, CV_BGR2HSV);
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
@@ -189,7 +189,7 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
  * 9 - bordas do campo
  */
 
-void Vision::renderImage(Fieldstate *fs)
+void Vision::renderImage()
 {
     for (int i = 0; i < 9; i++)
         m_RenderThreads[i].start();

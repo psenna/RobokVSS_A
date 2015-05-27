@@ -11,6 +11,8 @@ public:
 
     Robot();
 
+    int getId() const;
+    void setId(const int& id);
     Position getObjective() const;
     void setObjective(const Position& position);
     void setObjective(const int& x, const int& y);
@@ -18,9 +20,9 @@ public:
     void setCommand(const Command& command);
 
 private:
+    int m_Id;
     Position m_Objective;
     Command m_Command;
-
 };
 
 }

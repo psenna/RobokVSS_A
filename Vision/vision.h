@@ -16,7 +16,7 @@ class Vision
 public:
     static Vision* getInstance();
     void getData(Fieldstate *fs);
-    void calibrate(int id, Mat* FrameAlvo);
+    void calibrate(int id, Mat* frameAlvo);
     //void retification();
     void setCameraId(const int &id);
     void setMinMax(const CvScalar &min, const CvScalar &max, const int &id);
@@ -35,8 +35,8 @@ private:
     Vision();
     void adjustImage();
     void rectifyImage();
-    void convertImage(Mat* FrameAlvo);
-    void renderImage(Fieldstate *fs);
+    void convertImage(Mat* frameAlvo);
+    void renderImage();
     void identifyRobot(Fieldstate *fs);
     Mat thresholdImage(Scalar min, Scalar max);
     Mat dilateImage(const Mat &binaryFrame);
@@ -47,11 +47,10 @@ private:
     Mat m_FrameRect;
     Mat m_FrameHSV;
     Mat m_FrameBinary;
-    CvCapture* m_Capture;
     int m_IdCamera;
 
     std::vector<Position> m_Found[10];
-    VideoCapture m_VideoCapture;
+    cv::VideoCapture m_VideoCapture;
     CvScalar m_Max[10];
     CvScalar m_Min[10];
     RenderThread m_RenderThreads[10];
