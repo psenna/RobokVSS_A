@@ -89,16 +89,34 @@ void Vision::autoRetificationSet(){
 
         if(m_Found[9].size()<4)return; //Erro: Calibre novamente as Bordas do campo
 
-        float minx = 8888, miny = 8888, maxx = 0, maxy=0; //botar tam max
+        float a[8]; //botar tam max
+        float medx=0, medy=0;  //guardará a média dos pontos, ponto central
 
         for(int i=0; i<4; i++){
-            minx = min(m_Found[9][i].x, minx);
-            miny = min(m_Found[9][i].y, miny);
-            maxx = max(m_Found[9][i].x, maxx);
-            maxy = max(m_Found[9][i].y, maxy);
+            medx += m_Found[9][i].x/4;
+            medy += m_Found[9][i].y/4;
         }
 
-        setRetificationsParam(minx, miny,maxx , miny, minx, maxy, maxx, maxy);
+        for(int i=0; i<4; i++){             //compara com o ponto central para separar os pontos
+            if(medx - m_Found[9][i].x > 0 && medy - m_Found[9][i].y > 0){
+                a[0] = m_Found[9][i].x;
+                a[1] = m_Found[9][i].y;
+            }
+            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y > 0){
+                a[2] = m_Found[9][i].x;
+                a[3] = m_Found[9][i].y;
+            }
+            if(medx - m_Found[9][i].x > 0 && medy - m_Found[9][i].y < 0){
+                a[4] = m_Found[9][i].x;
+                a[5] = m_Found[9][i].y;
+            }
+            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y < 0){
+                a[6] = m_Found[9][i].x;
+                a[7] = m_Found[9][i].y;
+            }
+        }
+
+        setRetificationsParam(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
     }
 }
 
