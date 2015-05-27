@@ -22,6 +22,8 @@ Vision::Vision()
         this->setMinMax(cvScalar(0, 0, 0), cvScalar(0, 0, 0), i);
         m_RenderThreads[i].setNumber(i);
     }
+    bordasFrameOriginal.resize(4);
+    bordasRectify.resize(4);
 }
 
 Vision* Vision::getInstance()
@@ -50,12 +52,6 @@ void Vision::getData(Fieldstate *fs){
         tf = time();
         cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
-//        std::cout << "size: " << this->m_Found[1].size() << std::endl;
-//        if(m_Found[1].size() > 0){
-//            std::cout << "tam: " << this->m_Found[1].at(0).number_of_pixels << std::endl;
-//            cv::circle(m_FrameOriginal, cvPoint(m_Found[1].at(0).x, m_Found[1].at(0).y), 10, cvScalar(255,0,0));
-//        }
-
         cv::waitKey(1);
     }
 }
@@ -72,7 +68,7 @@ void Vision::calibrate(int id, Mat* FrameAlvo) {
     }
 }
 
-//void Vision::retification(){
+//void Vision::retification(){ //nao ta usando essa função
 //    if(captureImage()){
 //        convertImage();
 //        setRetificationsParam(0,0,m_FrameOriginal.cols,0,0, m_FrameOriginal.rows,m_FrameOriginal.cols,m_FrameOriginal.rows);
@@ -89,7 +85,7 @@ void Vision::autoRetificationSet(){
 
         if(m_Found[9].size()<4)return; //Erro: Calibre novamente as Bordas do campo
 
-        float a[8]; //botar tam max
+        std::vector<float> a(8);
         float medx=0, medy=0;  //guardará a média dos pontos, ponto central
 
         for(int i=0; i<4; i++){
@@ -102,21 +98,21 @@ void Vision::autoRetificationSet(){
                 a[0] = m_Found[9][i].x;
                 a[1] = m_Found[9][i].y;
             }
-            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y > 0){
+            if(medx - m_Found[9][i].x > 0 && medy - m_Found[9][i].y < 0){
                 a[2] = m_Found[9][i].x;
                 a[3] = m_Found[9][i].y;
             }
-            if(medx - m_Found[9][i].x > 0 && medy - m_Found[9][i].y < 0){
+            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y < 0){
                 a[4] = m_Found[9][i].x;
                 a[5] = m_Found[9][i].y;
             }
-            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y < 0){
+            if(medx - m_Found[9][i].x < 0 && medy - m_Found[9][i].y > 0){
                 a[6] = m_Found[9][i].x;
                 a[7] = m_Found[9][i].y;
             }
         }
 
-        setRetificationsParam(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+        setRetificationsParam(a);
     }
 }
 
@@ -124,7 +120,7 @@ void Vision::autoRetificationSet(){
  * Método responsável pelos ajustes na imagem.
  * brilho, contraste, saturaçao e retificaçao.
  */
-void Vision::adjustImage(){
+void Vision::adjustImage(){    
     rectifyImage();
 }
 
@@ -139,37 +135,29 @@ bool Vision::captureImage(){
     {
         cout << "Please check your device." << endl;
         return false;
-    }    
+    }
     cvWaitKey(1);
     return true;
 
 }
 
-/* retifica a imagem, aWorld = limites da imagem, aImg = limites da area a retificar */
+/* retifica a imagem, bordasFrameOriginal = limites da imagem, bordasRectify = limites da area a retificar */
 void Vision::rectifyImage(){
 
-        // Input Quadilateral or Image plane coordinates
-         std::vector<Point2f> inputQuad;
-        // Output Quadilateral or World plane coordinates
-         std::vector<Point2f> outputQuad;
+    //codigo copiado e modificado de: http://opencvexamples.blogspot.com/2014/01/perspective-transform.html#.VWV1Aq1hiko
 
-        // The 4 points that select quadilateral on the input , from top-left in clockwise order
-        // These four pts are the sides of the rect box used as input
-        inputQuad.push_back(Point2f( aImg[0],aImg[1]));
-        inputQuad.push_back(Point2f( aImg[4],aImg[5]));
-        inputQuad.push_back(Point2f( aImg[6],aImg[7]));
-        inputQuad.push_back(Point2f( aImg[2],aImg[3]));
-        // The 4 points where the mapping is to be done , from top-left in clockwise order
-        outputQuad.push_back(Point2f( 0,0 ));
-        outputQuad.push_back(Point2f( 0,m_FrameOriginal.rows-1  ));
-        outputQuad.push_back(Point2f( m_FrameOriginal.cols-1,m_FrameOriginal.rows-1));
-        outputQuad.push_back(Point2f( m_FrameOriginal.cols-1,0));
+    // The 4 points where the mapping is to be done , from top-left in clockwise order
+    bordasFrameOriginal[0] = cv::Point2f(0,0);
+    bordasFrameOriginal[1] = cv::Point2f(0,m_FrameOriginal.rows-1 );
+    bordasFrameOriginal[2] = cv::Point2f(m_FrameOriginal.cols-1,m_FrameOriginal.rows-1);
+    bordasFrameOriginal[3] = cv::Point2f(m_FrameOriginal.cols-1,0);
 
-        // Get the Perspective Transform Matrix i.e. lambda
-        Mat lambda = findHomography(inputQuad,outputQuad,0);
-        // Apply the Perspective Transform just found to the src image
-        warpPerspective(m_FrameOriginal,m_FrameRect,lambda,m_FrameRect.size());
-        resize(m_FrameRect, m_FrameRect, tamDisplay);
+    // Get the Perspective Transform Matrix i.e. lambda
+    Mat lambda = findHomography(bordasRectify,bordasFrameOriginal,0);
+    // Apply the Perspective Transform just found to the src image
+    warpPerspective(m_FrameOriginal,m_FrameRect,lambda,m_FrameRect.size());
+    //resize image to the display size
+    resize(m_FrameRect, m_FrameRect, tamDisplay);
 }
 
 
@@ -203,7 +191,7 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
 
 void Vision::renderImage(Fieldstate *fs)
 {
-    for (int i = 0; i < 9; i++)    
+    for (int i = 0; i < 9; i++)
         m_RenderThreads[i].start();
 
     //identifyRobot(fs);
@@ -280,15 +268,26 @@ void Vision::setMinMax(const CvScalar &min, const CvScalar &max, const int &id){
     m_Max[id] = max;
 }
 
-void Vision::setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h){
-    aImg[0] = a;
-    aImg[1] = b;
-    aImg[2] = c;
-    aImg[3] = d;
-    aImg[4] = e;
-    aImg[5] = f;
-    aImg[6] = g;
-    aImg[7] = h;
+std::vector<float> Vision::convertBordas(std::vector<cv::Point2f> bordas){
+    std::vector<float> a(8);
+    a[0] = bordas[0].x;
+    a[1] = bordas[0].y;
+    a[2] = bordas[1].x;
+    a[3] = bordas[1].y;
+    a[4] = bordas[2].x;
+    a[5] = bordas[2].y;
+    a[6] = bordas[3].x;
+    a[7] = bordas[3].y;
+    return a;
+}
+
+void Vision::setRetificationsParam(std::vector<float> aImg){
+    // The 4 points that select quadilateral on the input , from top-left in clockwise order
+    // These four pts are the sides of the rect box used as input
+    bordasRectify[0] = Point2f(aImg[0],aImg[1]);
+    bordasRectify[1] = Point2f(aImg[2],aImg[3]);
+    bordasRectify[2] = Point2f(aImg[4],aImg[5]);
+    bordasRectify[3] = Point2f(aImg[6],aImg[7]);
 }
 
 CvScalar* Vision::getMin(){

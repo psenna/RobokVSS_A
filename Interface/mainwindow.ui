@@ -721,7 +721,7 @@ border-color: white;</string>
            </item>
           </layout>
          </widget>
-         <widget class="QPushButton" name="pushButton_9">
+         <widget class="QPushButton" name="pushButtonLoadRect">
           <property name="geometry">
            <rect>
             <x>250</x>
@@ -737,7 +737,7 @@ border-color: white;</string>
            <string>Load</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="pushButton_10">
+         <widget class="QPushButton" name="pushButtonSaveRect">
           <property name="geometry">
            <rect>
             <x>360</x>

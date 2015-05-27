@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Vision->tamDisplay = Size(ui->label_2->width()-1,ui->label_2->height()-1);
     m_Vision->setCameraId(0);
     callLoadCalibration();//carrega calibragem
-    if(loadRectification(m_Vision->aImg))m_Display1 = &m_Vision->m_FrameRect;//carrega retificacao
+    on_pushButtonLoadRect_clicked();//carrega retificacao
     on_rBtnSettings_clicked();
 }
 
@@ -177,20 +177,20 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
         m_Display1 = &m_Vision->m_FrameRect;
         switch (ui->comboBoxRectfy->currentIndex()) {
         case 0://A
-            m_Vision->aImg[0] = (float) P.x();
-            m_Vision->aImg[1] = (float) P.y();
+            m_Vision->bordasRectify[0].x = (float) P.x();
+            m_Vision->bordasRectify[0].y = (float) P.y();
             break;
         case 1://B
-            m_Vision->aImg[2] = (float) P.x();
-            m_Vision->aImg[3] = (float) P.y();
+            m_Vision->bordasRectify[1].x = (float) P.x();
+            m_Vision->bordasRectify[1].y = (float) P.y();
             break;
         case 2://C
-            m_Vision->aImg[4] = (float) P.x();
-            m_Vision->aImg[5] = (float) P.y();
+            m_Vision->bordasRectify[2].x = (float) P.x();
+            m_Vision->bordasRectify[2].y = (float) P.y();
             break;
         case 3://D
-            m_Vision->aImg[6] = (float) P.x();
-            m_Vision->aImg[7] = (float) P.y();
+            m_Vision->bordasRectify[3].x = (float) P.x();
+            m_Vision->bordasRectify[3].y = (float) P.y();
             break;
         default:
             break;
@@ -206,14 +206,14 @@ void MainWindow::keyPressEvent(QKeyEvent * ev){
 }
 
 void MainWindow::showRectify(){//mostra os pontos da retificacao no frame original
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]), 5, cvScalar(255,0,0));//A
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]),cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]),cv::Scalar(0,255,0),1,8,0);//A-B
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]), 5, cvScalar(0,255,0));//B
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]),cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]),cv::Scalar(255,0,255),1,8,0);//B-D
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]), 5, cvScalar(0,0,255));//C
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]),cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]),cv::Scalar(0,0,255),1,8,0);//D-C
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]), 5, cvScalar(255,0,255));//D
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]),cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]),cv::Scalar(255,0,0),1,8,0);//C-A
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y), 5, cvScalar(255,0,0));//A
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y),cv::Scalar(0,255,0),1,8,0);//A-B
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y), 5, cvScalar(0,255,0));//B
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y),cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y),cv::Scalar(255,0,255),1,8,0);//B-C
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y), 5, cvScalar(0,0,255));//C
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y),cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Scalar(0,0,255),1,8,0);//C-D
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y), 5, cvScalar(255,0,255));//D
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Scalar(255,0,0),1,8,0);//D-A
 }
 
 //********************************************************************************************
@@ -245,7 +245,7 @@ void MainWindow::on_rBtnSettings_clicked() //Settings
 
 void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
 {
-    ui->stackedWidget->setCurrentIndex(1);    
+    ui->stackedWidget->setCurrentIndex(1);
 
     while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){        
         m_Vision->adjustImage();
@@ -344,14 +344,18 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     m_Vision->closeCapture();
 }
 
-void MainWindow::on_pushButton_10_clicked()
+void MainWindow::on_pushButtonSaveRect_clicked()
 {
-    saveRectification(m_Vision->aImg);
+    saveRectification(m_Vision->convertBordas(m_Vision->bordasRectify));
 }
 
-void MainWindow::on_pushButton_9_clicked()
+void MainWindow::on_pushButtonLoadRect_clicked()
 {
-    loadRectification(m_Vision->aImg);
+    std::vector<float> aImg(8);
+    if(loadRectification(&aImg)){
+        m_Display1 = &m_Vision->m_FrameRect;//carrega retificacao
+        m_Vision->setRetificationsParam(aImg);
+    }
 }
 
 void MainWindow::on_pushButtonSaveField_clicked()
@@ -367,7 +371,7 @@ void MainWindow::on_pushButtonLoadField_clicked()
 void MainWindow::on_pushButtonRectReset_clicked()
 {
     m_Display1 = &m_Vision->m_FrameOriginal;
-    m_Vision->setRetificationsParam(0,0,m_Vision->m_FrameOriginal.cols,0,0, m_Vision->m_FrameOriginal.rows,m_Vision->m_FrameOriginal.cols,m_Vision->m_FrameOriginal.rows);
+    m_Vision->setRetificationsParam(m_Vision->convertBordas(m_Vision->bordasFrameOriginal));
 }
 
 void MainWindow::on_pushButtonAutoRect_clicked()

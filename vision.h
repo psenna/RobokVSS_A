@@ -23,10 +23,10 @@ public:
     bool captureImage();
     CvScalar* getMin();
     CvScalar* getMax();
-    void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
+    void setRetificationsParam(std::vector<float> aImg);
     void closeCapture();
     void autoRetificationSet();
-
+    std::vector<float> convertBordas(std::vector<cv::Point2f> bordas);
 
     friend class RenderThread;
     friend class MainWindow;
@@ -51,13 +51,13 @@ private:
     int m_IdCamera;
 
     std::vector<Position> m_Found[10];
-    float aImg[8]; /* pontos para a retificaçao */
     VideoCapture m_VideoCapture;
     CvScalar m_Max[10];
     CvScalar m_Min[10];
     RenderThread m_RenderThreads[10];
     cv::Size tamDisplay;
-
+    std::vector<cv::Point2f> bordasRectify; /* pontos para a retificaçao */
+    std::vector<cv::Point2f> bordasFrameOriginal; /* pontos para a retificaçao */
 };
 
 #endif // VISION_H

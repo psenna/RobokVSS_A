@@ -19,7 +19,7 @@ void saveSettings(int brightness, int saturation, int contrast) {
     fclose(file);
 }
 
-void saveRectification(float a[8]) {
+void saveRectification(std::vector<float> a) {
 
     FILE *file;
     file = fopen("retificacao", "wb");
@@ -35,6 +35,8 @@ void saveRectification(float a[8]) {
         writing[6] = a[6];
         writing[7] = a[7];
         fwrite(writing, 1, sizeof(float) * 8, file);
+        for(int i = 0; i < 8; i++){
+        }
     }
 
     fclose(file);
@@ -109,7 +111,7 @@ bool loadCalibration(CvScalar MIN[10], CvScalar MAX[10]) {
     return false;
 }
 
-bool loadRectification(float aImg[8]){
+bool loadRectification(std::vector<float>* aImg){
     FILE *arq = fopen("retificacao","rb");
 
     if (arq != NULL)
@@ -117,9 +119,9 @@ bool loadRectification(float aImg[8]){
         int leitura[8];
         fread(leitura, 1, sizeof(float) * 8, arq);
         for(int i = 0; i < 8; i++){
-            aImg[i] = leitura[i];
+            aImg->at(i) = leitura[i];
         }
-        fclose(arq);
+        fclose(arq);        
         return true;
     }
     return false;
