@@ -87,6 +87,8 @@ void Vision::autoRetificationSet(){
         m_RenderThreads[9].start();
         m_RenderThreads[9].wait();
 
+        if(m_Found[9].size()<4)return; //Erro: Calibre novamente as Bordas do campo
+
         float minx = 8888, miny = 8888, maxx = 0, maxy=0; //botar tam max
 
         for(int i=0; i<4; i++){

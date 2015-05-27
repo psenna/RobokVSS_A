@@ -86,7 +86,7 @@ void saveFieldState(CvPoint a, CvPoint b, CvPoint c, CvPoint d, CvPoint e){
     fclose(file);
 }
 
-void loadCalibration(CvScalar MIN[10], CvScalar MAX[10]) {
+bool loadCalibration(CvScalar MIN[10], CvScalar MAX[10]) {
 
     FILE* file = fopen("calib", "rb");
 
@@ -104,10 +104,12 @@ void loadCalibration(CvScalar MIN[10], CvScalar MAX[10]) {
             MAX[i].val[2] = reading[(6*i)+5];
         }
         fclose(file);
+        return true;
     }
+    return false;
 }
 
-void loadRectification(float aImg[8]){
+bool loadRectification(float aImg[8]){
     FILE *arq = fopen("retificacao","rb");
 
     if (arq != NULL)
@@ -118,7 +120,9 @@ void loadRectification(float aImg[8]){
             aImg[i] = leitura[i];
         }
         fclose(arq);
+        return true;
     }
+    return false;
 }
 
 void loadFieldstate(Fieldstate *fs){

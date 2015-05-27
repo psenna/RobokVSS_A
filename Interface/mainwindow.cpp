@@ -26,12 +26,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     // Instanciar Vision
     m_Vision = Vision::getInstance();
 
+
     m_Display1 = &m_Vision->m_FrameOriginal;
-    m_Vision->setRetificationsParam(0,0,m_Vision->m_FrameOriginal.cols,0,0, m_Vision->m_FrameOriginal.rows,m_Vision->m_FrameOriginal.cols,m_Vision->m_FrameOriginal.rows);
 
     m_Vision->tamDisplay = Size(ui->label_2->width()-1,ui->label_2->height()-1);
     m_Vision->setCameraId(0);
     callLoadCalibration();//carrega calibragem
+    if(loadRectification(m_Vision->aImg))m_Display1 = &m_Vision->m_FrameRect;//carrega retificacao
     on_rBtnSettings_clicked();
 }
 
@@ -93,7 +94,7 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
     if (ui->rBtnCalibrate->isChecked()) {
 
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
-        if(P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
+        if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
         cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
 
         if (ev->button() & Qt::LeftButton) { //setHsvInterval
@@ -170,10 +171,10 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
             Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), 1);
         }
     }
-    else if (ui->rBtnRectifyImage->isChecked()){
-        m_Display1 = &m_Vision->m_FrameRect;
+    else if (ui->rBtnRectifyImage->isChecked()){       
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
-        if(P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
+        if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
+        m_Display1 = &m_Vision->m_FrameRect;
         switch (ui->comboBoxRectfy->currentIndex()) {
         case 0://A
             m_Vision->aImg[0] = (float) P.x();
@@ -371,7 +372,7 @@ void MainWindow::on_pushButtonRectReset_clicked()
 
 void MainWindow::on_pushButtonAutoRect_clicked()
 {
-    on_pushButtonRectReset_clicked();
-    m_Vision->autoRetificationSet();
-    m_Display1 = &m_Vision->m_FrameRect;
+        on_pushButtonRectReset_clicked();
+        m_Vision->autoRetificationSet();
+        m_Display1 = &m_Vision->m_FrameRect;
 }
