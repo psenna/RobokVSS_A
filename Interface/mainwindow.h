@@ -20,6 +20,7 @@ public:
     ~MainWindow();
 
     void mousePressEvent( QMouseEvent* ev);
+    void keyPressEvent(QKeyEvent * ev);
     void closeEvent(QCloseEvent *event);
     void callLoadCalibration();
 
@@ -61,6 +62,8 @@ private slots:
 
     void on_pushButtonLoadField_clicked();
 
+    void on_pushButtonRectReset_clicked();
+
     void on_pushButtonAutoRect_clicked();
 
 private:
@@ -70,6 +73,8 @@ private:
     Vision *m_Vision;
     Serial *serial;
     Fieldstate *fs;
+
+    void showRectify();
 };
 
 #endif // MAINWINDOW_H

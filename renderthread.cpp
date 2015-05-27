@@ -60,7 +60,7 @@ void RenderThread::run()
     // Detectar cores a partir do frame binarizado resultante
     vision->m_Found[m_Number] = DetectColors(binaryFrame.clone(), 6, 4, 1000);
 
-        std::cout << "size: " << vision->m_Found[9].size() << std::endl;
+    //std::cout << "size: " << vision->m_Found[9].size() << std::endl;
 
 }
 

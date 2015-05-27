@@ -16,8 +16,8 @@ class Vision
 public:
     static Vision* getInstance();
     void getData(Fieldstate *fs);
-    void calibrate(int id);
-    void retification();
+    void calibrate(int id, Mat* FrameAlvo);
+    //void retification();
     void setCameraId(const int &id);
     void setMinMax(const CvScalar &min, const CvScalar &max, const int &id);
     bool captureImage();
@@ -25,7 +25,7 @@ public:
     CvScalar* getMax();
     void setRetificationsParam(float a, float b, float c, float d, float e, float f, float g, float h);
     void closeCapture();
-    void autoRetification();
+    void autoRetificationSet();
 
 
     friend class RenderThread;
@@ -35,7 +35,7 @@ private:
     Vision();
     void adjustImage();
     void rectifyImage();
-    void convertImage();    
+    void convertImage(Mat* FrameAlvo);
     void renderImage(Fieldstate *fs);
     void identifyRobot(Fieldstate *fs);
     Mat thresholdImage(Scalar min, Scalar max);
@@ -56,6 +56,7 @@ private:
     CvScalar m_Max[10];
     CvScalar m_Min[10];
     RenderThread m_RenderThreads[10];
+    cv::Size tamDisplay;
 
 };
 

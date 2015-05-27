@@ -277,7 +277,7 @@ border-top: 3px solid black;</string>
          <string notr="true">border-left: 2px rgb(0, 0, 0);</string>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="Settings">
          <property name="styleSheet">
@@ -725,7 +725,7 @@ border-color: white;</string>
           <property name="geometry">
            <rect>
             <x>250</x>
-            <y>110</y>
+            <y>130</y>
             <width>99</width>
             <height>27</height>
            </rect>
@@ -741,7 +741,7 @@ border-color: white;</string>
           <property name="geometry">
            <rect>
             <x>360</x>
-            <y>110</y>
+            <y>130</y>
             <width>91</width>
             <height>27</height>
            </rect>
@@ -753,11 +753,11 @@ border-color: white;</string>
            <string>Save</string>
           </property>
          </widget>
-         <widget class="QPushButton" name="pushButtonAutoRect">
+         <widget class="QPushButton" name="pushButtonRectReset">
           <property name="geometry">
            <rect>
             <x>460</x>
-            <y>110</y>
+            <y>130</y>
             <width>91</width>
             <height>27</height>
            </rect>
@@ -766,7 +766,23 @@ border-color: white;</string>
            <string notr="true">background-color: rgb(206, 203, 200);</string>
           </property>
           <property name="text">
-           <string>Auto</string>
+           <string>Reset</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButtonAutoRect">
+          <property name="geometry">
+           <rect>
+            <x>460</x>
+            <y>90</y>
+            <width>91</width>
+            <height>27</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(206, 203, 200);</string>
+          </property>
+          <property name="text">
+           <string>AutoRect</string>
           </property>
          </widget>
         </widget>

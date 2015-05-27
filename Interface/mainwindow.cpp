@@ -6,6 +6,7 @@
 #include "serial.h"
 #include <vector>
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QMessageBox>
 
 #include <stdio.h>
@@ -26,7 +27,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Vision = Vision::getInstance();
 
     m_Display1 = &m_Vision->m_FrameOriginal;
-    m_Display2 = &m_Vision->m_FrameBinary;
+    m_Vision->setRetificationsParam(0,0,m_Vision->m_FrameOriginal.cols,0,0, m_Vision->m_FrameOriginal.rows,m_Vision->m_FrameOriginal.cols,m_Vision->m_FrameOriginal.rows);
+
+    m_Vision->tamDisplay = Size(ui->label_2->width()-1,ui->label_2->height()-1);
     m_Vision->setCameraId(0);
     callLoadCalibration();//carrega calibragem
     on_rBtnSettings_clicked();
@@ -90,6 +93,7 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
     if (ui->rBtnCalibrate->isChecked()) {
 
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
+        if(P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
         cv::Vec3b vec = Vision::getInstance()->m_FrameHSV.at<cv::Vec3b>(cv::Point(P.x(),P.y()));
 
         if (ev->button() & Qt::LeftButton) { //setHsvInterval
@@ -166,6 +170,49 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
             Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), 1);
         }
     }
+    else if (ui->rBtnRectifyImage->isChecked()){
+        m_Display1 = &m_Vision->m_FrameRect;
+        QPoint P = ui->label_2->mapFrom(this, ev->pos());
+        if(P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
+        switch (ui->comboBoxRectfy->currentIndex()) {
+        case 0://A
+            m_Vision->aImg[0] = (float) P.x();
+            m_Vision->aImg[1] = (float) P.y();
+            break;
+        case 1://B
+            m_Vision->aImg[2] = (float) P.x();
+            m_Vision->aImg[3] = (float) P.y();
+            break;
+        case 2://C
+            m_Vision->aImg[4] = (float) P.x();
+            m_Vision->aImg[5] = (float) P.y();
+            break;
+        case 3://D
+            m_Vision->aImg[6] = (float) P.x();
+            m_Vision->aImg[7] = (float) P.y();
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent * ev){
+    if (ui->rBtnRectifyImage->isChecked()){
+        if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_D)
+        ui->comboBoxRectfy->setCurrentIndex(ev->key()-Qt::Key_A);
+    }
+}
+
+void MainWindow::showRectify(){//mostra os pontos da retificacao no frame original
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]), 5, cvScalar(255,0,0));//A
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]),cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]),cv::Scalar(0,255,0),1,8,0);//A-B
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]), 5, cvScalar(0,255,0));//B
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[2], m_Vision->aImg[3]),cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]),cv::Scalar(255,0,255),1,8,0);//B-D
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]), 5, cvScalar(0,0,255));//C
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]),cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]),cv::Scalar(0,0,255),1,8,0);//D-C
+    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->aImg[6], m_Vision->aImg[7]), 5, cvScalar(255,0,255));//D
+    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->aImg[4], m_Vision->aImg[5]),cv::Point(m_Vision->aImg[0], m_Vision->aImg[1]),cv::Scalar(255,0,0),1,8,0);//C-A
 }
 
 //********************************************************************************************
@@ -190,20 +237,20 @@ void MainWindow::on_rBtnSettings_clicked() //Settings
     ui->label_3->clear();
     while (m_Vision->captureImage() && ui->rBtnSettings->isChecked())
     {
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        m_Vision->adjustImage();
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
     }
 }
 
 void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
 {
-    ui->stackedWidget->setCurrentIndex(1);
-    m_Vision->autoRetification();
+    ui->stackedWidget->setCurrentIndex(1);    
 
-    while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
-        m_Vision->m_FrameRect = m_Vision->m_FrameOriginal.clone();
+    while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){        
         m_Vision->adjustImage();
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameRect)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        showRectify();
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
     }
 }
 
@@ -217,8 +264,9 @@ void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
     updateSliders(-1);
 
     while(ui->rBtnCalibrate->isChecked()){
-        m_Vision->calibrate(id);
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        m_Vision->adjustImage();
+        m_Vision->calibrate(id,m_Display1);
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameBinary)));
 
         id = updateSliders(id);
@@ -239,7 +287,8 @@ void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
     ui->stackedWidget->setCurrentIndex(3);
 
     while (m_Vision->captureImage() && ui->rBtnFieldAdjust->isChecked()) {
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        m_Vision->adjustImage();
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
 }
@@ -249,8 +298,9 @@ void MainWindow::on_rBtnGame_clicked() //Game
     ui->stackedWidget->setCurrentIndex(4);
 
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
-        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
+        m_Vision->adjustImage();
+        ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));//poderia ser um display com status dos robos(objetivo, direcao, etc)
     }
 }
 
@@ -313,7 +363,15 @@ void MainWindow::on_pushButtonLoadField_clicked()
     loadFieldstate(fs);
 }
 
+void MainWindow::on_pushButtonRectReset_clicked()
+{
+    m_Display1 = &m_Vision->m_FrameOriginal;
+    m_Vision->setRetificationsParam(0,0,m_Vision->m_FrameOriginal.cols,0,0, m_Vision->m_FrameOriginal.rows,m_Vision->m_FrameOriginal.cols,m_Vision->m_FrameOriginal.rows);
+}
+
 void MainWindow::on_pushButtonAutoRect_clicked()
 {
-    m_Vision->autoRetification();
+    on_pushButtonRectReset_clicked();
+    m_Vision->autoRetificationSet();
+    m_Display1 = &m_Vision->m_FrameRect;
 }

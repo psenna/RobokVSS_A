@@ -7,6 +7,7 @@
 #define SIZE .5
 
 using namespace std;
+using namespace cv;
 
 Vision* Vision::m_Instance = 0;
 
@@ -42,7 +43,7 @@ void Vision::getData(Fieldstate *fs){
         ti = time();
 
         //adjustImage();
-        convertImage();
+        convertImage(&m_FrameOriginal);
         renderImage(fs);
 
 
@@ -59,11 +60,11 @@ void Vision::getData(Fieldstate *fs){
     }
 }
 
-void Vision::calibrate(int id) {
+void Vision::calibrate(int id, Mat* FrameAlvo) {
 
     if (captureImage()) {
         //adjustImage();
-        convertImage();
+        convertImage(FrameAlvo);
         //cv::setMouseCallback("Original Frame", mouseEvent, &m_FrameHSV);
         m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
         m_FrameBinary = erodeImage(m_FrameBinary);
@@ -71,24 +72,22 @@ void Vision::calibrate(int id) {
     }
 }
 
-void Vision::retification(){
-    if(captureImage()){
-        convertImage();
-        setRetificationsParam(0,0,m_FrameOriginal.cols,0,0, m_FrameOriginal.rows,m_FrameOriginal.cols,m_FrameOriginal.rows);
-        rectifyImage();
-    }
-}
+//void Vision::retification(){
+//    if(captureImage()){
+//        convertImage();
+//        setRetificationsParam(0,0,m_FrameOriginal.cols,0,0, m_FrameOriginal.rows,m_FrameOriginal.cols,m_FrameOriginal.rows);
+//        rectifyImage();
+//    }
+//}
 
-void Vision::autoRetification(){
+void Vision::autoRetificationSet(){
     if(captureImage()){
-        convertImage();
-
-        cv::Mat binaryFrame = thresholdImage(m_Min[9], m_Max[9]);
+        convertImage(&m_FrameOriginal);
 
         m_RenderThreads[9].start();
         m_RenderThreads[9].wait();
 
-        float minx = 8888, miny = 8888, maxx = 0, maxy=0; //botar taam max
+        float minx = 8888, miny = 8888, maxx = 0, maxy=0; //botar tam max
 
         for(int i=0; i<4; i++){
             minx = min(m_Found[9][i].x, minx);
@@ -98,8 +97,6 @@ void Vision::autoRetification(){
         }
 
         setRetificationsParam(minx, miny,maxx , miny, minx, maxy, maxx, maxy);
-
-        rectifyImage();
     }
 }
 
@@ -122,7 +119,7 @@ bool Vision::captureImage(){
     {
         cout << "Please check your device." << endl;
         return false;
-    }
+    }    
     cvWaitKey(1);
     return true;
 
@@ -130,26 +127,36 @@ bool Vision::captureImage(){
 
 /* retifica a imagem, aWorld = limites da imagem, aImg = limites da area a retificar */
 void Vision::rectifyImage(){
-    //float aWorld[8] = {0, 0, 540, 0, 0, 405, 540, 405};
-    float aWorld[8] = {0, 0, m_FrameOriginal.cols, 0, 0, m_FrameOriginal.rows, m_FrameOriginal.cols, m_FrameOriginal.rows};
-    CvMat mImg, mWorld;
-    cvInitMatHeader(&mImg, 4, 2, CV_32FC1, aImg, 0);
-    cvInitMatHeader(&mWorld, 4, 2, CV_32FC1, aWorld, 0);
 
-    CvMat* hist = cvCreateMat(3, 3, CV_32FC1);
-    cvFindHomography(&mImg, &mWorld, hist, 0, 0.0, NULL);
-    IplImage temp = m_FrameOriginal;
-    cvWarpPerspective(&temp, &temp, hist);
-    Mat frameAuxiliar(&temp);
-    m_FrameOriginal = frameAuxiliar.clone();
-    frameAuxiliar.release();
+        // Input Quadilateral or Image plane coordinates
+         std::vector<Point2f> inputQuad;
+        // Output Quadilateral or World plane coordinates
+         std::vector<Point2f> outputQuad;
+
+        // The 4 points that select quadilateral on the input , from top-left in clockwise order
+        // These four pts are the sides of the rect box used as input
+        inputQuad.push_back(Point2f( aImg[0],aImg[1]));
+        inputQuad.push_back(Point2f( aImg[4],aImg[5]));
+        inputQuad.push_back(Point2f( aImg[6],aImg[7]));
+        inputQuad.push_back(Point2f( aImg[2],aImg[3]));
+        // The 4 points where the mapping is to be done , from top-left in clockwise order
+        outputQuad.push_back(Point2f( 0,0 ));
+        outputQuad.push_back(Point2f( 0,m_FrameOriginal.rows-1  ));
+        outputQuad.push_back(Point2f( m_FrameOriginal.cols-1,m_FrameOriginal.rows-1));
+        outputQuad.push_back(Point2f( m_FrameOriginal.cols-1,0));
+
+        // Get the Perspective Transform Matrix i.e. lambda
+        Mat lambda = findHomography(inputQuad,outputQuad,0);
+        // Apply the Perspective Transform just found to the src image
+        warpPerspective(m_FrameOriginal,m_FrameRect,lambda,m_FrameRect.size());
+        resize(m_FrameRect, m_FrameRect, tamDisplay);
 }
 
 
 /* converte a imagem capturada de BGR para HSV */
-void Vision::convertImage()
+void Vision::convertImage(Mat* FrameAlvo)
 {
-    cvtColor(m_FrameOriginal, m_FrameHSV, CV_BGR2HSV);
+    cvtColor(*FrameAlvo, m_FrameHSV, CV_BGR2HSV);
 }
 
 /* binariza a imagem. min e max sao os intervalos HSV para binarizaçao */
