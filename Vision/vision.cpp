@@ -155,7 +155,7 @@ void Vision::rectifyImage(){
     // Get the Perspective Transform Matrix i.e. lambda
     Mat lambda = findHomography(bordasRectify,bordasFrameOriginal,0);
     // Apply the Perspective Transform just found to the src image
-    warpPerspective(m_FrameOriginal,m_FrameRect,lambda,m_FrameRect.size());
+    warpPerspective(m_FrameOriginal,m_FrameRect,lambda,m_FrameOriginal.size());
     //resize image to the display size
     resize(m_FrameRect, m_FrameRect, tamDisplay);
 }

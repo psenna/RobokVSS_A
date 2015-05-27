@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     QApplication::quit();
 
-    // Instanciar Vision
     m_Vision = Vision::getInstance();
 
 
@@ -33,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Vision->setCameraId(0);
     callLoadCalibration();//carrega calibragem
     on_pushButtonLoadRect_clicked();//carrega retificacao
-    on_rBtnSettings_clicked();
+    on_rBtnSettings_clicked();//Settings = menu inicial
 }
 
 MainWindow::~MainWindow()
@@ -89,9 +88,9 @@ int MainWindow::updateSliders(int id){ //Atualiza as Sliders da calibragem depen
     return id;
 }
 
-void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (criar uma nova classe de mouse e passar isso pra ela)
+void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
 {
-    if (ui->rBtnCalibrate->isChecked()) {
+    if (ui->rBtnCalibrate->isChecked()) {//Calibrate
 
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
@@ -171,11 +170,11 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
             Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), 1);
         }
     }
-    else if (ui->rBtnRectifyImage->isChecked()){       
+    else if (ui->rBtnRectifyImage->isChecked()){ //Rectify
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return; //ignore se clique for fora da label
         m_Display1 = &m_Vision->m_FrameRect;
-        switch (ui->comboBoxRectfy->currentIndex()) {
+        switch (ui->comboBoxRectfy->currentIndex()) {//setBordasRectify
         case 0://A
             m_Vision->bordasRectify[0].x = (float) P.x();
             m_Vision->bordasRectify[0].y = (float) P.y();
@@ -198,9 +197,9 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui (cria
     }
 }
 
-void MainWindow::keyPressEvent(QKeyEvent * ev){
-    if (ui->rBtnRectifyImage->isChecked()){
-        if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_D)
+void MainWindow::keyPressEvent(QKeyEvent * ev){ //Eventos de teclado na ui
+    if (ui->rBtnRectifyImage->isChecked()){//Rectify
+        if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_D)//ABCD
         ui->comboBoxRectfy->setCurrentIndex(ev->key()-Qt::Key_A);
     }
 }
