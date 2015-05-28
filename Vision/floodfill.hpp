@@ -66,14 +66,7 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         FloodNeighbour(frameBin, l+1, c+1, pilhaL, pilhaC, pixels_counter);
         FloodNeighbour(frameBin, l+1, c-1, pilhaL, pilhaC, pixels_counter);
         FloodNeighbour(frameBin, l-1, c+1, pilhaL, pilhaC, pixels_counter);
-
-        //Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
-        if (frameBin.at<char>(l+1, c) != 0) {
-            pilhaL.push(l+1);			//se sim adiciona as coordenadas y
-            pilhaC.push(c);			//e x deste ponto as respectivas pilhas
-            frameBin.at<char>(l+1, c) = 0;	//pinta de preto cada ponto já processado
-            pixels_counter++;			//aumenta o contador de pixels brancos dentro desta area branca
-        }        
+        
     } // end while
 
     if (pixels_counter > min_size && pixels_counter < max_size) { //Verifica se a quantidade de pixels dentro da area branca esta dentro de um intervalo predefinido
