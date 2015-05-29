@@ -59,5 +59,6 @@ void RenderThread::run()
 
     // Detectar cores a partir do frame binarizado resultante
     vision->m_Found[m_Number] = DetectColors(binaryFrame.clone(), 6, 5, 1000);
-}
 
+    this->exit();
+}

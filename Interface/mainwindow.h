@@ -30,8 +30,6 @@ private slots:
 
     void on_buttonLoadCalib_clicked();
 
-    int updateSliders(int id);
-
     void on_rBtnSettings_clicked();
 
     void on_rBtnRectifyImage_clicked();
@@ -74,10 +72,12 @@ private:
     Serial *serial;
     Fieldstate *fs;
     bool m_isPlaying;
+    int m_IdCalib;
 
     void showRectify();
     void showGame();
     void setBordasFramOrig();
+    void updateSlidersAndID();
 };
 
 #endif // MAINWINDOW_H

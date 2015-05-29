@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     callLoadCalibration();//carrega calibragem
     on_pushButtonLoadRect_clicked();//carrega retificacao
     on_rBtnSettings_clicked();//Settings = menu inicial
+    m_IdCalib = -1;
 }
 
 MainWindow::~MainWindow()
@@ -68,10 +69,9 @@ void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_
     for(int i=0; i<10; i++){//para nao ter que ficar mudando toda hora aqui
         m_Vision->setMinMax(a[i], b[i], i);
     }
-    updateSliders(-1);
 }
 
-int MainWindow::updateSliders(int id){ //Atualiza as Sliders da calibragem dependendo do objeto selecionado
+void MainWindow::updateSlidersAndID(){ //Atualiza as Sliders da calibragem dependendo do objeto selecionado
     int novo;
 
     if(ui->radioButton_6->isChecked()) novo = 0; //cor do time nosso
@@ -85,16 +85,15 @@ int MainWindow::updateSliders(int id){ //Atualiza as Sliders da calibragem depen
     if(ui->radioButtonBall->isChecked()) novo = 8; //bola
     if(ui->radioButtonBorda->isChecked()) novo = 9; //bordas do campo
 
-    if(novo!=id){ // atualiza somente se mudar a opcao de objeto
+    if(novo!=m_IdCalib){ // atualiza somente se mudar a opcao de objeto
         ui->horizontalSliderh1->setValue(m_Vision->getMin()[novo].val[0]);
         ui->horizontalSliderh2->setValue(m_Vision->getMax()[novo].val[0]);
         ui->horizontalSliders1->setValue(m_Vision->getMin()[novo].val[1]);
         ui->horizontalSliders2->setValue(m_Vision->getMax()[novo].val[1]);
         ui->horizontalSliderv1->setValue(m_Vision->getMin()[novo].val[2]);
         ui->horizontalSliderv2->setValue(m_Vision->getMax()[novo].val[2]);
-        return novo;
+        m_IdCalib = novo;
     }
-    return id;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
@@ -114,7 +113,7 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
             ui->horizontalSliders1->setValue(vec[1]-15); ui->horizontalSliders2->setValue(vec[1]+15);
             ui->horizontalSliderv1->setValue(vec[2]-15); ui->horizontalSliderv2->setValue(vec[2]+15);
 
-            Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), 1);
+            Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), m_IdCalib);
         }
         else if (ev->button() & Qt::RightButton) { //addHSVInterval
             int h1 = m_Vision->getMin()[1].val[0];
@@ -176,7 +175,7 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
             ui->horizontalSliders1->setValue(s1); ui->horizontalSliders2->setValue(s2);
             ui->horizontalSliderv1->setValue(v1); ui->horizontalSliderv2->setValue(v2);
 
-            Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), 1);
+            Vision::getInstance()->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), m_IdCalib);
         }
     }
     else if (ui->rBtnRectifyImage->isChecked()){ //Rectify
@@ -275,18 +274,17 @@ void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
 {
     ui->stackedWidget->setCurrentIndex(2);
     ui->radioButton_6->setChecked(true);
-    int id = 0;
+    m_IdCalib = 0;
     int h1, h2, s1, s2, v1, v2;
 
-    updateSliders(-1);
+    updateSlidersAndID();
 
     while(ui->rBtnCalibrate->isChecked()){
         m_Vision->adjustImage();
-        m_Vision->calibrate(id,m_Display1);
+        updateSlidersAndID();
+        m_Vision->calibrate(m_IdCalib,m_Display1);
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameBinary)));
-
-        id = updateSliders(id);
 
         h1 = ui->horizontalSliderh1->value();
         h2 = ui->horizontalSliderh2->value();
@@ -295,7 +293,7 @@ void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
         v1 = ui->horizontalSliderv1->value();
         v2 = ui->horizontalSliderv2->value();
 
-        m_Vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), id);
+        m_Vision->setMinMax(cvScalar(h1, s1, v1), cvScalar(h2, s2, v2), m_IdCalib);
     }
 }
 
