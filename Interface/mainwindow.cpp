@@ -31,10 +31,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_Vision->tamDisplay = Size(ui->label_2->width()-1,ui->label_2->height()-1);
     m_Vision->setCameraId(0);
+    m_IdCalib = -1;
     callLoadCalibration();//carrega calibragem
     on_pushButtonLoadRect_clicked();//carrega retificacao
     on_rBtnSettings_clicked();//Settings = menu inicial
-    m_IdCalib = -1;
+
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +70,7 @@ void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_
     for(int i=0; i<10; i++){//para nao ter que ficar mudando toda hora aqui
         m_Vision->setMinMax(a[i], b[i], i);
     }
+    updateSlidersAndID();
 }
 
 void MainWindow::updateSlidersAndID(){ //Atualiza as Sliders da calibragem dependendo do objeto selecionado
@@ -116,12 +118,12 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
             Vision::getInstance()->setMinMax(cvScalar(vec[0]-15, vec[1]-15, vec[2]-15), cvScalar(vec[0]+15, vec[1]+15, vec[2]+15), m_IdCalib);
         }
         else if (ev->button() & Qt::RightButton) { //addHSVInterval
-            int h1 = m_Vision->getMin()[1].val[0];
-            int h2 = m_Vision->getMax()[1].val[0];
-            int s1 = m_Vision->getMin()[1].val[1];
-            int s2 = m_Vision->getMax()[1].val[1];
-            int v1 = m_Vision->getMin()[1].val[2];
-            int v2 = m_Vision->getMax()[1].val[2];
+            int h1 = m_Vision->getMin()[m_IdCalib].val[0];
+            int h2 = m_Vision->getMax()[m_IdCalib].val[0];
+            int s1 = m_Vision->getMin()[m_IdCalib].val[1];
+            int s2 = m_Vision->getMax()[m_IdCalib].val[1];
+            int v1 = m_Vision->getMin()[m_IdCalib].val[2];
+            int v2 = m_Vision->getMax()[m_IdCalib].val[2];
 
             if (vec[0]-15 > 0 && vec[0]-15 < h1) {
                 h1 = vec[0] - 15;
