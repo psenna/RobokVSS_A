@@ -12,8 +12,9 @@ public:
 
     void run();
 
-    int getNumber() const;
+    int getNumber() const;    
     void setNumber(const int &number);
+    void setQuantObj(const int &quant);
 
     CvScalar getMax() const;
     CvScalar getMin() const;
@@ -23,6 +24,7 @@ public:
 
 private:
     int m_Number;
+    int m_QuantObj;
     CvScalar m_Max;
     CvScalar m_Min;
 };

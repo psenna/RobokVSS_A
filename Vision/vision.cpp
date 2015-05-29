@@ -25,6 +25,16 @@ Vision::Vision()
     bordasFrameOriginal.resize(4);
     bordasRectify.resize(4);
 
+    m_RenderThreads[0].setQuantObj(3);
+    m_RenderThreads[1].setQuantObj(1);
+    m_RenderThreads[2].setQuantObj(1);
+    m_RenderThreads[3].setQuantObj(1);
+    m_RenderThreads[4].setQuantObj(3);
+    m_RenderThreads[5].setQuantObj(1);
+    m_RenderThreads[6].setQuantObj(1);
+    m_RenderThreads[7].setQuantObj(1);
+    m_RenderThreads[8].setQuantObj(1);
+    m_RenderThreads[9].setQuantObj(4);
 }
 
 Vision* Vision::getInstance()
@@ -41,23 +51,23 @@ Vision* Vision::getInstance()
  */
 void Vision::getData(Fieldstate *fs){
 
-        double ti,tf; // ti = tempo inicial // tf = tempo final
-        ti = time();
+    double ti,tf; // ti = tempo inicial // tf = tempo final
+    ti = time();
 
-        convertImage(&m_FrameRect);
-        renderImage();
-        for (int i = 0; i < 5; ++i) {
-             std::cout<<i<<" e "<<m_Found[i].size()<<"\n";
+    convertImage(&m_FrameRect);
+    renderImage();
+    for (int i = 0; i < 4; ++i) {
+        std::cout<<i<<" e "<<m_Found[i].size()<<"\n";
 
-        }
-        identifyRobot(fs);
+    }
+    identifyRobot(fs);
 
- std::cout<<"lol";
+    std::cout<<"lol";
 
-        tf = time();
-        cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
+    tf = time();
+    cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
-        cv::waitKey(1);
+    cv::waitKey(1);
 }
 
 void Vision::calibrate(int id, Mat* frameAlvo) {

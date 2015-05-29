@@ -16,6 +16,11 @@ void RenderThread::setNumber(const int &number)
     m_Number = number;
 }
 
+void RenderThread::setQuantObj(const int &quant)
+{
+    m_QuantObj = quant;
+}
+
 CvScalar RenderThread::getMax() const
 {
     return m_Max;
@@ -58,7 +63,7 @@ void RenderThread::run()
 
 
     // Detectar cores a partir do frame binarizado resultante
-    vision->m_Found[m_Number] = DetectColors(binaryFrame.clone(), 6, 5, 1000);
+    vision->m_Found[m_Number] = DetectColors(binaryFrame.clone(), 6, m_QuantObj, 1000);
 
     this->exit();
 }
