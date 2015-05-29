@@ -8,7 +8,6 @@
 #include <stack>
 #include <vector>
 
-#define WHITE_PIXEL 1
 #define BLACK_PIXEL 0
 
 using cv::Mat;
@@ -49,6 +48,8 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         pilhaL.pop();           //remover o ponto a processar da pilha
 
 
+         //Verifica se o ponto atual possui um vizinho branco (8 comparações, 4 vizinhos diagonais, 2 horizontais e 2 verticais)
+
         // Vizinho de cima
         FloodNeighbour(frameBin, l+1, c, pilhaL, pilhaC, pixels_counter);
 
@@ -66,7 +67,7 @@ void FindObjectFlood(Mat frameBin, int l, int c, std::vector<Position> &objects,
         FloodNeighbour(frameBin, l+1, c+1, pilhaL, pilhaC, pixels_counter);
         FloodNeighbour(frameBin, l+1, c-1, pilhaL, pilhaC, pixels_counter);
         FloodNeighbour(frameBin, l-1, c+1, pilhaL, pilhaC, pixels_counter);
-        
+
     } // end while
 
     if (pixels_counter > min_size && pixels_counter < max_size) { //Verifica se a quantidade de pixels dentro da area branca esta dentro de um intervalo predefinido

@@ -2,6 +2,11 @@
 
 using namespace robok;
 
+Fieldstate::Fieldstate(){
+    m_RobotsTeam.resize(5);
+    m_RobotsEnemy.resize(5);
+}
+
 /*
  * GETTERS AND SETTERS
  */
@@ -39,6 +44,10 @@ std::vector<Robot> Fieldstate::getRobotsTeam() const {
 
 Robot Fieldstate::getRobotTeamById(const int &id){
     return m_RobotsTeam.at(id);
+}
+
+void Fieldstate::setRobotTeamById(const Robot &robot, const int &id){
+    m_RobotsTeam[id] = robot;
 }
 
 void Fieldstate::setRobotsEnemy(const std::vector<Robot> &robots){

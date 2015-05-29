@@ -17,7 +17,7 @@ void Unit::setPosition(const Position &position){
     m_Position = position;
 }
 
-void Unit::setPosition(const int &x, const int &y){
+void Unit::setPosition(const float &x, const float &y){
     m_Position.x = x;
     m_Position.y = y;
 }

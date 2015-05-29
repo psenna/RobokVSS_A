@@ -14,17 +14,18 @@
 using namespace cv;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
-{    
+{
     ui = (new Ui::MainWindow);
     ui->setupUi(this);
     this->setWindowTitle("Robok VSS System");
     this->showMaximized();
     //connect( ui->myQuitButton, SIGNAL( clicked() ), qApp, SLOT( quit() ) );
 
+    fs = new Fieldstate();
+    m_isPlaying = false;
     QApplication::quit();
 
     m_Vision = Vision::getInstance();
-
 
     m_Display1 = &m_Vision->m_FrameOriginal;
 
@@ -50,6 +51,14 @@ void MainWindow::closeEvent(QCloseEvent *event)//Evento de fechar a ui
     delete ui;
     m_Vision->closeCapture();
     exit(0);
+}
+
+void MainWindow::setBordasFramOrig(){ //seta bordas do Frame Original para a retificacao
+    // The 4 points where the rectify mapping is to be done , from top-left in clockwise order
+    m_Vision->bordasFrameOriginal[0] = cv::Point2f(0,0);
+    m_Vision->bordasFrameOriginal[1] = cv::Point2f(0,m_Vision->tamDisplay.height-1);
+    m_Vision->bordasFrameOriginal[2] = cv::Point2f(m_Vision->tamDisplay.width-1,m_Vision->tamDisplay.height-1);
+    m_Vision->bordasFrameOriginal[3] = cv::Point2f(m_Vision->tamDisplay.width-1,0);
 }
 
 void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_write.h
@@ -200,7 +209,7 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
 void MainWindow::keyPressEvent(QKeyEvent * ev){ //Eventos de teclado na ui
     if (ui->rBtnRectifyImage->isChecked()){//Rectify
         if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_D)//ABCD
-        ui->comboBoxRectfy->setCurrentIndex(ev->key()-Qt::Key_A);
+            ui->comboBoxRectfy->setCurrentIndex(ev->key()-Qt::Key_A);
     }
 }
 
@@ -213,6 +222,12 @@ void MainWindow::showRectify(){//mostra os pontos da retificacao no frame origin
     cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y),cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Scalar(0,0,255),1,8,0);//C-D
     cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y), 5, cvScalar(255,0,255));//D
     cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Scalar(255,0,0),1,8,0);//D-A
+}
+
+void MainWindow::showGame(){//mostra os pontos do centro dos robos no frame original
+    for (int i = 0; i < 3; ++i) {
+        cv::circle(*m_Display1, cv::Point(fs->getRobotTeamById(i).getPosition().x, fs->getRobotTeamById(i).getPosition().y), 10, cvScalar(0,255,0));
+    }
 }
 
 //********************************************************************************************
@@ -234,6 +249,8 @@ void MainWindow::on_buttonLoadCalib_clicked() //Load da Calibragem
 void MainWindow::on_rBtnSettings_clicked() //Settings
 {
     ui->stackedWidget->setCurrentIndex(0);
+    setBordasFramOrig();//Chame esta funcao pelo menos uma vez no comeco da execucao do programa
+
     ui->label_3->clear();
     while (m_Vision->captureImage() && ui->rBtnSettings->isChecked())
     {
@@ -246,7 +263,7 @@ void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
 {
     ui->stackedWidget->setCurrentIndex(1);
 
-    while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){        
+    while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
         m_Vision->adjustImage();
         showRectify();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
@@ -299,8 +316,13 @@ void MainWindow::on_rBtnGame_clicked() //Game
 
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
         m_Vision->adjustImage();
+        if(m_isPlaying){
+            m_Vision->getData(fs);
+            showGame();
+        }
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));//poderia ser um display com status dos robos(objetivo, direcao, etc)
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));//poderia ser um display com status dos robos(objetivo, direcao, etc)
+
     }
 }
 
@@ -313,7 +335,11 @@ void MainWindow::on_buttonScanDevices_clicked()
 
 void MainWindow::on_buttonGo_clicked()
 {
-    m_Vision->getData(fs);
+    m_isPlaying = !m_isPlaying;
+    if(m_isPlaying)
+        ui->buttonGo->setText("Stop");
+    else
+        ui->buttonGo->setText("GO!");
 }
 
 void MainWindow::on_horizontalSliderBrightness_valueChanged(int value)
@@ -375,7 +401,7 @@ void MainWindow::on_pushButtonRectReset_clicked()
 
 void MainWindow::on_pushButtonAutoRect_clicked()
 {
-        on_pushButtonRectReset_clicked();
-        m_Vision->autoRetificationSet();
-        m_Display1 = &m_Vision->m_FrameRect;
+    on_pushButtonRectReset_clicked();
+    m_Vision->autoRetificationSet();
+    m_Display1 = &m_Vision->m_FrameRect;
 }

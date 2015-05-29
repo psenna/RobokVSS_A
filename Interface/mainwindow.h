@@ -73,8 +73,11 @@ private:
     Vision *m_Vision;
     Serial *serial;
     Fieldstate *fs;
+    bool m_isPlaying;
 
     void showRectify();
+    void showGame();
+    void setBordasFramOrig();
 };
 
 #endif // MAINWINDOW_H

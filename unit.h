@@ -13,7 +13,7 @@ public:
 
     Position getPosition() const;
     void setPosition(const Position &position);
-    void setPosition(const int &x, const int &y);
+    void setPosition(const float &x, const float &y);
 
 private:
     Position m_Position;

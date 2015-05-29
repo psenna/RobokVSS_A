@@ -24,6 +24,7 @@ Vision::Vision()
     }
     bordasFrameOriginal.resize(4);
     bordasRectify.resize(4);
+
 }
 
 Vision* Vision::getInstance()
@@ -39,21 +40,24 @@ Vision* Vision::getInstance()
  * e atualiza a posicao de cada objeto no campo.
  */
 void Vision::getData(Fieldstate *fs){
-    if(captureImage()){
 
         double ti,tf; // ti = tempo inicial // tf = tempo final
         ti = time();
 
-        //adjustImage();
-        convertImage(&m_FrameOriginal);
+        convertImage(&m_FrameRect);
         renderImage();
+        for (int i = 0; i < 5; ++i) {
+             std::cout<<i<<" e "<<m_Found[i].size()<<"\n";
 
+        }
+        identifyRobot(fs);
+
+ std::cout<<"lol";
 
         tf = time();
         cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
         cv::waitKey(1);
-    }
 }
 
 void Vision::calibrate(int id, Mat* frameAlvo) {
@@ -61,20 +65,11 @@ void Vision::calibrate(int id, Mat* frameAlvo) {
     if (captureImage()) {
         //adjustImage();
         convertImage(frameAlvo);
-        //cv::setMouseCallback("Original Frame", mouseEvent, &m_FrameHSV);
         m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
         m_FrameBinary = erodeImage(m_FrameBinary);
         m_FrameBinary = dilateImage(m_FrameBinary);
     }
 }
-
-//void Vision::retification(){ //nao ta usando essa função
-//    if(captureImage()){
-//        convertImage();
-//        setRetificationsParam(0,0,m_FrameOriginal.cols,0,0, m_FrameOriginal.rows,m_FrameOriginal.cols,m_FrameOriginal.rows);
-//        rectifyImage();
-//    }
-//}
 
 void Vision::autoRetificationSet(){
     if(captureImage()){
@@ -136,6 +131,8 @@ bool Vision::captureImage(){
         cout << "Please check your device." << endl;
         return false;
     }
+    //resize image to the display size
+    resize(m_FrameOriginal, m_FrameOriginal, tamDisplay);
     cvWaitKey(1);
     return true;
 
@@ -145,12 +142,6 @@ bool Vision::captureImage(){
 void Vision::rectifyImage(){
 
     //codigo copiado e modificado de: http://opencvexamples.blogspot.com/2014/01/perspective-transform.html#.VWV1Aq1hiko
-
-    // The 4 points where the mapping is to be done , from top-left in clockwise order
-    bordasFrameOriginal[0] = cv::Point2f(0,0);
-    bordasFrameOriginal[1] = cv::Point2f(0,m_FrameOriginal.rows-1 );
-    bordasFrameOriginal[2] = cv::Point2f(m_FrameOriginal.cols-1,m_FrameOriginal.rows-1);
-    bordasFrameOriginal[3] = cv::Point2f(m_FrameOriginal.cols-1,0);
 
     // Get the Perspective Transform Matrix i.e. lambda
     Mat lambda = findHomography(bordasRectify,bordasFrameOriginal,0);
@@ -191,10 +182,11 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
 
 void Vision::renderImage()
 {
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; ++i)
         m_RenderThreads[i].start();
-
-    //identifyRobot(fs);
+    for (int i = 0; i < 8; ++i) {
+        m_RenderThreads[i].wait();
+    }
 }
 
 
@@ -226,7 +218,6 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
     return result;
 }
 
-
 /* identify Robot
  * método responsável por fazer o casamento entre
  * as posiçoes das cores dos times e dos jogadores no
@@ -237,6 +228,7 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
 void Vision::identifyRobot(Fieldstate *fs){
     double menor_distancia = 0;
     int menorDistanciaId;
+    Robot robot;
     for(int i = 1; i < 4; i++)
     {
         if(!m_Found[i].empty()){
@@ -249,14 +241,18 @@ void Vision::identifyRobot(Fieldstate *fs){
                 }
             }
             if(menor_distancia != 0) {
-                double x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
-                double y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
+                float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
+                float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
                 m_Found[0][menorDistanciaId].x = 9999;
                 m_Found[0][menorDistanciaId].y = 9999;
-                fs->getRobotTeamById(i-1).setPosition((int) x, (int) y);
+                robot.setPosition(x,y);
+                fs->setRobotTeamById(robot,i-1);
+                std::cout<<"teste: "<< x << "\n";
+                std::cout<<fs->getRobotTeamById(i-1).getPosition().x<<"\n";
             }
         }
     }
+
 }
 
 void Vision::setCameraId(const int &id){
