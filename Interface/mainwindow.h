@@ -5,6 +5,7 @@
 #include <opencv2/opencv.hpp>
 #include "Communitacion/serial.h"
 #include "fieldstate.h"
+#include "Strategy/default.h"
 #include "Vision/vision.h"
 
 namespace Ui {
@@ -73,8 +74,10 @@ private:
     Fieldstate *fs;
     bool m_isPlaying;
     int m_IdCalib;
+    Goal goal1, goal2;
 
     void showRectify();
+    void showFieldAdjust();
     void showGame();
     void setBordasFramOrig();
     void updateSlidersAndID();

@@ -4,7 +4,7 @@
 #include <sys/time.h>
 
 // Constante para o parâmetro SIZE usado nas técnicas erode e dilate.
-#define SIZE .5
+#define SIZE 2
 
 using namespace std;
 using namespace cv;
@@ -208,7 +208,7 @@ cv::Mat Vision::dilateImage(const cv::Mat &binaryFrame)
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
-                                            cv::Size(1 * SIZE + 1, 1 * SIZE + 1),
+                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::dilate(binaryFrame, result, element);
     return result;
@@ -222,7 +222,7 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
     // MORPH_RECT, MORPH_CROSS, MORPH_ELLIPSE
     // Precisamos ver qual será melhor para o projeto
     Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
-                                            cv::Size(1 * SIZE + 1, 1 * SIZE + 1),
+                                            cv::Size(2 * SIZE + 1, 2 * SIZE + 1),
                                             cv::Point(SIZE, SIZE));
     cv::erode(binaryFrame, result, element);
     return result;

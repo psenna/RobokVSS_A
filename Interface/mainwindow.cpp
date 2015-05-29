@@ -204,6 +204,36 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
         default:
             break;
         }
+    }else if(ui->rBtnFieldAdjust->isChecked()){
+        QPoint P = ui->label_2->mapFrom(this, ev->pos());
+        if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return;   //ignore se clique for fora da label
+
+        switch (ui->comboBoxFieldAdjust->currentIndex()) {//setBordasRectify
+        case 0://A
+            goal1.GoalPost_1.x = (float) P.x();
+            goal1.GoalPost_1.y = (float) P.y();
+            break;
+        case 1://B
+            goal1.GoalPost_2.x = (float) P.x();
+            goal1.GoalPost_2.y = (float) P.y();
+            break;
+        case 2://C
+            //m_Vision->bordasRectify[2].x = (float) P.x();
+            //m_Vision->bordasRectify[2].y = (float) P.y();
+            break;
+        case 3://D
+            goal2.GoalPost_1.x = (float) P.x();
+            goal2.GoalPost_1.y = (float) P.y();
+            break;
+        case 4://E
+            goal2.GoalPost_2.x = (float) P.x();
+            goal2.GoalPost_2.y = (float) P.y();
+            break;
+        default:
+            break;
+        }
+        fs->setGoalLeft(goal1);
+        fs->setGoalRight(goal2);
     }
 }
 
@@ -211,6 +241,10 @@ void MainWindow::keyPressEvent(QKeyEvent * ev){ //Eventos de teclado na ui
     if (ui->rBtnRectifyImage->isChecked()){//Rectify
         if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_D)//ABCD
             ui->comboBoxRectfy->setCurrentIndex(ev->key()-Qt::Key_A);
+    }
+    if (ui->rBtnFieldAdjust->isChecked()){//Rectify
+        if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_E)//ABCDE
+            ui->comboBoxFieldAdjust->setCurrentIndex(ev->key()-Qt::Key_E);
     }
 }
 
@@ -225,7 +259,14 @@ void MainWindow::showRectify(){//mostra os pontos da retificacao no frame origin
     cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Scalar(255,0,0),1,8,0);//D-A
 }
 
-void MainWindow::showGame(){//mostra os pontos do centro dos robos no frame original
+void MainWindow::showFieldAdjust(){//mostra os pontos dos centros dos postes dos gols na secao de ajuste de campo
+    cv::circle(*m_Display1, cv::Point(fs->getGoalLeft().GoalPost_1.x, fs->getGoalLeft().GoalPost_1.y), 5, cvScalar(0,0,255));
+    cv::circle(*m_Display1, cv::Point(fs->getGoalLeft().GoalPost_2.x, fs->getGoalLeft().GoalPost_2.y), 5, cvScalar(0,0,255));
+    cv::circle(*m_Display1, cv::Point(fs->getGoalRight().GoalPost_1.x, fs->getGoalRight().GoalPost_1.y), 5, cvScalar(0,0,255));
+    cv::circle(*m_Display1, cv::Point(fs->getGoalRight().GoalPost_2.x, fs->getGoalRight().GoalPost_2.y), 5, cvScalar(0,0,255));
+}
+
+void MainWindow::showGame(){//mostra os pontos do centro dos robos
     for (int i = 0; i < 3; ++i) {
         cv::circle(*m_Display1, cv::Point(fs->getRobotTeamById(i).getPosition().x, fs->getRobotTeamById(i).getPosition().y), 10, cvScalar(0,255,0));
     }
@@ -305,6 +346,7 @@ void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
 
     while (m_Vision->captureImage() && ui->rBtnFieldAdjust->isChecked()) {
         m_Vision->adjustImage();
+        showFieldAdjust();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
@@ -318,11 +360,12 @@ void MainWindow::on_rBtnGame_clicked() //Game
         m_Vision->adjustImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
+            Default d;
+            d.play(fs);
             showGame();
         }
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));//poderia ser um display com status dos robos(objetivo, direcao, etc)
-
     }
 }
 

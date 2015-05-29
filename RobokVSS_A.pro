@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     Interface/mainwindow.cpp \
     Vision/renderthread.cpp \
     Vision/vision.cpp \
-    Communitacion/serial.cpp
+    Communitacion/serial.cpp \    
+    Strategy/default.cpp
 
 HEADERS  += \
     ball.h \
@@ -38,7 +39,9 @@ HEADERS  += \
     Vision/floodfill.hpp \
     Vision/renderthread.h \
     Vision/vision.h \
-    Communitacion/serial.h
+    Communitacion/serial.h \    
+    Strategy/default.h \
+    Strategy/strategy.h
 
 FORMS    += \
     Interface/mainwindow.ui
