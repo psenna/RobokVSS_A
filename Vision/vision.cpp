@@ -236,12 +236,13 @@ cv::Mat Vision::erodeImage(const cv::Mat &binaryFrame)
  */
 
 void Vision::identifyRobot(Fieldstate *fs){
-    double menor_distancia = 0;
+    double menor_distancia;
     int menorDistanciaId;
     Robot robot;
     for(int i = 1; i < 4; i++)
     {
         if(!m_Found[i].empty()){
+            menor_distancia = 9999;
             for(unsigned int j = 0; j < m_Found[0].size(); j++)
             {
                 if(m_Found[i][0].distance(m_Found[0][j]) < menor_distancia || menor_distancia == 0)
@@ -253,8 +254,6 @@ void Vision::identifyRobot(Fieldstate *fs){
             if(menor_distancia != 0) {
                 float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
-                m_Found[0][menorDistanciaId].x = 9999;
-                m_Found[0][menorDistanciaId].y = 9999;
                 robot.setPosition(x,y);
                 fs->setRobotTeamById(robot,i-1);
                 std::cout<<"teste: "<< x << "\n";
