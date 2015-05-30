@@ -254,7 +254,9 @@ void Vision::identifyRobot(Fieldstate *fs){
             if(menor_distancia != 0) {
                 float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
+                float orientation = atan2( m_Found[i][0].y - m_Found[0][menorDistanciaId].y , m_Found[i][0].x - m_Found[0][menorDistanciaId].x);
                 robot.setPosition(x,y);
+                robot.setOrientation(orientation);
                 fs->setRobotTeamById(robot,i-1);
                 std::cout<<"teste: "<< x << "\n";
                 std::cout<<fs->getRobotTeamById(i-1).getPosition().x<<"\n";

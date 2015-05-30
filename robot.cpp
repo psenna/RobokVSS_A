@@ -28,3 +28,11 @@ void Robot::setCommand(const Command &command)
 {
     m_Command = command;
 }
+
+void Robot::setOrientation(float orientation){
+    this->orientation = orientation;
+}
+
+float Robot::getOrientation(){
+    return this->orientation;
+}
