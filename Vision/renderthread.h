@@ -12,10 +12,10 @@ public:
 
     void run();
 
-    int getNumber() const;    
-    void setNumber(const int &number);
-    void setQuantObj(const int &quant);
-
+    int getThreadNumber() const;
+    void setThreadNumber(const int &number);
+    int getObjectsAmount() const;
+    void setObjectsAmount(const int &amount);
     CvScalar getMax() const;
     CvScalar getMin() const;
     void setMax(const CvScalar &max);
@@ -23,8 +23,8 @@ public:
     void setMinMax(const CvScalar &min, const CvScalar &max);
 
 private:
-    int m_Number;
-    int m_QuantObj;
+    int m_ThreadNumber;
+    int m_ObjectsAmount;
     CvScalar m_Max;
     CvScalar m_Min;
 };

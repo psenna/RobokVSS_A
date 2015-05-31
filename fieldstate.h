@@ -25,7 +25,7 @@ public:
 
     std::vector<Robot> getRobotsTeam() const;
     void setRobotsTeam(const std::vector<Robot> &robots);
-    Robot getRobotTeamById(const int& id);
+    Robot getRobotTeamById(const int &id);
     void setRobotTeamById(const Robot &robot, const int &id);
 
 

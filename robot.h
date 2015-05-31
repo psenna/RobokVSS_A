@@ -16,14 +16,14 @@ public:
     Position getObjective() const;
     void setObjective(const Position& position);
     void setObjective(const int& x, const int& y);
-    float getOrientation();
-    void setOrientation(float orientation);
+    float getOrientation() const;
+    void setOrientation(const float &orientation);
     Command getCommand() const;
     void setCommand(const Command& command);
 
 private:
     int m_Id;
-    float orientation;
+    float m_Orientation;
     Position m_Objective;
     Command m_Command;
 };

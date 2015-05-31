@@ -20,21 +20,21 @@ Vision::Vision()
     for (int i = 0; i < 10; i++)
     {
         this->setMinMax(cvScalar(0, 0, 0), cvScalar(0, 0, 0), i);
-        m_RenderThreads[i].setNumber(i);
+        m_RenderThreads[i].setThreadNumber(i);
     }
     m_OriginalBorderPoints.resize(4);
     m_RectificationBorderPoints.resize(4);
 
-    m_RenderThreads[0].setQuantObj(3);
-    m_RenderThreads[1].setQuantObj(1);
-    m_RenderThreads[2].setQuantObj(1);
-    m_RenderThreads[3].setQuantObj(1);
-    m_RenderThreads[4].setQuantObj(3);
-    m_RenderThreads[5].setQuantObj(1);
-    m_RenderThreads[6].setQuantObj(1);
-    m_RenderThreads[7].setQuantObj(1);
-    m_RenderThreads[8].setQuantObj(1);
-    m_RenderThreads[9].setQuantObj(4);
+    m_RenderThreads[0].setObjectsAmount(3);
+    m_RenderThreads[1].setObjectsAmount(1);
+    m_RenderThreads[2].setObjectsAmount(1);
+    m_RenderThreads[3].setObjectsAmount(1);
+    m_RenderThreads[4].setObjectsAmount(3);
+    m_RenderThreads[5].setObjectsAmount(1);
+    m_RenderThreads[6].setObjectsAmount(1);
+    m_RenderThreads[7].setObjectsAmount(1);
+    m_RenderThreads[8].setObjectsAmount(1);
+    m_RenderThreads[9].setObjectsAmount(4);
 }
 
 Vision* Vision::getInstance()
@@ -81,7 +81,7 @@ void Vision::calibrate(int id, Mat* target_frame) {
     }
 }
 
-void Vision::autoRetificationSet(){
+void Vision::autoRectificationSet(){
 
     if (captureImage()) {
 
@@ -93,17 +93,18 @@ void Vision::autoRetificationSet(){
         m_RenderThreads[9].wait();
 
         // Em caso de erro, retornar
-        if (m_Found[9].size() < 4) return; //Erro: Calibre novamente as Bordas do campo
+        if (m_Found[9].size() < 4) return;      //Erro: Calibre novamente as Bordas do campo
 
         std::vector<float> aFloatVector(8);
-        float medx = 0, medy = 0;  //guardará a média dos pontos, ponto central
+        float medx = 0, medy = 0;               // Guardará a média dos pontos, ponto central
 
-        for(int i=0; i<4; i++){
+        for (int i = 0; i < 4; i++) {
             medx += m_Found[9][i].x/4;
             medy += m_Found[9][i].y/4;
         }
 
-        for (int i = 0; i < 4; i++) {             //compara com o ponto central para separar os pontos
+        // Compara com o ponto central para separar os pontos
+        for (int i = 0; i < 4; i++) {
             if(medx - m_Found[9][i].x > 0 && medy - m_Found[9][i].y > 0){
                 aFloatVector[0] = m_Found[9][i].x;
                 aFloatVector[1] = m_Found[9][i].y;
@@ -130,6 +131,10 @@ void Vision::autoRetificationSet(){
  * Método responsável pelos ajustes na imagem.
  * brilho, contraste, saturaçao e retificaçao.
  */
+void Vision::adjustImage()
+{
+    rectifyImage();
+}
 
 
 /* faz a captura da imagem */
@@ -241,28 +246,30 @@ void Vision::identifyRobot(Fieldstate *fs){
     double menor_distancia;
     int menorDistanciaId;
     robok::Robot robot;
-    for(int i = 1; i < 4; i++)
+    for (int i = 1; i < 4; i++)
     {
-        if(!m_Found[i].empty()){
+        if (!m_Found[i].empty()) {
             menor_distancia = 9999;
-            for(unsigned int j = 0; j < m_Found[0].size(); j++)
+            for (unsigned int j = 0; j < m_Found[0].size(); j++)
             {
-                if(m_Found[i][0].distance(m_Found[0][j]) < menor_distancia || menor_distancia == 0)
+                if (m_Found[i][0].distance(m_Found[0][j]) < menor_distancia
+                    || menor_distancia == 0)
                 {
                     menor_distancia = m_Found[i][0].distance(m_Found[0][j]);
                     menorDistanciaId = j;
                 }
             }
-            if(menor_distancia != 0) {
+            if (menor_distancia != 0) {
                 float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
-                float orientation = atan2( m_Found[i][0].y - m_Found[0][menorDistanciaId].y , m_Found[i][0].x - m_Found[0][menorDistanciaId].x);
-                robot.setPosition(x,y);
+                float orientation = atan2(m_Found[i][0].y - m_Found[0][menorDistanciaId].y,
+                                          m_Found[i][0].x - m_Found[0][menorDistanciaId].x);
+                robot.setPosition(x, y);
                 robot.setOrientation(orientation);
-                fs->setRobotTeamById(robot,i-1);                                
+                fs->setRobotTeamById(robot, i-1);
             }
         }
-    }
+    } // end for
 
 }
 
@@ -276,36 +283,36 @@ void Vision::setMinMax(const CvScalar &min, const CvScalar &max, const int &id){
 }
 
 std::vector<float> Vision::convertBorders(std::vector<cv::Point2f> border_points){
-    std::vector<float> a(8);
-    a[0] = border_points[A].x;
-    a[1] = border_points[A].y;
-    a[2] = border_points[B].x;
-    a[3] = border_points[B].y;
-    a[4] = border_points[C].x;
-    a[5] = border_points[C].y;
-    a[6] = border_points[D].x;
-    a[7] = border_points[D].y;
-    return a;
+    std::vector<float> aFloatVector(8);
+    aFloatVector[0] = border_points[A].x;
+    aFloatVector[1] = border_points[A].y;
+    aFloatVector[2] = border_points[B].x;
+    aFloatVector[3] = border_points[B].y;
+    aFloatVector[4] = border_points[C].x;
+    aFloatVector[5] = border_points[C].y;
+    aFloatVector[6] = border_points[D].x;
+    aFloatVector[7] = border_points[D].y;
+    return aFloatVector;
 }
 
-void Vision::setRectificationsParam(std::vector<float> aImg){
-    // The 4 points that select quadilateral on the input , from top-left in clockwise order
-    // These four pts are the sides of the rect box used as input
-    m_RectificationBorderPoints[A] = Point2f(aImg[0],aImg[1]);
-    m_RectificationBorderPoints[B] = Point2f(aImg[2],aImg[3]);
-    m_RectificationBorderPoints[C] = Point2f(aImg[4],aImg[5]);
-    m_RectificationBorderPoints[D] = Point2f(aImg[6],aImg[7]);
+void Vision::setRectificationsParam(std::vector<float> paramsVector){
+    // The 4 points that select quadilateral on the input, from top-left in clockwise order
+    // These four points are the sides of the rect box used as input
+    m_RectificationBorderPoints[A] = Point2f(paramsVector[0], paramsVector[1]);
+    m_RectificationBorderPoints[B] = Point2f(paramsVector[2], paramsVector[3]);
+    m_RectificationBorderPoints[C] = Point2f(paramsVector[4], paramsVector[5]);
+    m_RectificationBorderPoints[D] = Point2f(paramsVector[6], paramsVector[7]);
 }
 
-CvScalar* Vision::getMin(){
+CvScalar* Vision::getMin() {
     return m_Min;
 }
 
-CvScalar* Vision::getMax(){
+CvScalar* Vision::getMax() {
     return m_Max;
 }
 
-void Vision::closeCapture(){
+void Vision::closeCapture() {
     m_VideoCapture.release();
 }
 

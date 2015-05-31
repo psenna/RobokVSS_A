@@ -350,7 +350,7 @@ void MainWindow::on_rBtnSettings_clicked() //Settings
     ui->label_3->clear();
     while (m_Vision->captureImage() && ui->rBtnSettings->isChecked())
     {
-        m_Vision->rectifyImage();
+        m_Vision->adjustImage();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
     }
 }
@@ -360,7 +360,7 @@ void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
     ui->stackedWidget->setCurrentIndex(1);
 
     while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
-        m_Vision->rectifyImage();
+        m_Vision->adjustImage();
         showRectify();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
@@ -377,7 +377,7 @@ void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
     updateSlidersAndID();
 
     while(ui->rBtnCalibrate->isChecked()){
-        m_Vision->rectifyImage();
+        m_Vision->adjustImage();
         updateSlidersAndID();
         m_Vision->calibrate(m_IdCalib, m_Display1);
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
@@ -399,7 +399,7 @@ void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
     ui->stackedWidget->setCurrentIndex(3);
 
     while (m_Vision->captureImage() && ui->rBtnFieldAdjust->isChecked()) {
-        m_Vision->rectifyImage();
+        m_Vision->adjustImage();
         showFieldAdjust(); // Desenhar pontos de ajuste na tela
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
@@ -411,7 +411,7 @@ void MainWindow::on_rBtnGame_clicked() //Game
     ui->stackedWidget->setCurrentIndex(4);
 
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
-        m_Vision->rectifyImage();
+        m_Vision->adjustImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
             Default d;
@@ -499,6 +499,6 @@ void MainWindow::on_pushButtonRectReset_clicked()
 void MainWindow::on_pushButtonAutoRect_clicked()
 {
     on_pushButtonRectReset_clicked();
-    m_Vision->autoRetificationSet();
+    m_Vision->autoRectificationSet();
     m_Display1 = &m_Vision->m_FrameRect;
 }

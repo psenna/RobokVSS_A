@@ -30,9 +30,9 @@ public:
     bool captureImage();
     CvScalar* getMin();
     CvScalar* getMax();
-    void setRectificationsParam(std::vector<float> aImg);
+    void setRectificationsParam(std::vector<float> paramsVector);
     void closeCapture();
-    void autoRetificationSet();
+    void autoRectificationSet();
     std::vector<float> convertBorders(std::vector<cv::Point2f> border_points);
 
     friend class RenderThread;
@@ -41,6 +41,7 @@ public:
 private:
     Vision();  
     void rectifyImage();
+    void adjustImage();
     void convertImage(Mat* target_frame);
     void renderImage();
     void identifyRobot(Fieldstate *fs);
