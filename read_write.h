@@ -4,6 +4,8 @@
 #include "opencv2/opencv.hpp"
 #include "fieldstate.h"
 
+using namespace robok;
+
 void saveSettings(int brightness, int saturation, int contrast);
 void saveRectification(std::vector<float> a);
 void saveCalibration(CvScalar MIN[9], CvScalar MAX[9]);

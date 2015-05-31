@@ -8,7 +8,7 @@ class Strategy
 public:
     Strategy() {}
     ~Strategy() {}
-    virtual void play(Fieldstate *fs) = 0;
+    virtual void play(robok::Fieldstate *fs) = 0;
 };
 
 #endif // STRATEGY_H

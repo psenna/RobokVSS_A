@@ -1,5 +1,7 @@
 #include "ball.h"
 
+using namespace robok;
+
 Ball::Ball()
 {
 }

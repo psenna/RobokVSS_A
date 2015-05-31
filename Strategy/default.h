@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 
+using namespace robok;
+
 class Default : public Strategy
 {
 public:

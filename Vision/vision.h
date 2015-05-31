@@ -7,40 +7,46 @@
 #include "renderthread.h"
 #include <vector>
 
+// Define Border Points
+#define A 0
+#define B 1
+#define C 2
+#define D 3
+
 using cv::Mat;
 using cv::VideoCapture;
 using cv::Scalar;
+using robok::Fieldstate;
 
 class Vision
 {
 public:
     static Vision* getInstance();
     void getData(Fieldstate *fs);
-    void calibrate(int id, Mat* frameAlvo);
+    void calibrate(int id, Mat* target_frame);
     //void retification();
     void setCameraId(const int &id);
     void setMinMax(const CvScalar &min, const CvScalar &max, const int &id);
     bool captureImage();
     CvScalar* getMin();
     CvScalar* getMax();
-    void setRetificationsParam(std::vector<float> aImg);
+    void setRectificationsParam(std::vector<float> aImg);
     void closeCapture();
     void autoRetificationSet();
-    std::vector<float> convertBordas(std::vector<cv::Point2f> bordas);
+    std::vector<float> convertBorders(std::vector<cv::Point2f> border_points);
 
     friend class RenderThread;
     friend class MainWindow;
 
 private:
-    Vision();
-    void adjustImage();
+    Vision();  
     void rectifyImage();
-    void convertImage(Mat* frameAlvo);
+    void convertImage(Mat* target_frame);
     void renderImage();
     void identifyRobot(Fieldstate *fs);
     Mat thresholdImage(Scalar min, Scalar max);
-    Mat dilateImage(const Mat &binaryFrame);
-    Mat erodeImage(const Mat &binaryFrame);
+    Mat dilateImage(const Mat &binary_frame);
+    Mat erodeImage(const Mat &binary_frame);
 
     static Vision *m_Instance;
     Mat m_FrameOriginal;
@@ -54,9 +60,9 @@ private:
     CvScalar m_Max[10];
     CvScalar m_Min[10];
     RenderThread m_RenderThreads[10];
-    cv::Size tamDisplay;
-    std::vector<cv::Point2f> bordasRectify; /* pontos para a retificaçao */
-    std::vector<cv::Point2f> bordasFrameOriginal; /* pontos para a retificaçao */
+    cv::Size m_DisplaySize;
+    std::vector<cv::Point2f> m_RectificationBorderPoints;
+    std::vector<cv::Point2f> m_OriginalBorderPoints;
 };
 
 #endif // VISION_H

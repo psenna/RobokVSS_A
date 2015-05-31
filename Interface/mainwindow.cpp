@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_Display1 = &m_Vision->m_FrameOriginal;
 
-    m_Vision->tamDisplay = Size(ui->label_2->width()-1,ui->label_2->height()-1);
+    m_Vision->m_DisplaySize = Size(ui->label_2->width()-1,ui->label_2->height()-1);
     m_Vision->setCameraId(0);
     m_IdCalib = -1;
     callLoadCalibration();//carrega calibragem
@@ -55,12 +55,12 @@ void MainWindow::closeEvent(QCloseEvent *event)//Evento de fechar a ui
     exit(0);
 }
 
-void MainWindow::setBordasFramOrig(){ //seta bordas do Frame Original para a retificacao
+void MainWindow::setOriginalFrameBorderPoints(){ //seta bordas do Frame Original para a retificacao
     // The 4 points where the rectify mapping is to be done , from top-left in clockwise order
-    m_Vision->bordasFrameOriginal[0] = cv::Point2f(0,0);
-    m_Vision->bordasFrameOriginal[1] = cv::Point2f(0,m_Vision->tamDisplay.height-1);
-    m_Vision->bordasFrameOriginal[2] = cv::Point2f(m_Vision->tamDisplay.width-1,m_Vision->tamDisplay.height-1);
-    m_Vision->bordasFrameOriginal[3] = cv::Point2f(m_Vision->tamDisplay.width-1,0);
+    m_Vision->m_OriginalBorderPoints[0] = cv::Point2f(0,0);
+    m_Vision->m_OriginalBorderPoints[1] = cv::Point2f(0, m_Vision->m_DisplaySize.height-1);
+    m_Vision->m_OriginalBorderPoints[2] = cv::Point2f(m_Vision->m_DisplaySize.width-1, m_Vision->m_DisplaySize.height-1);
+    m_Vision->m_OriginalBorderPoints[3] = cv::Point2f(m_Vision->m_DisplaySize.width-1, 0);
 }
 
 void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_write.h
@@ -73,28 +73,29 @@ void MainWindow::callLoadCalibration(){  //Adaptador para chamar o Load do read_
     updateSlidersAndID();
 }
 
-void MainWindow::updateSlidersAndID(){ //Atualiza as Sliders da calibragem dependendo do objeto selecionado
-    int novo;
+void MainWindow::updateSlidersAndID() { //Atualiza as Sliders da calibragem dependendo do objeto selecionado
 
-    if(ui->radioButton_6->isChecked()) novo = 0; //cor do time nosso
-    if(ui->radioButton_7->isChecked()) novo = 4; //cor do time adversario
-    if(ui->radioButton_8->isChecked()) novo = 1; // V
-    if(ui->radioButton_9->isChecked()) novo = 2; // V
-    if(ui->radioButton_10->isChecked()) novo = 3; //robos nossos
-    if(ui->radioButton_11->isChecked()) novo = 5; // V
-    if(ui->radioButton_12->isChecked()) novo = 6; // V
-    if(ui->radioButton_13->isChecked()) novo = 7; //robos adversarios
-    if(ui->radioButtonBall->isChecked()) novo = 8; //bola
-    if(ui->radioButtonBorda->isChecked()) novo = 9; //bordas do campo
+    int newId;
 
-    if(novo!=m_IdCalib){ // atualiza somente se mudar a opcao de objeto
-        ui->horizontalSliderh1->setValue(m_Vision->getMin()[novo].val[0]);
-        ui->horizontalSliderh2->setValue(m_Vision->getMax()[novo].val[0]);
-        ui->horizontalSliders1->setValue(m_Vision->getMin()[novo].val[1]);
-        ui->horizontalSliders2->setValue(m_Vision->getMax()[novo].val[1]);
-        ui->horizontalSliderv1->setValue(m_Vision->getMin()[novo].val[2]);
-        ui->horizontalSliderv2->setValue(m_Vision->getMax()[novo].val[2]);
-        m_IdCalib = novo;
+    if(ui->radioButton_6->isChecked()) newId = 0; //cor do time nosso
+    if(ui->radioButton_7->isChecked()) newId = 4; //cor do time adversario
+    if(ui->radioButton_8->isChecked()) newId = 1; // V
+    if(ui->radioButton_9->isChecked()) newId = 2; // V
+    if(ui->radioButton_10->isChecked()) newId = 3; //robos nossos
+    if(ui->radioButton_11->isChecked()) newId = 5; // V
+    if(ui->radioButton_12->isChecked()) newId = 6; // V
+    if(ui->radioButton_13->isChecked()) newId = 7; //robos adversarios
+    if(ui->radioButtonBall->isChecked()) newId = 8; //bola
+    if(ui->radioButtonBorda->isChecked()) newId = 9; //bordas do campo
+
+    if (newId != m_IdCalib){ // atualiza somente se mudar a opcao de objeto
+        ui->horizontalSliderh1->setValue(m_Vision->getMin()[newId].val[0]);
+        ui->horizontalSliderh2->setValue(m_Vision->getMax()[newId].val[0]);
+        ui->horizontalSliders1->setValue(m_Vision->getMin()[newId].val[1]);
+        ui->horizontalSliders2->setValue(m_Vision->getMax()[newId].val[1]);
+        ui->horizontalSliderv1->setValue(m_Vision->getMin()[newId].val[2]);
+        ui->horizontalSliderv2->setValue(m_Vision->getMax()[newId].val[2]);
+        m_IdCalib = newId;
     }
 }
 
@@ -186,20 +187,20 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
         m_Display1 = &m_Vision->m_FrameRect;
         switch (ui->comboBoxRectfy->currentIndex()) {//setBordasRectify
         case 0://A
-            m_Vision->bordasRectify[0].x = (float) P.x();
-            m_Vision->bordasRectify[0].y = (float) P.y();
+            m_Vision->m_RectificationBorderPoints[0].x = (float) P.x();
+            m_Vision->m_RectificationBorderPoints[0].y = (float) P.y();
             break;
         case 1://B
-            m_Vision->bordasRectify[1].x = (float) P.x();
-            m_Vision->bordasRectify[1].y = (float) P.y();
+            m_Vision->m_RectificationBorderPoints[1].x = (float) P.x();
+            m_Vision->m_RectificationBorderPoints[1].y = (float) P.y();
             break;
         case 2://C
-            m_Vision->bordasRectify[2].x = (float) P.x();
-            m_Vision->bordasRectify[2].y = (float) P.y();
+            m_Vision->m_RectificationBorderPoints[2].x = (float) P.x();
+            m_Vision->m_RectificationBorderPoints[2].y = (float) P.y();
             break;
         case 3://D
-            m_Vision->bordasRectify[3].x = (float) P.x();
-            m_Vision->bordasRectify[3].y = (float) P.y();
+            m_Vision->m_RectificationBorderPoints[3].x = (float) P.x();
+            m_Vision->m_RectificationBorderPoints[3].y = (float) P.y();
             break;
         default:
             break;
@@ -210,30 +211,30 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
 
         switch (ui->comboBoxFieldAdjust->currentIndex()) {//setBordasRectify
         case 0://A
-            goal1.GoalPost_1.x = (float) P.x();
-            goal1.GoalPost_1.y = (float) P.y();
+            m_Goal1.GoalPost_1.x = (float) P.x();
+            m_Goal1.GoalPost_1.y = (float) P.y();
             break;
         case 1://B
-            goal1.GoalPost_2.x = (float) P.x();
-            goal1.GoalPost_2.y = (float) P.y();
+            m_Goal1.GoalPost_2.x = (float) P.x();
+            m_Goal1.GoalPost_2.y = (float) P.y();
             break;
         case 2://C
             //m_Vision->bordasRectify[2].x = (float) P.x();
             //m_Vision->bordasRectify[2].y = (float) P.y();
             break;
         case 3://D
-            goal2.GoalPost_1.x = (float) P.x();
-            goal2.GoalPost_1.y = (float) P.y();
+            m_Goal2.GoalPost_1.x = (float) P.x();
+            m_Goal2.GoalPost_1.y = (float) P.y();
             break;
         case 4://E
-            goal2.GoalPost_2.x = (float) P.x();
-            goal2.GoalPost_2.y = (float) P.y();
+            m_Goal2.GoalPost_2.x = (float) P.x();
+            m_Goal2.GoalPost_2.y = (float) P.y();
             break;
         default:
             break;
         }
-        fs->setGoalLeft(goal1);
-        fs->setGoalRight(goal2);
+        fs->setGoalLeft(m_Goal1);
+        fs->setGoalRight(m_Goal2);
     }
 }
 
@@ -249,26 +250,79 @@ void MainWindow::keyPressEvent(QKeyEvent * ev){ //Eventos de teclado na ui
 }
 
 void MainWindow::showRectify(){//mostra os pontos da retificacao no frame original
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y), 5, cvScalar(255,0,0));//A
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y),cv::Scalar(0,255,0),1,8,0);//A-B
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y), 5, cvScalar(0,255,0));//B
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[1].x, m_Vision->bordasRectify[1].y),cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y),cv::Scalar(255,0,255),1,8,0);//B-C
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y), 5, cvScalar(0,0,255));//C
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[2].x, m_Vision->bordasRectify[2].y),cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Scalar(0,0,255),1,8,0);//C-D
-    cv::circle(m_Vision->m_FrameOriginal, cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y), 5, cvScalar(255,0,255));//D
-    cv::line(m_Vision->m_FrameOriginal,cv::Point(m_Vision->bordasRectify[3].x, m_Vision->bordasRectify[3].y),cv::Point(m_Vision->bordasRectify[0].x, m_Vision->bordasRectify[0].y),cv::Scalar(255,0,0),1,8,0);//D-A
+    cv::circle(m_Vision->m_FrameOriginal,
+               cv::Point(m_Vision->m_RectificationBorderPoints[0].x, m_Vision->m_RectificationBorderPoints[0].y),
+               5, // Raio
+               cvScalar(255,0,0)); // Desenha circulo no ponto A
+
+    cv::line(m_Vision->m_FrameOriginal,
+             cv::Point(m_Vision->m_RectificationBorderPoints[0].x, m_Vision->m_RectificationBorderPoints[0].y),
+             cv::Point(m_Vision->m_RectificationBorderPoints[1].x, m_Vision->m_RectificationBorderPoints[1].y),
+             cv::Scalar(0,255,0)); // Desenha a linha do ponto A para o ponto B
+
+    cv::circle(m_Vision->m_FrameOriginal,
+               cv::Point(m_Vision->m_RectificationBorderPoints[1].x, m_Vision->m_RectificationBorderPoints[1].y),
+               5,
+               cvScalar(0,255,0)); // Desenha circulo no ponto B
+
+    cv::line(m_Vision->m_FrameOriginal,
+             cv::Point(m_Vision->m_RectificationBorderPoints[1].x, m_Vision->m_RectificationBorderPoints[1].y),
+             cv::Point(m_Vision->m_RectificationBorderPoints[2].x, m_Vision->m_RectificationBorderPoints[2].y),
+             cv::Scalar(255,0,255)); // Desenha a linha do ponto B para o ponto C
+
+    cv::circle(m_Vision->m_FrameOriginal,
+               cv::Point(m_Vision->m_RectificationBorderPoints[2].x,
+               m_Vision->m_RectificationBorderPoints[2].y),
+               5, // Raio
+               cvScalar(0,0,255)); // Desenha circulo no ponto C
+
+    cv::line(m_Vision->m_FrameOriginal,
+             cv::Point(m_Vision->m_RectificationBorderPoints[2].x, m_Vision->m_RectificationBorderPoints[2].y),
+             cv::Point(m_Vision->m_RectificationBorderPoints[3].x, m_Vision->m_RectificationBorderPoints[3].y),
+             cv::Scalar(0,0,255)); // Desenha a linha do ponto C para o ponto D
+
+    cv::circle(m_Vision->m_FrameOriginal,
+               cv::Point(m_Vision->m_RectificationBorderPoints[3].x, m_Vision->m_RectificationBorderPoints[3].y),
+               5, // Raio
+               cvScalar(255,0,255)); // Desenha circulo no ponto D
+
+    cv::line(m_Vision->m_FrameOriginal,
+             cv::Point(m_Vision->m_RectificationBorderPoints[3].x, m_Vision->m_RectificationBorderPoints[3].y),
+             cv::Point(m_Vision->m_RectificationBorderPoints[0].x, m_Vision->m_RectificationBorderPoints[0].y),
+             cv::Scalar(255,0,0)); // Desenha a linha do ponto D para o ponto A
 }
 
 void MainWindow::showFieldAdjust(){//mostra os pontos dos centros dos postes dos gols na secao de ajuste de campo
-    cv::circle(*m_Display1, cv::Point(fs->getGoalLeft().GoalPost_1.x, fs->getGoalLeft().GoalPost_1.y), 5, cvScalar(0,0,255));
-    cv::circle(*m_Display1, cv::Point(fs->getGoalLeft().GoalPost_2.x, fs->getGoalLeft().GoalPost_2.y), 5, cvScalar(0,0,255));
-    cv::circle(*m_Display1, cv::Point(fs->getGoalRight().GoalPost_1.x, fs->getGoalRight().GoalPost_1.y), 5, cvScalar(0,0,255));
-    cv::circle(*m_Display1, cv::Point(fs->getGoalRight().GoalPost_2.x, fs->getGoalRight().GoalPost_2.y), 5, cvScalar(0,0,255));
+    cv::circle(*m_Display1,
+               cv::Point(fs->getGoalLeft().GoalPost_1.x, fs->getGoalLeft().GoalPost_1.y),
+               5,
+               cvScalar(0,0,255)); // Desenha circulo na trave A
+
+    cv::circle(*m_Display1,
+               cv::Point(fs->getGoalLeft().GoalPost_2.x, fs->getGoalLeft().GoalPost_2.y),
+               5,
+               cvScalar(0,0,255)); // Desenha circulo na trave B
+
+    cv::circle(*m_Display1,
+               cv::Point(fs->getGoalRight().GoalPost_1.x, fs->getGoalRight().GoalPost_1.y),
+               5,
+               cvScalar(0,0,255)); // Desenha circulo na trave D
+
+    cv::circle(*m_Display1,
+               cv::Point(fs->getGoalRight().GoalPost_2.x, fs->getGoalRight().GoalPost_2.y),
+               5,
+               cvScalar(0,0,255)); // Desenha circulo na trave E
 }
 
 void MainWindow::showGame(){//mostra os pontos do centro dos robos
     for (int i = 0; i < 3; ++i) {
-        cv::circle(*m_Display1, cv::Point(fs->getRobotTeamById(i).getPosition().x, fs->getRobotTeamById(i).getPosition().y), 10, cvScalar(0,255,0));
+        cv::circle(*m_Display1,
+                   cv::Point(fs->getRobotTeamById(i).getPosition().x,
+                             fs->getRobotTeamById(i).getPosition().y),
+                             10,
+                             cvScalar(0,255,0),
+                             2 // Expessura da linha
+                   );
     }
 }
 
@@ -291,12 +345,12 @@ void MainWindow::on_buttonLoadCalib_clicked() //Load da Calibragem
 void MainWindow::on_rBtnSettings_clicked() //Settings
 {
     ui->stackedWidget->setCurrentIndex(0);
-    setBordasFramOrig();//Chame esta funcao pelo menos uma vez no comeco da execucao do programa
+    setOriginalFrameBorderPoints();//Chame esta funcao pelo menos uma vez no comeco da execucao do programa
 
     ui->label_3->clear();
     while (m_Vision->captureImage() && ui->rBtnSettings->isChecked())
     {
-        m_Vision->adjustImage();
+        m_Vision->rectifyImage();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
     }
 }
@@ -306,7 +360,7 @@ void MainWindow::on_rBtnRectifyImage_clicked() //Rectify Image
     ui->stackedWidget->setCurrentIndex(1);
 
     while(m_Vision->captureImage() && ui->rBtnRectifyImage->isChecked()){
-        m_Vision->adjustImage();
+        m_Vision->rectifyImage();
         showRectify();
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
@@ -323,9 +377,9 @@ void MainWindow::on_rBtnCalibrate_clicked() //Calibrate
     updateSlidersAndID();
 
     while(ui->rBtnCalibrate->isChecked()){
-        m_Vision->adjustImage();
+        m_Vision->rectifyImage();
         updateSlidersAndID();
-        m_Vision->calibrate(m_IdCalib,m_Display1);
+        m_Vision->calibrate(m_IdCalib, m_Display1);
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameBinary)));
 
@@ -345,8 +399,8 @@ void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
     ui->stackedWidget->setCurrentIndex(3);
 
     while (m_Vision->captureImage() && ui->rBtnFieldAdjust->isChecked()) {
-        m_Vision->adjustImage();
-        showFieldAdjust();
+        m_Vision->rectifyImage();
+        showFieldAdjust(); // Desenhar pontos de ajuste na tela
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
         ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(m_Vision->m_FrameOriginal)));
     }
@@ -357,7 +411,7 @@ void MainWindow::on_rBtnGame_clicked() //Game
     ui->stackedWidget->setCurrentIndex(4);
 
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
-        m_Vision->adjustImage();
+        m_Vision->rectifyImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
             Default d;
@@ -414,7 +468,7 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
 
 void MainWindow::on_pushButtonSaveRect_clicked()
 {
-    saveRectification(m_Vision->convertBordas(m_Vision->bordasRectify));
+    saveRectification(m_Vision->convertBorders(m_Vision->m_RectificationBorderPoints));
 }
 
 void MainWindow::on_pushButtonLoadRect_clicked()
@@ -422,7 +476,7 @@ void MainWindow::on_pushButtonLoadRect_clicked()
     std::vector<float> aImg(8);
     if(loadRectification(&aImg)){
         m_Display1 = &m_Vision->m_FrameRect;//carrega retificacao
-        m_Vision->setRetificationsParam(aImg);
+        m_Vision->setRectificationsParam(aImg);
     }
 }
 
@@ -439,7 +493,7 @@ void MainWindow::on_pushButtonLoadField_clicked()
 void MainWindow::on_pushButtonRectReset_clicked()
 {
     m_Display1 = &m_Vision->m_FrameOriginal;
-    m_Vision->setRetificationsParam(m_Vision->convertBordas(m_Vision->bordasFrameOriginal));
+    m_Vision->setRectificationsParam(m_Vision->convertBorders(m_Vision->m_OriginalBorderPoints));
 }
 
 void MainWindow::on_pushButtonAutoRect_clicked()

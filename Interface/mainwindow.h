@@ -25,46 +25,6 @@ public:
     void closeEvent(QCloseEvent *event);
     void callLoadCalibration();
 
-private slots:
-
-    void on_buttonSaveCalib_clicked();
-
-    void on_buttonLoadCalib_clicked();
-
-    void on_rBtnSettings_clicked();
-
-    void on_rBtnRectifyImage_clicked();
-
-    void on_rBtnCalibrate_clicked();
-
-    void on_rBtnFieldAdjust_clicked();
-
-    void on_rBtnGame_clicked();
-
-    void on_buttonScanDevices_clicked();
-
-    void on_buttonGo_clicked();
-
-    void on_horizontalSliderBrightness_valueChanged(int value);
-
-    void on_horizontalSliderSaturation_valueChanged(int value);
-
-    void on_horizontalSliderContrast_valueChanged(int value);
-
-    void on_comboBox_currentIndexChanged(int index);
-
-    void on_pushButtonSaveField_clicked();
-
-    void on_pushButtonLoadField_clicked();
-
-    void on_pushButtonRectReset_clicked();
-
-    void on_pushButtonAutoRect_clicked();
-
-    void on_pushButtonLoadRect_clicked();
-
-    void on_pushButtonSaveRect_clicked();
-
 private:
     Ui::MainWindow *ui;
     cv::Mat *m_Display1;
@@ -74,13 +34,36 @@ private:
     Fieldstate *fs;
     bool m_isPlaying;
     int m_IdCalib;
-    Goal goal1, goal2;
+    Goal m_Goal1, m_Goal2;
 
     void showRectify();
     void showFieldAdjust();
     void showGame();
-    void setBordasFramOrig();
+    void setOriginalFrameBorderPoints();
     void updateSlidersAndID();
+
+private slots:
+
+    void on_buttonSaveCalib_clicked();
+    void on_buttonLoadCalib_clicked();
+    void on_rBtnSettings_clicked();
+    void on_rBtnRectifyImage_clicked();
+    void on_rBtnCalibrate_clicked();
+    void on_rBtnFieldAdjust_clicked();
+    void on_rBtnGame_clicked();
+    void on_buttonScanDevices_clicked();
+    void on_buttonGo_clicked();
+    void on_horizontalSliderBrightness_valueChanged(int value);
+    void on_horizontalSliderSaturation_valueChanged(int value);
+    void on_horizontalSliderContrast_valueChanged(int value);
+    void on_comboBox_currentIndexChanged(int index);
+    void on_pushButtonSaveField_clicked();
+    void on_pushButtonLoadField_clicked();
+    void on_pushButtonRectReset_clicked();
+    void on_pushButtonAutoRect_clicked();
+    void on_pushButtonLoadRect_clicked();
+    void on_pushButtonSaveRect_clicked();
+
 };
 
 #endif // MAINWINDOW_H

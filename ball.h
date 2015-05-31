@@ -3,7 +3,7 @@
 
 #include "unit.h"
 
-using namespace robok;
+namespace robok {
 
 class Ball : public Unit
 {
@@ -16,5 +16,7 @@ public:
     void setPrediction(const Position& position);
     void setPrediction(const int& x, const int& y);
 };
+
+}
 
 #endif // BALL_H
