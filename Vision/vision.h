@@ -48,6 +48,7 @@ private:
     Mat thresholdImage(Scalar min, Scalar max);
     Mat dilateImage(const Mat &binary_frame);
     Mat erodeImage(const Mat &binary_frame);
+    void testeConfiabilidade();
 
     static Vision *m_Instance;
     Mat m_FrameOriginal;
@@ -64,6 +65,10 @@ private:
     cv::Size m_DisplaySize;
     std::vector<cv::Point2f> m_RectificationBorderPoints;
     std::vector<cv::Point2f> m_OriginalBorderPoints;
+
+    //Teste
+    int fpsCount;
+    int missObject[9];
 };
 
 #endif // VISION_H

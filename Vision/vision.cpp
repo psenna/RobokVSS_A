@@ -51,6 +51,7 @@ Vision* Vision::getInstance()
  */
 void Vision::getData(Fieldstate *fs){
 
+
     double ti,tf; // ti = tempo inicial // tf = tempo final
     ti = time();
 
@@ -62,12 +63,30 @@ void Vision::getData(Fieldstate *fs){
     }
     identifyRobot(fs);
 
-    std::cout<<"lol";
-
     tf = time();
     cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
+    testeConfiabilidade();
+    //teste de precisao de orientacao
+    //std::cout<<"Orientacao - robo0: "<<fs->getRobotTeamById(0).getOrientation()<<" robo0: "<<fs->getRobotTeamById(1).getOrientation()<<" robo0: "<<fs->getRobotTeamById(2).getOrientation()<<std::endl;
+
     cv::waitKey(1);
+}
+
+void Vision::testeConfiabilidade(){//teste de confiabilidade de encontros dos objetos. Para uso do TFG
+    //SetupStart na void MainWindow::on_rBtnGame_clicked()
+    fpsCount++;
+    for (int i = 0; i < 9; ++i) {
+       if(m_Found[i].size() < m_RenderThreads[i].getObjectsAmount())
+           missObject[i]++;
+    }
+    if(fpsCount == 10000){
+        std::cout<<"quantidade de frames: "<< fpsCount<<std::endl;
+        for (int i = 0; i < 9; ++i) {
+             std::cout<<"quantidade de objetos perdidos ["<<i<<"]: "<< missObject[i]<<std::endl;
+        }
+       std::cout<<std::endl;
+    }
 }
 
 void Vision::calibrate(int id, Mat* target_frame) {

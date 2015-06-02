@@ -409,6 +409,10 @@ void MainWindow::on_rBtnFieldAdjust_clicked() //Field Adjust
 void MainWindow::on_rBtnGame_clicked() //Game
 {
     ui->stackedWidget->setCurrentIndex(4);
+    m_Vision->fpsCount = 0;//teste de confiabilidade
+    for (int i = 0; i < 9; i++) {//teste de confiabilidade
+        m_Vision->missObject[i] = 0;
+    }
 
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
         m_Vision->adjustImage();
