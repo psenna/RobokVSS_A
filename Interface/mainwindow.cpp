@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Display1 = &m_Vision->m_FrameOriginal;
 
     m_Vision->m_DisplaySize = Size(ui->label_2->width()-1,ui->label_2->height()-1);
-    m_Vision->setCameraId(0);
+
     m_IdCalib = -1;
     callLoadCalibration();//carrega calibragem
     on_pushButtonLoadRect_clicked();//carrega retificacao
@@ -316,6 +316,7 @@ void MainWindow::showFieldAdjust(){//mostra os pontos dos centros dos postes dos
 
 void MainWindow::showGame(){//mostra os pontos do centro dos robos
     for (int i = 0; i < 3; ++i) {
+        if(fs->getRobotTeamById(i).getPosition().x != -1 && fs->getRobotTeamById(i).getPosition().y != -1)
         cv::circle(*m_Display1,
                    cv::Point(fs->getRobotTeamById(i).getPosition().x,
                              fs->getRobotTeamById(i).getPosition().y),
@@ -418,8 +419,8 @@ void MainWindow::on_rBtnGame_clicked() //Game
         m_Vision->adjustImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
-            Default d;
-            d.play(fs);
+//            Default d;
+//            d.play(fs);
             showGame();
         }
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));

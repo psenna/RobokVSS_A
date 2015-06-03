@@ -15,7 +15,7 @@ double time();
 
 Vision::Vision()
 {
-    m_VideoCapture.open(1);
+    m_VideoCapture.open(0);
 
     for (int i = 0; i < 10; i++)
     {
@@ -57,14 +57,14 @@ void Vision::getData(Fieldstate *fs){
 
     convertImage(&m_FrameRect);
     renderImage();
-    for (int i = 0; i < 4; ++i) {
-        std::cout<<i<<" e "<<m_Found[i].size()<<"\n";
+//    for (int i = 0; i < 4; ++i) {
+//        std::cout<<i<<" e "<<m_Found[i].size()<<"\n";
+//    }
 
-    }
     identifyRobot(fs);
 
     tf = time();
-    cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
+    //cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
     testeConfiabilidade();
     //teste de precisao de orientacao
@@ -73,16 +73,16 @@ void Vision::getData(Fieldstate *fs){
     cv::waitKey(1);
 }
 
-void Vision::testeConfiabilidade(){//teste de confiabilidade de encontros dos objetos. Para uso do TFG
+void Vision::testeConfiabilidade(){//teste de confiabilidade de encontros das etiquetas individuais do time. Para uso do TFG
     //SetupStart na void MainWindow::on_rBtnGame_clicked()
     fpsCount++;
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 1; i < 4; ++i) {
        if(m_Found[i].size() < m_RenderThreads[i].getObjectsAmount())
            missObject[i]++;
     }
-    if(fpsCount == 10000){
+    if(fpsCount == 900){
         std::cout<<"quantidade de frames: "<< fpsCount<<std::endl;
-        for (int i = 0; i < 9; ++i) {
+        for (int i = 1; i < 4; ++i) {
              std::cout<<"quantidade de objetos perdidos ["<<i<<"]: "<< missObject[i]<<std::endl;
         }
        std::cout<<std::endl;
@@ -95,8 +95,8 @@ void Vision::calibrate(int id, Mat* target_frame) {
         //adjustImage();
         convertImage(target_frame);
         m_FrameBinary = thresholdImage(m_Min[id], m_Max[id]);
-        m_FrameBinary = erodeImage(m_FrameBinary);
-        m_FrameBinary = dilateImage(m_FrameBinary);
+        //m_FrameBinary = erodeImage(m_FrameBinary);
+       // m_FrameBinary = dilateImage(m_FrameBinary);
     }
 }
 
@@ -159,10 +159,10 @@ void Vision::adjustImage()
 /* faz a captura da imagem */
 bool Vision::captureImage(){
 
-    if (!m_VideoCapture.isOpened())
+    while (!m_VideoCapture.isOpened())
         m_VideoCapture.open(m_IdCamera);
 
-    if (!m_VideoCapture.read(m_FrameOriginal))
+    while (!m_VideoCapture.read(m_FrameOriginal))
     {
         cout << "Please check your device." << endl;
         return false;
@@ -218,9 +218,10 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
 
 void Vision::renderImage()
 {
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; ++i){
         m_RenderThreads[i].start();
-    for (int i = 0; i < 8; ++i) {
+    }
+    for (int i = 0; i < 8; ++i){
         m_RenderThreads[i].wait();
     }
 }
@@ -278,7 +279,7 @@ void Vision::identifyRobot(Fieldstate *fs){
                     menorDistanciaId = j;
                 }
             }
-            if (menor_distancia != 0) {
+            if (menor_distancia != 9999) {
                 float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
                 float orientation = atan2(m_Found[i][0].y - m_Found[0][menorDistanciaId].y,
@@ -286,7 +287,13 @@ void Vision::identifyRobot(Fieldstate *fs){
                 robot.setPosition(x, y);
                 robot.setOrientation(orientation);
                 fs->setRobotTeamById(robot, i-1);
+            }else{
+                robot.setPosition(-1, -1);
+                fs->setRobotTeamById(robot, i-1);
             }
+        }else{
+            robot.setPosition(-1, -1);
+            fs->setRobotTeamById(robot, i-1);
         }
     } // end for
 

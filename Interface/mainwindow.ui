@@ -319,6 +319,16 @@ border-top: 3px solid black;</string>
                    <string>video1</string>
                   </property>
                  </item>
+                 <item>
+                  <property name="text">
+                   <string>video2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>video3</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
               </layout>
@@ -1827,8 +1837,8 @@ border-color: rgb(255, 255, 255);</string>
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:9.7002pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;O &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; color:#008000;&quot;&gt;uvcdynctrl &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; color:#3c3c3c;&quot;&gt;precisa estar instalado para fazer os ajustes.&lt;br /&gt;&lt;br /&gt;Para instalar utilize o seguinte comando no bash:&lt;br /&gt;&lt;br /&gt;$ sudo apt-get install uvcdynctrl&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;O &lt;span style=&quot; color:#008000;&quot;&gt;uvcdynctrl &lt;/span&gt;&lt;span style=&quot; color:#3c3c3c;&quot;&gt;precisa estar instalado para fazer os ajustes.&lt;br /&gt;&lt;br /&gt;Para instalar utilize o seguinte comando no bash:&lt;br /&gt;&lt;br /&gt;$ sudo apt-get install uvcdynctrl&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
