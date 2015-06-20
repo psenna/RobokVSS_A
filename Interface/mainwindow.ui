@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: #393939</string>
    </property>
    <widget class="QFrame" name="frame">
     <property name="geometry">
@@ -27,15 +27,13 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-border-right-color: rgb(0, 0, 0);
-border-right: 3px solid black;</string>
+     <string notr="true">background-color: #393939;</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <enum>QFrame::Sunken</enum>
     </property>
     <property name="lineWidth">
      <number>1</number>
@@ -50,7 +48,7 @@ border-right: 3px solid black;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);
+      <string notr="true">background-color: #393939;
 border-right: white</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -80,6 +78,9 @@ border-right: white</string>
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
           </property>
           <property name="text">
            <string>Options</string>
@@ -125,6 +126,9 @@ border-right: white</string>
         <property name="enabled">
          <bool>true</bool>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: #f8dc0b;</string>
+        </property>
         <property name="text">
          <string>Settings</string>
         </property>
@@ -151,6 +155,9 @@ border-right: white</string>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnRectifyImage">
+        <property name="styleSheet">
+         <string notr="true">color: #f8dc0b;</string>
+        </property>
         <property name="text">
          <string>Rectify Image</string>
         </property>
@@ -174,6 +181,9 @@ border-right: white</string>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnCalibrate">
+        <property name="styleSheet">
+         <string notr="true">color: #f8dc0b;</string>
+        </property>
         <property name="text">
          <string>Calibrate</string>
         </property>
@@ -197,6 +207,9 @@ border-right: white</string>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnFieldAdjust">
+        <property name="styleSheet">
+         <string notr="true">color: #f8dc0b;</string>
+        </property>
         <property name="text">
          <string>Field Adjust</string>
         </property>
@@ -220,6 +233,9 @@ border-right: white</string>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnGame">
+        <property name="styleSheet">
+         <string notr="true">color: #f8dc0b;</string>
+        </property>
         <property name="text">
          <string>Game</string>
         </property>
@@ -237,8 +253,7 @@ border-right: white</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-image: url(:/resources/robokLogo.png);
-border-right: white</string>
+      <string notr="true">background-image: url(:/resources/robok.png);</string>
      </property>
     </widget>
    </widget>
@@ -252,11 +267,10 @@ border-right: white</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);
-border-top: 3px solid black;</string>
+     <string notr="true">background-color: #393939</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
@@ -274,14 +288,15 @@ border-top: 3px solid black;</string>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="styleSheet">
-         <string notr="true">border-left: 2px rgb(0, 0, 0);</string>
+         <string notr="true">background-color: #393939;
+border-left: 2px rgb(0, 0, 0);</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="Settings">
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(255, 255, 255);</string>
+          <string notr="true">border-color: #393939</string>
          </property>
          <widget class="QWidget" name="horizontalLayoutWidget">
           <property name="geometry">
@@ -299,6 +314,9 @@ border-top: 3px solid black;</string>
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
                 <widget class="QLabel" name="label_9">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>Device:</string>
                  </property>
@@ -307,7 +325,54 @@ border-top: 3px solid black;</string>
                <item>
                 <widget class="QComboBox" name="comboBox">
                  <property name="styleSheet">
-                  <string notr="true">background-color: rgb(215, 211, 208);</string>
+                  <string notr="true">QComboBox {
+    border: 1px solid black;
+    border-radius: 0px;
+    padding: 1px 18px 1px 5px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #909090, stop: 1 #707070);
+	color: black;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #c0c0c0, stop: 1 #a0a0a0);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #505050;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 0px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}</string>
                  </property>
                  <item>
                   <property name="text">
@@ -593,6 +658,9 @@ QPushButton:default {
              </property>
              <item row="0" column="0">
               <widget class="QLabel" name="label_13">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Brightness</string>
                </property>
@@ -601,7 +669,21 @@ QPushButton:default {
              <item row="0" column="1">
               <widget class="QSlider" name="horizontalSliderBrightness">
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(215, 211, 208);</string>
+                <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -623,6 +705,9 @@ QPushButton:default {
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_14">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Saturation</string>
                </property>
@@ -631,7 +716,21 @@ QPushButton:default {
              <item row="2" column="1">
               <widget class="QSlider" name="horizontalSliderSaturation">
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(215, 211, 208);</string>
+                <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -653,6 +752,9 @@ QPushButton:default {
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_15">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Contrast</string>
                </property>
@@ -661,7 +763,21 @@ QPushButton:default {
              <item row="4" column="1">
               <widget class="QSlider" name="horizontalSliderContrast">
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(215, 211, 208);</string>
+                <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -686,6 +802,9 @@ QPushButton:default {
             <pointsize>26</pointsize>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
+          </property>
           <property name="text">
            <string>Settings</string>
           </property>
@@ -693,7 +812,7 @@ QPushButton:default {
         </widget>
         <widget class="QWidget" name="RectifyImage">
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(255, 255, 255);</string>
+          <string notr="true">border-color: #393939</string>
          </property>
          <widget class="QLabel" name="label_5">
           <property name="geometry">
@@ -708,6 +827,9 @@ QPushButton:default {
            <font>
             <pointsize>22</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
           </property>
           <property name="text">
            <string>Rectify Image</string>
@@ -747,7 +869,54 @@ border-color: white;</string>
            <item>
             <widget class="QComboBox" name="comboBoxRectfy">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(246, 244, 242);</string>
+              <string notr="true">QComboBox {
+    border: 1px solid black;
+    border-radius: 0px;
+    padding: 1px 18px 1px 5px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #909090, stop: 1 #707070);
+	color: black;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #c0c0c0, stop: 1 #a0a0a0);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #505050;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 0px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}</string>
              </property>
              <item>
               <property name="text">
@@ -783,7 +952,28 @@ border-color: white;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(206, 203, 200);</string>
+           <string notr="true">QPushButton {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    min-width: 80px;
+	color: black;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #505050, stop: 1 black);
+	color: white;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
           </property>
           <property name="text">
            <string>Load</string>
@@ -799,7 +989,28 @@ border-color: white;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(206, 203, 200);</string>
+           <string notr="true">QPushButton {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    min-width: 80px;
+	color: black;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #505050, stop: 1 black);
+	color: white;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
           </property>
           <property name="text">
            <string>Save</string>
@@ -815,7 +1026,28 @@ border-color: white;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(206, 203, 200);</string>
+           <string notr="true">QPushButton {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    min-width: 80px;
+	color: black;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #505050, stop: 1 black);
+	color: white;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
           </property>
           <property name="text">
            <string>Reset</string>
@@ -831,7 +1063,28 @@ border-color: white;</string>
            </rect>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(206, 203, 200);</string>
+           <string notr="true">QPushButton {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    min-width: 80px;
+	color: black;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #505050, stop: 1 black);
+	color: white;
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
           </property>
           <property name="text">
            <string>AutoRect</string>
@@ -840,7 +1093,7 @@ border-color: white;</string>
         </widget>
         <widget class="QWidget" name="Calibrate">
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(255, 255, 255);</string>
+          <string notr="true">border-color: #393939</string>
          </property>
          <widget class="QLabel" name="label_6">
           <property name="geometry">
@@ -855,6 +1108,9 @@ border-color: white;</string>
            <font>
             <pointsize>26</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
           </property>
           <property name="text">
            <string>Calibrate</string>
@@ -874,6 +1130,9 @@ border-color: white;</string>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item alignment="Qt::AlignLeft|Qt::AlignTop">
               <widget class="QLabel" name="label_10">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Team Colors</string>
                </property>
@@ -881,6 +1140,9 @@ border-color: white;</string>
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_6">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Blue</string>
                </property>
@@ -891,6 +1153,9 @@ border-color: white;</string>
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_7">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Yellow</string>
                </property>
@@ -898,6 +1163,9 @@ border-color: white;</string>
              </item>
              <item>
               <widget class="QRadioButton" name="radioButtonBall">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Ball</string>
                </property>
@@ -943,6 +1211,9 @@ QPushButton:default {
              </property>
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_12">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Blue Team</string>
                </property>
@@ -950,6 +1221,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_8">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 1</string>
                </property>
@@ -957,6 +1231,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_9">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 2</string>
                </property>
@@ -964,6 +1241,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_10">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 3</string>
                </property>
@@ -1006,6 +1286,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_19">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Yellow Team</string>
                </property>
@@ -1013,6 +1296,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_11">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 1</string>
                </property>
@@ -1020,6 +1306,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_12">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 2</string>
                </property>
@@ -1027,6 +1316,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_13">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robot 3</string>
                </property>
@@ -1034,6 +1326,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButtonBorda">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Borda</string>
                </property>
@@ -1055,6 +1350,9 @@ QPushButton:default {
           <layout class="QFormLayout" name="formLayout">
            <item row="0" column="0">
             <widget class="QLabel" name="label_27">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>H1</string>
              </property>
@@ -1062,6 +1360,23 @@ QPushButton:default {
            </item>
            <item row="0" column="1">
             <widget class="QSlider" name="horizontalSliderh1">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>180</number>
              </property>
@@ -1072,6 +1387,9 @@ QPushButton:default {
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_28">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>H2</string>
              </property>
@@ -1079,6 +1397,23 @@ QPushButton:default {
            </item>
            <item row="1" column="1">
             <widget class="QSlider" name="horizontalSliderh2">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>180</number>
              </property>
@@ -1089,6 +1424,9 @@ QPushButton:default {
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_29">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>S1</string>
              </property>
@@ -1096,6 +1434,9 @@ QPushButton:default {
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_30">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>S2</string>
              </property>
@@ -1103,6 +1444,9 @@ QPushButton:default {
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="label_31">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>V1</string>
              </property>
@@ -1110,6 +1454,9 @@ QPushButton:default {
            </item>
            <item row="5" column="0">
             <widget class="QLabel" name="label_32">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>V2</string>
              </property>
@@ -1117,6 +1464,23 @@ QPushButton:default {
            </item>
            <item row="2" column="1">
             <widget class="QSlider" name="horizontalSliders1">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -1127,6 +1491,23 @@ QPushButton:default {
            </item>
            <item row="3" column="1">
             <widget class="QSlider" name="horizontalSliders2">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -1137,6 +1518,23 @@ QPushButton:default {
            </item>
            <item row="4" column="1">
             <widget class="QSlider" name="horizontalSliderv1">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -1147,6 +1545,23 @@ QPushButton:default {
            </item>
            <item row="5" column="1">
             <widget class="QSlider" name="horizontalSliderv2">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+    border: 1px solid black;
+    height: 8px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #B1B1B1, stop:1 #c4c4c4);
+    margin: 2px 0;
+}
+
+QSlider::handle:horizontal {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FFD452, stop: 1 yellow);
+    border: 1px solid black;
+    width: 20px;
+    margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+    border-radius: 0px;
+}</string>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -1160,7 +1575,7 @@ QPushButton:default {
         </widget>
         <widget class="QWidget" name="FieldAdjust">
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(255, 255, 255);</string>
+          <string notr="true">border-color: #393939</string>
          </property>
          <widget class="QLabel" name="label_7">
           <property name="geometry">
@@ -1175,6 +1590,9 @@ QPushButton:default {
            <font>
             <pointsize>26</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
           </property>
           <property name="text">
            <string>Field Adjust</string>
@@ -1206,6 +1624,9 @@ border-color: white;</string>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QLabel" name="label_20">
+             <property name="styleSheet">
+              <string notr="true">color: #f8dc0b;</string>
+             </property>
              <property name="text">
               <string>Set Point:</string>
              </property>
@@ -1214,7 +1635,54 @@ border-color: white;</string>
            <item>
             <widget class="QComboBox" name="comboBoxFieldAdjust">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(246, 244, 242);</string>
+              <string notr="true">QComboBox {
+    border: 1px solid black;
+    border-radius: 0px;
+    padding: 1px 18px 1px 5px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #909090, stop: 1 #707070);
+	color: black;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #c0c0c0, stop: 1 #a0a0a0);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #505050;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 0px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}</string>
              </property>
              <item>
               <property name="text">
@@ -1322,7 +1790,7 @@ QPushButton:default {
         </widget>
         <widget class="QWidget" name="Game">
          <property name="styleSheet">
-          <string notr="true">border-color: rgb(255, 255, 255);</string>
+          <string notr="true">border-color: #393939</string>
          </property>
          <widget class="QLabel" name="label_8">
           <property name="geometry">
@@ -1337,6 +1805,9 @@ QPushButton:default {
            <font>
             <pointsize>26</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #f8dc0b;</string>
           </property>
           <property name="text">
            <string>Game</string>
@@ -1356,6 +1827,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_10">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_33">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Device: </string>
                </property>
@@ -1364,7 +1838,54 @@ QPushButton:default {
              <item>
               <widget class="QComboBox" name="comboBoxdevicesgame">
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(246, 244, 242);</string>
+                <string notr="true">QComboBox {
+    border: 1px solid black;
+    border-radius: 0px;
+    padding: 1px 18px 1px 5px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #909090, stop: 1 #707070);
+	color: black;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #c0c0c0, stop: 1 #a0a0a0);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #505050;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 0px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}</string>
                </property>
               </widget>
              </item>
@@ -1385,6 +1906,9 @@ QPushButton:default {
               <layout class="QHBoxLayout" name="horizontalLayout_12">
                <item>
                 <widget class="QLabel" name="label_26">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>Send</string>
                  </property>
@@ -1418,6 +1942,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_12">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_24">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Side:</string>
                </property>
@@ -1425,6 +1952,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_16">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Left</string>
                </property>
@@ -1435,6 +1965,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_17">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Right</string>
                </property>
@@ -1459,6 +1992,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_8">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_22">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Team:</string>
                </property>
@@ -1466,6 +2002,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_14">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Blue</string>
                </property>
@@ -1476,6 +2015,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QRadioButton" name="radioButton_15">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Yellow</string>
                </property>
@@ -1500,6 +2042,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_13">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_25">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Strategy:</string>
                </property>
@@ -1508,7 +2053,54 @@ QPushButton:default {
              <item>
               <widget class="QComboBox" name="comboBoxStrategyGame">
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(246, 244, 242);</string>
+                <string notr="true">QComboBox {
+    border: 1px solid black;
+    border-radius: 0px;
+    padding: 1px 18px 1px 5px;
+    min-width: 6em;
+}
+
+QComboBox:editable {
+    background: white;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #909090, stop: 1 #707070);
+	color: black;
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #c0c0c0, stop: 1 #a0a0a0);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #505050;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 0px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    image: url(/usr/share/icons/crystalsvg/16x16/actions/1downarrow.png);
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}</string>
                </property>
               </widget>
              </item>
@@ -1527,6 +2119,9 @@ QPushButton:default {
              </item>
              <item>
               <widget class="QCheckBox" name="checkBox_7">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Ball</string>
                </property>
@@ -1554,6 +2149,9 @@ QPushButton:default {
             <layout class="QVBoxLayout" name="verticalLayout_11">
              <item alignment="Qt::AlignTop">
               <widget class="QLabel" name="label_23">
+               <property name="styleSheet">
+                <string notr="true">color: #f8dc0b;</string>
+               </property>
                <property name="text">
                 <string>Robots</string>
                </property>
@@ -1563,6 +2161,9 @@ QPushButton:default {
               <layout class="QHBoxLayout" name="horizontalLayout_13">
                <item>
                 <widget class="QCheckBox" name="checkBox">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>1</string>
                  </property>
@@ -1573,6 +2174,9 @@ QPushButton:default {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_2">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>2</string>
                  </property>
@@ -1583,6 +2187,9 @@ QPushButton:default {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_3">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>3</string>
                  </property>
@@ -1594,6 +2201,9 @@ QPushButton:default {
               <layout class="QHBoxLayout" name="horizontalLayout_14">
                <item>
                 <widget class="QCheckBox" name="checkBox_4">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>1</string>
                  </property>
@@ -1601,6 +2211,9 @@ QPushButton:default {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_6">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>2</string>
                  </property>
@@ -1608,6 +2221,9 @@ QPushButton:default {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_5">
+                 <property name="styleSheet">
+                  <string notr="true">color: #f8dc0b;</string>
+                 </property>
                  <property name="text">
                   <string>3</string>
                  </property>
@@ -1816,12 +2432,13 @@ QPushButton:default {
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);
+      <string notr="true">background-color: #393939;
 border-top-color: rgb(0, 0, 0);
-border-color: rgb(255, 255, 255);</string>
+border-color: #393939;
+</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="SettingsInfo">
       <widget class="QTextEdit" name="textEdit">
@@ -1837,8 +2454,8 @@ border-color: rgb(255, 255, 255);</string>
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;O &lt;span style=&quot; color:#008000;&quot;&gt;uvcdynctrl &lt;/span&gt;&lt;span style=&quot; color:#3c3c3c;&quot;&gt;precisa estar instalado para fazer os ajustes.&lt;br /&gt;&lt;br /&gt;Para instalar utilize o seguinte comando no bash:&lt;br /&gt;&lt;br /&gt;$ sudo apt-get install uvcdynctrl&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Droid Sans'; font-size:9.7002pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; color:#f0f324;&quot;&gt;O &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; color:#22a617;&quot;&gt;uvcdynctrl&lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; color:#f0f324;&quot;&gt; precisa estar instalado para fazer os ajustes.&lt;br /&gt;&lt;br /&gt;Para instalar utilize o seguinte comando no bash:&lt;br /&gt;&lt;br /&gt;$ sudo apt-get install uvcdynctrl&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
@@ -1861,10 +2478,10 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QFrame" name="frame_3">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+        <string notr="true">background-color: #393939;</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Box</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
@@ -1887,10 +2504,11 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QFrame" name="frame_4">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 255, 255);</string>
+        <string notr="true">background-color: #393939;
+border-left: 2px rgb(0, 0, 0);</string>
        </property>
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Box</enum>
        </property>
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>

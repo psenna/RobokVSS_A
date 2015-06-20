@@ -3,5 +3,6 @@
         <file>resources/fieldAdjust.png</file>
         <file>resources/rectifyImage.jpg</file>
         <file>resources/robokLogo.png</file>
+        <file>resources/robok.png</file>
     </qresource>
 </RCC>
