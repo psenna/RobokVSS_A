@@ -28,6 +28,10 @@ void RenderThread::run()
     // Detectar cores a partir do frame binarizado resultante
     vision->m_Found[m_ThreadNumber] = DetectColors(binary_frame.clone(), MIN_SIZE, m_ObjectsAmount, MAX_SIZE);
 
+    if(m_ThreadNumber == 8){
+        std::cout << "achados: " << vision->m_Found[8].size() << endl;
+    }
+
     // Terminar a Thread
     this->exit();
 }

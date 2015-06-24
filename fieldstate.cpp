@@ -65,3 +65,19 @@ void Fieldstate::setFieldCenter(const Position &position){
 Position Fieldstate::getFieldCenter() const {
     return this->m_FieldCenter;
 }
+
+void Fieldstate::setArea(int area){
+    area_x = area;
+}
+
+int Fieldstate::getArea(){
+    return this->area_x;
+}
+
+void Fieldstate::setArea2(int area){
+    area2_x = area;
+}
+
+int Fieldstate::getArea2(){
+    return this->area2_x;
+}

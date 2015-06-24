@@ -10,6 +10,7 @@ class Robot : public Unit
 public:
 
     Robot();
+    Robot(const Robot& robot);
 
     int getId() const;
     void setId(const int& id);

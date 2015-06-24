@@ -32,10 +32,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_Vision->m_DisplaySize = Size(ui->label_2->width()-1,ui->label_2->height()-1);
 
     m_IdCalib = -1;
-    callLoadCalibration();//carrega calibragem
+    callLoadCalibration();//carrega calibrafgem
     on_pushButtonLoadRect_clicked();//carrega retificacao
     on_rBtnSettings_clicked();//Settings = menu inicial
-
 }
 
 MainWindow::~MainWindow()
@@ -219,8 +218,10 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
             m_Goal1.GoalPost_2.y = (float) P.y();
             break;
         case 2://C
-            //m_Vision->bordasRectify[2].x = (float) P.x();
-            //m_Vision->bordasRectify[2].y = (float) P.y();
+            Position pos;
+            pos.x = (float) P.x();
+            pos.y = (float) P.y();
+            fs->setFieldCenter(pos);
             break;
         case 3://D
             m_Goal2.GoalPost_1.x = (float) P.x();
@@ -325,6 +326,12 @@ void MainWindow::showGame(){//mostra os pontos do centro dos robos
                              2 // Expessura da linha
                    );
     }
+    if(fs->getBall().getPosition().x != -1)
+    cv::circle(*m_Display1, cv::Point(fs->getBall().getPosition().x, fs->getBall().getPosition().y),
+                         10, cvScalar(0,255,0),
+                         2 // Expessura da linha
+               );
+    std::cout << "ball x: " << fs->getBall().getPosition().x << " y: " << fs->getBall().getPosition().y << std::endl;
 }
 
 //********************************************************************************************
@@ -414,13 +421,17 @@ void MainWindow::on_rBtnGame_clicked() //Game
     for (int i = 0; i < 9; i++) {//teste de confiabilidade
         m_Vision->missObject[i] = 0;
     }
-
+    fs->setArea((fs->getFieldCenter().x-fs->getGoalLeft().GoalPost_1.x)/5 + fs->getGoalLeft().GoalPost_1.x);
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
         m_Vision->adjustImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
-//            Default d;
-//            d.play(fs);
+            Default d;
+            d.play(fs);
+            cv::circle(*m_Display1, cv::Point(d.zagueiroObj.x, d.zagueiroObj.y),
+                                 10, cvScalar(0,255,0),
+                                 2 // Expessura da linha
+                       );
             showGame();
         }
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));

@@ -35,6 +35,12 @@ public:
     Position getFieldCenter() const;
     void setFieldCenter(const Position& position);
 
+    void setArea(int area);
+    int getArea();
+
+    void setArea2(int area);
+    int getArea2();
+
 private:
     Goal m_GoalLeft;
     Goal m_GoalRight;
@@ -42,6 +48,8 @@ private:
     std::vector<Robot> m_RobotsTeam;
     std::vector<Robot> m_RobotsEnemy;
     Position m_FieldCenter;
+    int area_x;
+    int area2_x;
 
 };
 

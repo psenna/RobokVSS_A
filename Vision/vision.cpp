@@ -50,8 +50,6 @@ Vision* Vision::getInstance()
  * e atualiza a posicao de cada objeto no campo.
  */
 void Vision::getData(Fieldstate *fs){
-
-
     double ti,tf; // ti = tempo inicial // tf = tempo final
     ti = time();
 
@@ -218,10 +216,10 @@ cv::Mat Vision::thresholdImage(Scalar min, Scalar max)
 
 void Vision::renderImage()
 {
-    for (int i = 0; i < 8; ++i){
+    for (int i = 0; i < 9; ++i){
         m_RenderThreads[i].start();
     }
-    for (int i = 0; i < 8; ++i){
+    for (int i = 0; i < 9; ++i){
         m_RenderThreads[i].wait();
     }
 }
@@ -296,7 +294,13 @@ void Vision::identifyRobot(Fieldstate *fs){
             fs->setRobotTeamById(robot, i-1);
         }
     } // end for
-
+    robok::Ball bola;
+    if(!m_Found[8].empty()){
+        bola.setPosition(m_Found[8][0].x, m_Found[8][0].y);
+    }else{
+        bola.setPosition(-1, -1);
+    }
+    fs->setBall(bola);
 }
 
 void Vision::setCameraId(const int &id){
