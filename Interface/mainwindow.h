@@ -6,7 +6,10 @@
 #include "Communitacion/serial.h"
 #include "fieldstate.h"
 #include "Strategy/default.h"
+#include "Strategy/doubleattack.h"
 #include "Vision/vision.h"
+#include "motion.h"
+#include <QtSerialPort/QtSerialPort>
 
 namespace Ui {
 class MainWindow;
@@ -30,7 +33,7 @@ private:
     cv::Mat *m_Display1;
     cv::Mat *m_Display2;
     Vision *m_Vision;
-    Serial *serial;
+    Serial serial;
     Fieldstate *fs;
     bool m_isPlaying;
     int m_IdCalib;
@@ -64,6 +67,8 @@ private slots:
     void on_pushButtonLoadRect_clicked();
     void on_pushButtonSaveRect_clicked();
 
+    void on_buttonConnectDevice_clicked();
+    void on_ButtonPowerOff_clicked();
 };
 
 #endif // MAINWINDOW_H

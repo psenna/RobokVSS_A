@@ -42,7 +42,6 @@ MainWindow::~MainWindow()
     delete m_Display1;
     delete m_Display2;
     delete m_Vision;
-    delete serial;
     delete fs;
     delete ui;
 }
@@ -208,6 +207,9 @@ void MainWindow::mousePressEvent(QMouseEvent* ev) //Eventos de mouse na ui
         QPoint P = ui->label_2->mapFrom(this, ev->pos());
         if(P.x() < 0 || P.y() < 0 || P.x()>ui->label_2->width()-1 || P.y()>ui->label_2->height()-1) return;   //ignore se clique for fora da label
 
+        m_Goal1 = fs->getGoalLeft();
+        m_Goal2 = fs->getGoalRight();
+
         switch (ui->comboBoxFieldAdjust->currentIndex()) {//setBordasRectify
         case 0://A
             m_Goal1.GoalPost_1.x = (float) P.x();
@@ -246,7 +248,7 @@ void MainWindow::keyPressEvent(QKeyEvent * ev){ //Eventos de teclado na ui
     }
     if (ui->rBtnFieldAdjust->isChecked()){//Rectify
         if(ev->key()>=Qt::Key_A && ev->key()<=Qt::Key_E)//ABCDE
-            ui->comboBoxFieldAdjust->setCurrentIndex(ev->key()-Qt::Key_E);
+            ui->comboBoxFieldAdjust->setCurrentIndex(ev->key()-Qt::Key_A);
     }
 }
 
@@ -305,6 +307,11 @@ void MainWindow::showFieldAdjust(){//mostra os pontos dos centros dos postes dos
                cvScalar(0,0,255)); // Desenha circulo na trave B
 
     cv::circle(*m_Display1,
+               cv::Point(fs->getFieldCenter().x, fs->getFieldCenter().y),
+               5,
+               cvScalar(0,0,255)); // Desenha circulo no centro do campo C
+
+    cv::circle(*m_Display1,
                cv::Point(fs->getGoalRight().GoalPost_1.x, fs->getGoalRight().GoalPost_1.y),
                5,
                cvScalar(0,0,255)); // Desenha circulo na trave D
@@ -331,7 +338,6 @@ void MainWindow::showGame(){//mostra os pontos do centro dos robos
                          10, cvScalar(0,255,0),
                          2 // Expessura da linha
                );
-    std::cout << "ball x: " << fs->getBall().getPosition().x << " y: " << fs->getBall().getPosition().y << std::endl;
 }
 
 //********************************************************************************************
@@ -422,26 +428,79 @@ void MainWindow::on_rBtnGame_clicked() //Game
         m_Vision->missObject[i] = 0;
     }
     fs->setArea((fs->getFieldCenter().x-fs->getGoalLeft().GoalPost_1.x)/5 + fs->getGoalLeft().GoalPost_1.x);
+
+    Robot robo;
+
+    robo = fs->getRobotTeamById(0);
+
+    robo.setId(ui->spinBoxID1->value());
+
+    fs->setRobotTeamById(robo,0);
+
+
+    robo = fs->getRobotTeamById(1);
+
+    robo.setId(ui->spinBoxID2->value());
+
+    fs->setRobotTeamById(robo,1);
+
+
+    robo = fs->getRobotTeamById(2);
+
+    robo.setId(ui->spinBoxID3->value());
+
+    fs->setRobotTeamById(robo, 2);
+
+    std::cout << "spin1 " << ui->spinBoxID1->value() << std::endl;
+    std::cout << "spin2 " << ui->spinBoxID2->value() << std::endl;
+    std::cout << "spin3 " << ui->spinBoxID3->value() << std::endl;
+
+    Default d;
+    DoubleAttack doubleA;
+
+
     while (m_Vision->captureImage() && ui->rBtnGame->isChecked()) {
         m_Vision->adjustImage();
         if(m_isPlaying){
             m_Vision->getData(fs);
-            Default d;
-            d.play(fs);
+            showGame();
+
+            if(ui->comboBoxStrategyGame->currentIndex() == 0)
+                d.play(fs);
+            if(ui->comboBoxStrategyGame->currentIndex() == 1)
+                doubleA.play(fs);
+
+            ///Desenho dos objetivos da estratégia
+            ///
             cv::circle(*m_Display1, cv::Point(d.zagueiroObj.x, d.zagueiroObj.y),
-                                 10, cvScalar(0,255,0),
+                                 10, cvScalar(255,0,0),
                                  2 // Expessura da linha
                        );
-            showGame();
+            cv::circle(*m_Display1, cv::Point(d.atacanteObj.x, d.atacanteObj.y),
+                                 10, cvScalar(0,0,255),
+                                 2 // Expessura da linha
+                       );
+            cv::circle(*m_Display1, cv::Point(d.goleiroObj.x, d.goleiroObj.y),
+                                 10, cvScalar(0,255,255),
+                                 2 // Expessura da linha
+                       );
+
+            //////////////////////////////////
+            Motion::movimenta(fs);
+            if(serial.isConnected() && ui->checkBoxSendCommand->isChecked()){
+                //serial.createSendCommands(fs);
+                serial.createSendNewCommands(fs);
+            }
+
         }
         ui->label_2->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));
-        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1)));//poderia ser um display com status dos robos(objetivo, direcao, etc)
+        ui->label_3->setPixmap(QPixmap::fromImage(Mat2QImage(*m_Display1))); //poderia ser um display com status dos robos(objetivo, direcao, etc)
     }
 }
 
 void MainWindow::on_buttonScanDevices_clicked()
 {
-    QStringList stringList = serial->scan();
+    QStringList stringList = serial.scan();
     ui->comboBoxdevicesgame->clear();
     ui->comboBoxdevicesgame->addItems(stringList);
 }
@@ -498,7 +557,11 @@ void MainWindow::on_pushButtonLoadRect_clicked()
 
 void MainWindow::on_pushButtonSaveField_clicked()
 {
-    saveFieldState(cvPoint(0,0), cvPoint(0,0), cvPoint(0,0), cvPoint(0,0), cvPoint(0,0));
+    saveFieldState(cvPoint(fs->getGoalLeft().GoalPost_1.x, fs->getGoalLeft().GoalPost_1.y),
+                   cvPoint(fs->getGoalLeft().GoalPost_2.x, fs->getGoalLeft().GoalPost_2.y),
+                   cvPoint(fs->getFieldCenter().x, fs->getFieldCenter().y),
+                   cvPoint(fs->getGoalRight().GoalPost_1.x, fs->getGoalRight().GoalPost_1.y),
+                   cvPoint(fs->getGoalRight().GoalPost_2.x, fs->getGoalRight().GoalPost_2.y));
 }
 
 void MainWindow::on_pushButtonLoadField_clicked()
@@ -517,4 +580,21 @@ void MainWindow::on_pushButtonAutoRect_clicked()
     on_pushButtonRectReset_clicked();
     m_Vision->autoRectificationSet();
     m_Display1 = &m_Vision->m_FrameRect;
+}
+
+void MainWindow::on_buttonConnectDevice_clicked()
+{
+    serial.connect(ui->comboBoxdevicesgame->currentText());
+}
+
+void MainWindow::on_ButtonPowerOff_clicked()
+{
+    std::vector<Robot> robots = fs->getRobotsTeam();
+//    for(int i=0; i<robots.size(); i++){
+//        QString string = "<" + QString::number(fs->getRobotTeamById(i).getId());
+//        string = string + "00000000>";
+//        serial.send(string);
+//    }
+    QString string = "<000000000000>";
+            serial.send(string);
 }

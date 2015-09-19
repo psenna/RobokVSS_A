@@ -3,8 +3,15 @@
 using namespace robok;
 
 Fieldstate::Fieldstate(){
-    m_RobotsTeam.resize(5);
-    m_RobotsEnemy.resize(5);
+    m_RobotsTeam.resize(3);
+    m_RobotsEnemy.resize(3);
+
+    for(int i=0; i<3; i++)
+     for(int j=9; j>=0; j--)
+        angAnt[i][j] = 0;
+
+    for(int j=9; j>=0; j--)
+        posBola[j] = 0;
 }
 
 /*
@@ -80,4 +87,24 @@ void Fieldstate::setArea2(int area){
 
 int Fieldstate::getArea2(){
     return this->area2_x;
+}
+
+float Fieldstate::getAng(int id, float ang){
+    for(int j=9; j>0; j--){
+        angAnt[id][j] = angAnt[id][j-1];
+    }
+
+    angAnt[id][0] = ang;
+
+    float diff = (angAnt[id][6] - angAnt[id][0]);
+    ang -= diff;
+
+    return ang;
+}
+
+int Fieldstate::getVelBola(){
+    for(int j=9; j>0; j--){
+        posBola[j] = posBola[j-1];
+    }
+    posBola[0] = Ball.getPosition();
 }

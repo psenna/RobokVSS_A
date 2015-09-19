@@ -22,11 +22,13 @@ public:
     Command getCommand() const;
     void setCommand(const Command& command);
 
+
 private:
     int m_Id;
     float m_Orientation;
     Position m_Objective;
     Command m_Command;
+
 };
 
 }

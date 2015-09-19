@@ -4,10 +4,7 @@
 #
 #-------------------------------------------------
 
-CONFIG += serialport
-QT       += core gui
-QT += gui
-QT       += serialport
+QT       += core gui serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,7 +23,9 @@ SOURCES += main.cpp\
     Vision/renderthread.cpp \
     Vision/vision.cpp \
     Communitacion/serial.cpp \    
-    Strategy/default.cpp
+    Strategy/default.cpp \
+    motion.cpp \
+    Strategy/doubleattack.cpp
 
 HEADERS  += \
     ball.h \
@@ -41,7 +40,9 @@ HEADERS  += \
     Vision/vision.h \
     Communitacion/serial.h \    
     Strategy/default.h \
-    Strategy/strategy.h
+    Strategy/strategy.h \
+    motion.h \
+    Strategy/doubleattack.h
 
 FORMS    += \
     Interface/mainwindow.ui

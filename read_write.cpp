@@ -142,6 +142,8 @@ void loadFieldstate(Fieldstate *fs){
     }
 
     Goal goal, goal2;
+    Position fieldCenter;
+
     goal.GoalPost_1.x = a[0];
     goal.GoalPost_1.y = a[1];
 
@@ -150,16 +152,15 @@ void loadFieldstate(Fieldstate *fs){
 
     fs->setGoalLeft(goal);
 
-    goal2.GoalPost_1.x = a[4];
-    goal2.GoalPost_1.y = a[5];
+    fieldCenter.x = a[4];
+    fieldCenter.y = a[5];
 
-    goal2.GoalPost_2.x = a[6];
-    goal2.GoalPost_2.y = a[7];
+    goal2.GoalPost_1.x = a[6];
+    goal2.GoalPost_1.y = a[7];
+
+    goal2.GoalPost_2.x = a[8];
+    goal2.GoalPost_2.y = a[9];
 
     fs->setGoalRight(goal2);
-
-    Position fieldCenter;
-    fieldCenter.x = a[8];
-    fieldCenter.y = a[9];
     fs->setFieldCenter(fieldCenter);
 }

@@ -16,6 +16,8 @@ public:
     void goalkeeper(Fieldstate *fs, int id);
     void attacker(Fieldstate *fs, int id);
     void defender(Fieldstate *fs, int id);
+    void distribuiPosicoes(Fieldstate *fs);
+    void verificaAtacante(Fieldstate *fs, int atacanteId);
     Position goleiroObj, atacanteObj, zagueiroObj;
 
 private:

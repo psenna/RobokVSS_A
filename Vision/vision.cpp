@@ -64,7 +64,7 @@ void Vision::getData(Fieldstate *fs){
     tf = time();
     //cout << "Tempo gasto em milissegundos " << (tf-ti)*1000 << endl;
 
-    testeConfiabilidade();
+    //testeConfiabilidade();
     //teste de precisao de orientacao
     //std::cout<<"Orientacao - robo0: "<<fs->getRobotTeamById(0).getOrientation()<<" robo0: "<<fs->getRobotTeamById(1).getOrientation()<<" robo0: "<<fs->getRobotTeamById(2).getOrientation()<<std::endl;
 
@@ -264,6 +264,7 @@ void Vision::identifyRobot(Fieldstate *fs){
     double menor_distancia;
     int menorDistanciaId;
     robok::Robot robot;
+
     for (int i = 1; i < 4; i++)
     {
         if (!m_Found[i].empty()) {
@@ -277,19 +278,24 @@ void Vision::identifyRobot(Fieldstate *fs){
                     menorDistanciaId = j;
                 }
             }
+
+            robot = fs->getRobotTeamById(i-1);
+
             if (menor_distancia != 9999) {
                 float x = (m_Found[i][0].x + m_Found[0][menorDistanciaId].x) / 2;
                 float y = (m_Found[i][0].y + m_Found[0][menorDistanciaId].y) / 2;
-                float orientation = atan2(m_Found[i][0].y - m_Found[0][menorDistanciaId].y,
+                float orientation = atan2(m_Found[0][menorDistanciaId].y - m_Found[i][0].y,
                                           m_Found[i][0].x - m_Found[0][menorDistanciaId].x);
+
                 robot.setPosition(x, y);
-                robot.setOrientation(orientation);
+                robot.setOrientation((orientation*180.0)/3.14);
                 fs->setRobotTeamById(robot, i-1);
             }else{
                 robot.setPosition(-1, -1);
                 fs->setRobotTeamById(robot, i-1);
             }
         }else{
+            robot = fs->getRobotTeamById(i-1);
             robot.setPosition(-1, -1);
             fs->setRobotTeamById(robot, i-1);
         }

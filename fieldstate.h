@@ -41,6 +41,8 @@ public:
     void setArea2(int area);
     int getArea2();
 
+    float getAng(int id, float ang);
+
 private:
     Goal m_GoalLeft;
     Goal m_GoalRight;
@@ -50,7 +52,9 @@ private:
     Position m_FieldCenter;
     int area_x;
     int area2_x;
-
+    float angAnt[3][10];
+    Position posAnt[3][10];
+    Position posBola[10];
 };
 
 }
