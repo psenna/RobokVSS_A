@@ -11,21 +11,30 @@ namespace TesteXamarin
 	{
 		public GridView ()
 		{
-            int width = 100;
-            int heigh = 100;
+            int width = 250;
+            int heigh = 40;
+            int labelHeigh = 40;
+            double textLenth = Device.GetNamedSize(NamedSize.Large, typeof(Label));
 
             Grid grid = new Grid
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 RowDefinitions =
                 {
+                    new RowDefinition { Height = labelHeigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = heigh },
+                    new RowDefinition { Height = labelHeigh },
                     new RowDefinition { Height = heigh }
                 },
                 ColumnDefinitions =
@@ -38,74 +47,60 @@ namespace TesteXamarin
 
             grid.Children.Add(new Label
             {
-                Text = "Grid",
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                Text = "Fiscal",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = textLenth,
                 HorizontalOptions = LayoutOptions.Center
-            }, 0, 3, 0, 1);
+            }, 0, 1, 0, 1);
 
             grid.Children.Add(new Label
             {
-                Text = "Grid",
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                Text = "Ficha 20170000101",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = textLenth,
                 HorizontalOptions = LayoutOptions.Center
-            }, 0, 1, 5, 6);
+            }, 1, 2, 0, 1);
 
             grid.Children.Add(new Label
             {
-                Text = "Autosized cell",
-                TextColor = Color.White,
-                BackgroundColor = Color.Blue
-            }, 0, 1);
-
-            grid.Children.Add(new BoxView
-            {
-                Color = Color.Silver,
-                HeightRequest = 0
-            }, 1, 1);
-
-            grid.Children.Add(new BoxView
-            {
-                Color = Color.Teal
-            }, 0, 2);
+                Text = "11/08/2017",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = textLenth,
+                HorizontalOptions = LayoutOptions.Center
+            }, 2, 3, 0, 1);
 
             grid.Children.Add(new Label
             {
-                Text = $"heigh " ,
-                TextColor = Color.Purple,
-                BackgroundColor = Color.Aqua,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center,
-            }, 1, 2);
+                Text = "Nome Proprietário",
+                HorizontalTextAlignment = TextAlignment.Start,
+                FontSize = textLenth,
+                HorizontalOptions = LayoutOptions.Fill
+            }, 0, 2, 1, 2);
+
+            grid.Children.Add(new Entry
+            {
+                Text = "",
+                HorizontalTextAlignment = TextAlignment.End,
+                FontSize = textLenth,
+                HorizontalOptions = LayoutOptions.Fill
+            }, 0, 2, 2, 3);
 
             grid.Children.Add(new Label
             {
-                Text = "Span two rows (or more if you want)",
-                TextColor = Color.Yellow,
-                BackgroundColor = Color.Navy,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center
-            }, 2, 3, 1, 3);
+                Text = "CPF",
+                HorizontalTextAlignment = TextAlignment.Start,
+                FontSize = textLenth,
+                HorizontalOptions = LayoutOptions.Fill
+            }, 2, 3, 1, 2);
 
-            grid.Children.Add(new Label
+            grid.Children.Add(new Entry
             {
-                Text = "Span 2 columns",
-                TextColor = Color.Blue,
-                BackgroundColor = Color.Yellow,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center
-            }, 0, 2, 3, 4);
+                Text = "",
+                HorizontalTextAlignment = TextAlignment.End,
+                FontSize = textLenth,
+                HorizontalOptions = LayoutOptions.Fill
+            }, 2, 3, 2, 3);
 
-            grid.Children.Add(new Label
-            {
-                Text = "Fixed 100x100",
-                TextColor = Color.Aqua,
-                BackgroundColor = Color.Red,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center
-            }, 2, 3);
-
-            // Accomodate iPhone status bar.
-            this.Padding = new Thickness(10, Device.OnPlatform(20, 0, 0), 10, 5);
 
             // Build the page.
             var absolute = new AbsoluteLayout();
