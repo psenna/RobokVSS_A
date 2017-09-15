@@ -1,111 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Xamarin.Forms;
-
-namespace TesteXamarin
-{
-	public class GridView : ContentPage
-	{
-		public GridView ()
-		{
-            int width = 250;
-            int heigh = 40;
-            int labelHeigh = 40;
-            double textLenth = Device.GetNamedSize(NamedSize.Large, typeof(Label));
-
-            Grid grid = new Grid
+        public static void SetProperty(string compoundProperty, object target, object value)
+        {
+            string[] bits = compoundProperty.Split('.');
+            for (int i = 0; i < bits.Length - 1; i++)
             {
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh },
-                    new RowDefinition { Height = labelHeigh },
-                    new RowDefinition { Height = heigh }
-                },
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = width },
-                    new ColumnDefinition { Width = width },
-                    new ColumnDefinition { Width = width }
-                }
-            };
-
-            grid.Children.Add(new Label
-            {
-                Text = "Fiscal",
-                FontAttributes = FontAttributes.Bold,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Center
-            }, 0, 1, 0, 1);
-
-            grid.Children.Add(new Label
-            {
-                Text = "Ficha 20170000101",
-                FontAttributes = FontAttributes.Bold,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Center
-            }, 1, 2, 0, 1);
-
-            grid.Children.Add(new Label
-            {
-                Text = "11/08/2017",
-                FontAttributes = FontAttributes.Bold,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Center
-            }, 2, 3, 0, 1);
-
-            grid.Children.Add(new Label
-            {
-                Text = "Nome Proprietário",
-                HorizontalTextAlignment = TextAlignment.Start,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Fill
-            }, 0, 2, 1, 2);
-
-            grid.Children.Add(new Entry
-            {
-                Text = "",
-                HorizontalTextAlignment = TextAlignment.End,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Fill
-            }, 0, 2, 2, 3);
-
-            grid.Children.Add(new Label
-            {
-                Text = "CPF",
-                HorizontalTextAlignment = TextAlignment.Start,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Fill
-            }, 2, 3, 1, 2);
-
-            grid.Children.Add(new Entry
-            {
-                Text = "",
-                HorizontalTextAlignment = TextAlignment.End,
-                FontSize = textLenth,
-                HorizontalOptions = LayoutOptions.Fill
-            }, 2, 3, 2, 3);
-
-
-            // Build the page.
-            var absolute = new AbsoluteLayout();
-            absolute.Children.Add(grid);
-            this.Content = new ScrollView { Content = absolute };
+                PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i]);
+                target = propertyToGet.GetValue(target, null);
+                if (target == null)
+                    return;
+            }
+            PropertyInfo propertyToSet = target.GetType().GetProperty(bits.Last());
+            propertyToSet.SetValue(target, value, null);
         }
-	}
-}
+
+        public static object GetProperty(string compoundProperty, object target)
+        {
+            string[] bits = compoundProperty.Split('.');
+            for (int i = 0; i < bits.Length; i++)
+            {
+                PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i]);
+                target = propertyToGet.GetValue(target, null);
+                if (target == null)
+                    return null;
+            }
+            return target;
+        }
