@@ -1,26 +1,30 @@
-        public static void SetProperty(string compoundProperty, object target, object value)
-        {
-            string[] bits = compoundProperty.Split('.');
-            for (int i = 0; i < bits.Length - 1; i++)
-            {
-                PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i]);
-                target = propertyToGet.GetValue(target, null);
-                if (target == null)
-                    return;
-            }
-            PropertyInfo propertyToSet = target.GetType().GetProperty(bits.Last());
-            propertyToSet.SetValue(target, value, null);
-        }
-
-        public static object GetProperty(string compoundProperty, object target)
-        {
-            string[] bits = compoundProperty.Split('.');
-            for (int i = 0; i < bits.Length; i++)
-            {
-                PropertyInfo propertyToGet = target.GetType().GetProperty(bits[i]);
-                target = propertyToGet.GetValue(target, null);
-                if (target == null)
-                    return null;
-            }
-            return target;
-        }
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="PrismNinjectApp5.Views.MainPage"
+             x:Name="MainPage"
+             Title="MainPage">
+    <ListView ItemsSource="{Binding Pessoas}" HasUnevenRows="True" VerticalOptions="Fill">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <ViewCell.View>
+                        <Grid Padding="0,5,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label Text="{Binding Nome}" FontAttributes="Bold" Grid.ColumnSpan="1" HorizontalOptions="FillAndExpand" />
+                            <Button Text="Voltar" Grid.Row="0" Grid.Column="1" Command="{Binding Source={x:Reference MainPage}, Path=BindingContext.ComandoTeste}" CommandParameter="{Binding Id}" />
+                        </Grid>
+                    </ViewCell.View>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>
